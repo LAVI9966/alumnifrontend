@@ -10,7 +10,7 @@ const Header = () => {
   return (
     <header className="bg-custom-blue text-white p-4 flex justify-between items-center relative">
       {/* Logo */}
-      <Link href="/" className="w-16 ">
+      <Link href="/alumni/homepage" className="w-16 ">
         <Logo textwhite={true} isfooter={true} />
       </Link>
 
