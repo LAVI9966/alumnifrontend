@@ -1,47 +1,51 @@
+import Alumnihomepagecard from "@/components/homepage/alumnihomepagecard";
+import Createpostdialogue from "@/components/homepage/createpostdialogue";
 import Eventcard from "@/components/homepage/eventcard";
 import Postcard from "@/components/homepage/postcard";
+import Upcommingevent from "@/components/homepage/upcommingevent";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 const page = () => {
   return (
-    <div className="min-h-screen max-w-[1200px] mx-auto w-full  pt-4 px-4 sm:p-2 flex flex-col sm:flex-row gap-0 sm:gap-4">
+    <div className="min-h-screen max-w-[1200px] mx-auto w-full  pt-4 px-4 md:p-2 flex flex-col md:flex-row gap-0 md:gap-8 mt-2">
       {/* Upcoming Events Section */}
-      <div className="w-full sm:w-[25%]">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="font-bold text-lg">Upcoming Events</h2>
-          <Link href="/alumni/events" className="text-sm text-gray-500">
-            See All
-          </Link>
-        </div>
-        <div className="overflow-hidden w-full">
-          <div
-            className="flex overflow-x-auto scrollbar-hide space-x-4  overflow-hidden"
-            style={{ whiteSpace: "nowrap" }}
-          >
-            <div className="lg:flex-none">
-              <Eventcard />{" "}
-            </div>
-            <div className="lg:flex-none">
-              <Eventcard />{" "}
-            </div>
-            <div className="lg:flex-none">
-              <Eventcard />{" "}
-            </div>
-          </div>
+      <div className="w-full flex flex-col  gap-4 md:w-[31%]">
+        <Upcommingevent />
+        <div className=" hidden md:flex flex-col  gap-4 ">
+          <Alumnihomepagecard
+            title="Alumni Directory"
+            desc="Search and connect with alumni from different batches and locations."
+            targetlink="/alumni/members"
+            buttonname="Explore"
+          />
+          <Alumnihomepagecard
+            title="Upcoming Events"
+            desc="Stay informed about reunions, webinars, and other alumni gatherings."
+            targetlink="/alumni/events"
+            buttonname="View Events"
+          />
+          <Alumnihomepagecard
+            title="Career Opportunities"
+            desc="Discover job postings and mentorship programs shared by alumni."
+            targetlink="#"
+            buttonname="Find Opportunities"
+          />
         </div>
       </div>
-      {/* Create Post Button */}
-      <div className="w-full sm:w-[25%]">
-        <button className="w-full  bg-gray-900 text-white py-2 rounded-lg mt-4 ">
-          Create Post
-        </button>
-      </div>
-      {/* Post Card */}
-      <div className="flex  w-full sm:w-[50%] flex-col gap-2 mt-4 mb-8">
-        <Postcard />
-        <Postcard />
+
+      <div className="flex flex-col md:flex-row-reverse gap-8 w-full md:w-[69%]">
+        {/* Create Post Button */}
+        <div className="w-full md:w-[18%]">
+          <Createpostdialogue/>
+         
+        </div>
+        {/* Post Card */}
+        <div className="flex  w-full md:w-[82%] flex-col gap-2  mb-8">
+          <Postcard />
+          <Postcard />
+        </div>
       </div>
     </div>
   );

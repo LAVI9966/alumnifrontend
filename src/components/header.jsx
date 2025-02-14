@@ -65,12 +65,12 @@ const Header = () => {
             </a>
           </li>
           <li>
-            <a href="#" className="hover:text-gray-300">
+            <a href="/alumni/chat" className="hover:text-gray-300">
               Chat
             </a>
           </li>
           <li>
-            <a href="#" className="hover:text-gray-300">
+            <a href="/alumni/notification" className="hover:text-gray-300">
               Notification
             </a>
           </li>
