@@ -24,25 +24,25 @@ const Header = () => {
 
       {/* Desktop Menu */}
       <nav className="space-x-4 hidden md:block">
-        <a href="/alumni/about" className="hover:text-gray-300">
+        <Link href="/alumni/about" className="hover:text-gray-300">
           About Us
-        </a>
-        <a href="/alumni/events" className="hover:text-gray-300">
+        </Link>
+        <Link href="/alumni/events" className="hover:text-gray-300">
           Event
-        </a>
-        <a href="/alumni/members" className="hover:text-gray-300">
+        </Link>
+        <Link href="/alumni/members" className="hover:text-gray-300">
           Member
-        </a>
-        <a href="/alumni/contact" className="hover:text-gray-300">
+        </Link>
+        <Link href="/alumni/contact" className="hover:text-gray-300">
           Contact
-        </a>
+        </Link>
       </nav>
 
       {/* Icons */}
       <div className=" gap-3  hidden md:flex">
-        <div className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg">
+        <Link  href="/alumni/chat" className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg">
           <Icon icon="iconoir:message" width="24" height="24" />
-        </div>
+        </Link>
         <div className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg">
           <Icon icon="line-md:bell" width="24" height="24" />
         </div>
@@ -60,36 +60,36 @@ const Header = () => {
       >
         <ul className="flex flex-col text-end gap-4">
           <li>
-            <a href="/alumni/profile" className="hover:text-gray-300">
+            <Link href="/alumni/profile" className="hover:text-gray-300">
               Profile
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/alumni/chat" className="hover:text-gray-300">
+            <Link href="/alumni/chat" className="hover:text-gray-300">
               Chat
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/alumni/notification" className="hover:text-gray-300">
+            <Link href="/alumni/notification" className="hover:text-gray-300">
               Notification
-            </a>
+            </Link>
           </li>
 
           <li>
-            <a href="/alumni/about" className="hover:text-gray-300">
+            <Link href="/alumni/about" className="hover:text-gray-300">
               About Us
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/alumni/events" className="hover:text-gray-300">
+            <Link href="/alumni/events" className="hover:text-gray-300">
               Event
-            </a>
+            </Link>
           </li>
 
           <li>
-            <a href="/alumni/contact" className="hover:text-gray-300">
+            <Link href="/alumni/contact" className="hover:text-gray-300">
               Contact
-            </a>
+            </Link>
           </li>
           <li className="flex justify-end ">
             <Link

@@ -26,48 +26,46 @@ const events = [
 
 const EventCards = () => {
   return (
-    <div className="min-h-screen bg-gray-100 pt-8 px-4 sm:p-8">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-2xl font-bold mb-6">Upcoming Events</h2>
-        <div className="flex w-full flex-wrap justify-start gap-6 mb-10">
-          {events.map((event) => (
-            <div
-              key={event.id}
-              className="bg-white p-4 max-w-[380px] shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
-            >
-              <img
-                src={event.imageUrl}
-                alt={event.title}
-                className="w-full h-48 object-cover"
-              />
-              <div className="pt-2">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  {event.title}
-                </h3>
-                <div className="flex justify-between items-start mb-2">
-                  <div className="flex  flex-col items-start text-[#797979] gap-1 text-sm ">
-                    <div className="mr-4 flex items-center gap-1">
-                      <Icon icon="oui:token-date" width="20" height="20" />{" "}
-                      {event.date}
-                    </div>
-                    <div className="mr-4 flex items-center gap-1">
-                      <Icon
-                        icon="mingcute:location-line"
-                        width="20"
-                        height="20"
-                      />
-                      {event.location}
-                    </div>
+    <div className="min-h-screen max-w-[1200px] w-full mx-auto  pt-8 px-4 sm:p-8">
+      <h2 className="text-2xl font-bold mb-6">Upcoming Events</h2>
+      <div className="flex w-full flex-wrap justify-start gap-6 mb-10">
+        {events.map((event) => (
+          <div
+            key={event.id}
+            className="bg-white p-4 max-w-[380px] shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
+          >
+            <img
+              src={event.imageUrl}
+              alt={event.title}
+              className="w-full h-48 object-cover"
+            />
+            <div className="pt-2">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                {event.title}
+              </h3>
+              <div className="flex justify-between items-start mb-2">
+                <div className="flex  flex-col items-start text-[#797979] gap-1 text-sm ">
+                  <div className="mr-4 flex items-center gap-1">
+                    <Icon icon="oui:token-date" width="20" height="20" />{" "}
+                    {event.date}
                   </div>
-                  <button className="border border-[#C7A006] text-sm rounded-lg w-24 p-1">
-                    {event.buttonText}
-                  </button>
+                  <div className="mr-4 flex items-center gap-1">
+                    <Icon
+                      icon="mingcute:location-line"
+                      width="20"
+                      height="20"
+                    />
+                    {event.location}
+                  </div>
                 </div>
-                <p className="text-[#797979] text-sm">{event.description}</p>
+                <button className="border border-[#C7A006] text-sm rounded-lg w-24 p-1">
+                  {event.buttonText}
+                </button>
               </div>
+              <p className="text-[#797979] text-sm">{event.description}</p>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

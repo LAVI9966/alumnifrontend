@@ -12,10 +12,28 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Icon } from "@iconify/react";
+import {
+  BtnBold,
+  BtnItalic,
+  createButton,
+  Editor,
+  EditorProvider,
+  Toolbar,
+} from "react-simple-wysiwyg";
+const BtnAlignCenter = createButton("Align Center", "≡", "justifyCenter");
+const BtnAlignLeft = createButton("Align Left", "≡", "justifyLeft");
+const BtnUnderline = createButton("Underline", "U", "underline");
+const BtnStrikeThrough = createButton("Strike", "S", "strikeThrough");
+const BtnOrderedList = createButton("Numbered List", "1.", "insertOrderedList");
+const BtnUnorderedList = createButton(
+  "Bullet List",
+  "•",
+  "insertUnorderedList"
+);
 
 const Createpostdialogue = () => {
   const [image, setImage] = React.useState(null);
-  const [caption, setCaption] = React.useState("");
+  const [caption, setCaption] = React.useState("my <b>HTML</b>");
 
   const handleImageUpload = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -27,10 +45,7 @@ const Createpostdialogue = () => {
   };
   return (
     <AlertDialog>
-      <AlertDialogTrigger
-        button
-        className="w-full  bg-custom-blue text-white py-2 rounded-lg  "
-      >
+      <AlertDialogTrigger className="w-full  bg-custom-blue text-white py-2 rounded-lg  ">
         Create Post
       </AlertDialogTrigger>
       <AlertDialogContent className="p-0 max-w-2xl px-4 md:px-0 gap-0">
@@ -67,13 +82,30 @@ const Createpostdialogue = () => {
           </div>
           {/* Caption Input */}
           <div className="p-2 text-xs font-medium border-b">
-            <input
+            {/* <input
               type="text"
               placeholder="Say Something..."
               className="w-full outline-none text-gray-600"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
-            />
+            /> */}
+            <EditorProvider>
+              <Toolbar>
+                <BtnBold />
+                <BtnItalic />
+                <BtnUnderline />
+                <BtnStrikeThrough />
+                <BtnAlignLeft />
+                <BtnAlignCenter />
+                <BtnOrderedList />
+                <BtnUnorderedList />
+              </Toolbar>
+              <Editor
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                style={{ height: "50px", overflowY: "auto" }}
+              />
+            </EditorProvider>
           </div>
         </AlertDialogTitle>
 

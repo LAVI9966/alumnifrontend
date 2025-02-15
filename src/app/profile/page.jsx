@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 
 export default function ProfilePictureUpload() {
   return (
@@ -24,12 +25,12 @@ export default function ProfilePictureUpload() {
 
       {/* Action Buttons */}
       <div className="mt-8  flex gap-4">
-        <button className="bg-[#131A45] text-center hover:bg-[#1a2154] text-white text-sm font-bold py-3 w-[150px] px-10 rounded-lg">
+        <Link href="/alumni/homepage" className="bg-[#131A45] text-center hover:bg-[#1a2154] text-white text-sm font-bold py-3 w-[150px] px-10 rounded-lg">
           Skip
-        </button>
-        <button className="bg-[#FFFFFF] text-center border border-[#C7A006] hover:bg-gray-200 text-[#131A45] text-sm font-bold py-3 px-10 w-[150px] rounded-lg">
+        </Link>
+        <Link href="/alumni/homepage" className="bg-[#FFFFFF] text-center border border-[#C7A006] hover:bg-gray-200 text-[#131A45] text-sm font-bold py-3 px-10 w-[150px] rounded-lg">
           Continue
-        </button>
+        </Link>
       </div>
     </div>
   );

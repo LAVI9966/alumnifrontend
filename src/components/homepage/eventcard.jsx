@@ -3,7 +3,7 @@ import React from "react";
 
 const Eventcard = () => {
   return (
-    <div className="flex w-[317px]  bg-white shadow-md rounded-lg overflow-hidden p-3">
+    <div className="flex w-[317px] lg:w-full  bg-white shadow-md rounded-lg overflow-hidden p-3">
       <Image
         width={300}
         height={300}
