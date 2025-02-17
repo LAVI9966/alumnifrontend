@@ -1,10 +1,15 @@
 "use client";
 import Chatusers from "@/components/chatpage/chatusers";
 import { Icon } from "@iconify/react";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import Image from "next/image";
 import React from "react";
 
 const Chatmain = () => {
-  const [messages, setMessages] = React.useState([]);
+  const [messages, setMessages] = React.useState([
+    { text: "Hello there! How can we assist you today?", sender: "other" },
+    { text: "Hello there! How can we assist you today?", sender: "You" },
+  ]);
   const [input, setInput] = React.useState("");
 
   const handleSendMessage = (e) => {
@@ -39,14 +44,28 @@ const Chatmain = () => {
                 msg.sender === "You" ? "justify-end" : "justify-start"
               }`}
             >
-              <div
-                className={`p-2 rounded-lg max-w-xs ${
-                  msg.sender === "You"
-                    ? "bg-custom-blue text-white"
-                    : "bg-gray-200 text-black"
-                }`}
-              >
-                {msg.text}
+              <div className="flex gap-2">
+                {msg.sender !== "You" && (
+                  <Avatar className=" cursor-pointer">
+                    <AvatarImage
+                      className="w-10 h-10 rounded-full  "
+                      src="https://github.com/shadcn.png"
+                      alt="avtar"
+                    />
+                  </Avatar>
+                )}
+                <div>
+                  <div
+                    className={`p-2 rounded-lg max-w-xs ${
+                      msg.sender === "You"
+                        ? "bg-[#3271FF] text-white"
+                        : "bg-[#D9D9D9] text-[#797979]"
+                    }`}
+                  >
+                    {msg.text}
+                  </div>
+                  <div className="text-[#797979] text-xs mt-2">10:00 pm</div>
+                </div>
               </div>
             </div>
           ))}
