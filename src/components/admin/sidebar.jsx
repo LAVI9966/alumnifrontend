@@ -17,7 +17,7 @@ const AdminSidebar = () => {
           <Image
             width={200}
             height={100}
-            src="/flash/logoimage.jfif"
+            src="/logoimage.png"
             alt="Rimcollian Logo"
             className="h-[85px] ml-3 w-[85px]"
           />

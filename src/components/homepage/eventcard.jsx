@@ -7,7 +7,7 @@ const Eventcard = () => {
       <Image
         width={300}
         height={300}
-        src="/homepage/eventimg.jfif"
+        src="/homepage/eventimg.png"
         alt="Event"
         className="w-[152px] h-[109px] rounded-md object-cover"
       />

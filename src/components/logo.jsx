@@ -10,7 +10,7 @@ const Logo = ({ textwhite, isfooter }) => {
         } `}
       >
         <Image
-          src="/flash/logoimage.jfif"
+          src="/logoimage.png"
           alt="Rimcollian Logo"
           fill
           className="rounded-full object-contain"

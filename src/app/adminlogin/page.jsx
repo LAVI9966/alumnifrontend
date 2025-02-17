@@ -18,7 +18,7 @@ export default function page() {
                  h-20 w-20 mx-auto"
         >
           <Image
-            src="/flash/logoimage.jfif"
+            src="/logoimage.png"
             alt="Rimcollian Logo"
             fill
             className="rounded-full object-contain"
