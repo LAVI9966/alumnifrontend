@@ -74,12 +74,18 @@ export default function SignupPage() {
               </p>
             </div>
             <div className="w-full flex justify-center">
-              <button
+              {/* <button
                 type="submit"
                 className="w-[143px]  bg-[#131A45] text-white py-3 rounded-xl font-semibold hover:bg-[#1a2154]"
               >
                 Login
-              </button>
+              </button> */}
+              <Link
+                href="/profile"
+                className="w-[143px]  text-center bg-[#131A45] text-white py-3 rounded-xl font-semibold hover:bg-[#1a2154]"
+              >
+                Login
+              </Link>
             </div>
           </form>
           <div className="mt-4 text-center text-[#000000]">

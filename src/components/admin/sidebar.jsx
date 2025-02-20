@@ -6,7 +6,7 @@ import Link from "next/link";
 const AllMenu = [
   { text: "Dashboard", link: "/admin/homepage" },
   { text: "Manage Users", link: "/admin/manageusers" },
-  { text: "Manage Events", link: "#" },
+  { text: "Manage Events", link: "/admin/manageevent" },
   { text: "Feedback", link: "#" },
 ];
 const AdminSidebar = () => {

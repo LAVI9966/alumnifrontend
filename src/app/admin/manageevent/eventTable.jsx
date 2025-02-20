@@ -32,19 +32,17 @@ import { Icon } from "@iconify/react";
 const data = [
   {
     id: 1,
-    name: "John Doe",
-    collegeNo: "12345",
-    role: "Student",
-    mobile: "9876543210",
-    email: "john@example.com",
+    eventname: "John Doe",
+    date: "01/04/2025",
+    venue: "Student",
+    description: "Lorem ipsum dolor sit amet consectetur.",
   },
   {
     id: 2,
-    name: "Jane Smith",
-    collegeNo: "67890",
-    role: "Admin",
-    mobile: "9876543211",
-    email: "jane@example.com",
+    eventname: "John Doe",
+    date: "01/04/2025",
+    venue: "Student",
+    description: "Lorem ipsum dolor sit amet consectetur.",
   },
 ];
 
@@ -72,36 +70,32 @@ export const columns = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-  },
-  {
-    accessorKey: "collegeNo",
-    header: "college No",
+    accessorKey: "eventname",
+    header: "Event Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("collegeNo")}</div>
+      <div className="capitalize">{row.getValue("eventname")}</div>
     ),
   },
   {
-    accessorKey: "role",
-    header: "Role",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("role")}</div>,
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("date")}</div>,
   },
   {
-    accessorKey: "mobile",
-    header: "Mobile",
+    accessorKey: "venue",
+    header: "Venue",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("mobile")}</div>
+      <div className="capitalize">{row.getValue("venue")}</div>
     ),
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "description",
+    header: "Description",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("email")}</div>
+      <div className="capitalize">{row.getValue("description")}</div>
     ),
   },
+
   {
     id: "actions",
     header: "Action",
@@ -119,7 +113,7 @@ export const columns = [
   },
 ];
 
-export function UserDataTable() {
+export function EventDataTable() {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -157,9 +151,9 @@ export function UserDataTable() {
           <input
             type="text"
             placeholder="Filter roll number..."
-            value={table.getColumn("collegeNo")?.getFilterValue() ?? ""}
+            value={table.getColumn("eventname")?.getFilterValue() ?? ""}
             onChange={(event) =>
-              table.getColumn("collegeNo")?.setFilterValue(event.target.value)
+              table.getColumn("eventname")?.setFilterValue(event.target.value)
             }
             className=" w-full outline-none"
           />
