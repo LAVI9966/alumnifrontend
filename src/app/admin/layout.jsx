@@ -1,11 +1,31 @@
 "use client";
 import AdminHeader from "@/components/admin/adminheader";
 import AdminSidebar from "@/components/admin/sidebar";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 const Layout = ({ children }) => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("alumni");
+    if (!storedData) {
+      router.push("/login");
+      return;
+    }
+    const { token, user } = JSON.parse(storedData);
+
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+    if (user.role !== "admin") {
+      router.push("/alumni/homepage");
+    }
+  }, [router]);
 
   if (loading) {
     return <div>Loading...</div>; // Show loading indicator while checking token

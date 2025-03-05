@@ -46,9 +46,9 @@ const Header = () => {
         <div className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg">
           <Icon icon="line-md:bell" width="24" height="24" />
         </div>
-        <div className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg">
+        <Link href="/alumni/profile" className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg">
           <Icon icon="lucide:user" width="24" height="24" />
-        </div>
+        </Link>
       </div>
 
       {/* Mobile Dropdown Menu */}

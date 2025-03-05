@@ -11,13 +11,6 @@ import {
 } from "@tanstack/react-table";
 
 import {
-  ArrowUpDown,
-  ChevronDown,
-  ChevronDownIcon,
-  MoreHorizontal,
-} from "lucide-react";
-
-import {
   Table,
   TableBody,
   TableCell,
@@ -28,97 +21,139 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { Icon } from "@iconify/react";
-
-const data = [
-  {
-    id: 1,
-    eventname: "John Doe",
-    date: "01/04/2025",
-    venue: "Student",
-    description: "Lorem ipsum dolor sit amet consectetur.",
-  },
-  {
-    id: 2,
-    eventname: "John Doe",
-    date: "01/04/2025",
-    venue: "Student",
-    description: "Lorem ipsum dolor sit amet consectetur.",
-  },
-];
-
-export const columns = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "eventname",
-    header: "Event Name",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("eventname")}</div>
-    ),
-  },
-  {
-    accessorKey: "date",
-    header: "Date",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("date")}</div>,
-  },
-  {
-    accessorKey: "venue",
-    header: "Venue",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("venue")}</div>
-    ),
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("description")}</div>
-    ),
-  },
-
-  {
-    id: "actions",
-    header: "Action",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const student = row.original;
-
-      return (
-        <div>
-          <button className="underline">Edit</button>
-          <button className="text-red-600 underline ml-2">Delete</button>{" "}
-        </div>
-      );
-    },
-  },
-];
+import AddEvent from "./addEventDialogue";
+import gettoken from "@/app/function/gettoken";
+import toast from "react-hot-toast";
 
 export function EventDataTable() {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [data, setData] = React.useState([]);
 
+  const url = process.env.NEXT_PUBLIC_URL;
+  React.useEffect(() => {
+    getEvent();
+  }, []);
+
+  const getEvent = async () => {
+    try {
+      const token = await gettoken();
+      console.log(token);
+
+      const response = await fetch(`${url}/api/events`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token in headers
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log(data);
+        setData(data);
+      } else {
+        toast.error(data?.message || "failed.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An error occurred. Please try again.");
+    }
+  };
+  const handleDelete = async (id) => {
+    try {
+      const token = await gettoken();
+      console.log(token);
+      const response = await fetch(`${url}/api/events/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token in headers
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success(data?.message || "failed.");
+        getEvent();
+      } else {
+        toast.error(data?.message || "failed.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+    }
+  };
+  const columns = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "title",
+      header: "Event Name",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("title")}</div>
+      ),
+    },
+    {
+      accessorKey: "date",
+      header: "Date",
+      cell: ({ row }) => (
+        <div className="capitalize">
+          {new Date(row.getValue("date")).toISOString().split("T")[0]}
+        </div>
+      ),
+    },
+
+    {
+      accessorKey: "description",
+      header: "Description",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("description")}</div>
+      ),
+    },
+
+    {
+      id: "actions",
+      header: "Action",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const event = row.original;
+
+        return (
+          <div>
+            <button className="underline">Edit</button>
+            <button
+              onClick={() => handleDelete(event._id)}
+              className="text-red-600 underline ml-2"
+            >
+              Delete
+            </button>{" "}
+          </div>
+        );
+      },
+    },
+  ];
   const table = useReactTable({
     data,
     columns,
@@ -150,18 +185,16 @@ export function EventDataTable() {
           />
           <input
             type="text"
-            placeholder="Filter roll number..."
-            value={table.getColumn("eventname")?.getFilterValue() ?? ""}
+            placeholder="Search Event..."
+            value={table.getColumn("title")?.getFilterValue() ?? ""}
             onChange={(event) =>
-              table.getColumn("eventname")?.setFilterValue(event.target.value)
+              table.getColumn("title")?.setFilterValue(event.target.value)
             }
             className=" w-full outline-none"
           />
         </div>
-        <Button className="bg-custom-blue rounded-xl hover:bg-[#04061c]">
-          <Icon icon="basil:plus-outline" width="24" height="24" />
-          Add New
-        </Button>
+
+        <AddEvent getEvent={getEvent}/>
       </div>
       <div className="rounded-md border ">
         <Table>
