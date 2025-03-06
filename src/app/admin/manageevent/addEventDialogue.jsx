@@ -18,10 +18,11 @@ import gettoken from "@/app/function/gettoken";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-const AddEvent = ({ getEvent }) => {
+const AddEvent = ({ getEvent, id, title, description, date }) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
-  const router = useRouter();
+
   // Form validation schema
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("Title is required"),
@@ -34,12 +35,12 @@ const AddEvent = ({ getEvent }) => {
   // Function to handle form submission
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     setIsSubmitting(true);
-    const token = await gettoken();
 
     try {
-      // const { token } = await JSON.parse(storedData);
-      const response = await fetch(`${url}/api/events`, {
-        method: "POST",
+      const token = await gettoken();
+      const apiurl = id ? `${url}/api/events/${id}` : `${url}/api/events`;
+      const response = await fetch(apiurl, {
+        method: id ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -48,9 +49,12 @@ const AddEvent = ({ getEvent }) => {
       });
       const data = await response.json();
       if (response.ok) {
-        toast.success(data.message || "Event added successfully!");
+        toast.success(
+          data.message || `Event ${id ? "update" : "added"} successfully!`
+        );
         getEvent();
         resetForm();
+        setIsDialogOpen(false);
       } else {
         toast.error(data.message || "Something went wrong");
       }
@@ -63,12 +67,16 @@ const AddEvent = ({ getEvent }) => {
   };
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="bg-custom-blue rounded-xl hover:bg-[#04061c]">
-          <Icon icon="basil:plus-outline" width="24" height="24" />
-          Add New Event
-        </Button>
+        {id ? (
+          <button className="underline">Edit</button>
+        ) : (
+          <Button className="bg-custom-blue rounded-xl hover:bg-[#04061c]">
+            <Icon icon="basil:plus-outline" width="24" height="24" />
+            Add New Event
+          </Button>
+        )}
         {/* <Button variant="outline">Add New Event</Button> */}
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -80,11 +88,16 @@ const AddEvent = ({ getEvent }) => {
         </AlertDialogHeader>
 
         <Formik
-          initialValues={{ title: "", description: "", date: "" }}
+          enableReinitialize
+          initialValues={{
+            title: title || "",
+            description: description || "",
+            date: date || "",
+          }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, isValid }) => (
             <Form className="space-y-4">
               <div>
                 <Field
@@ -124,19 +137,22 @@ const AddEvent = ({ getEvent }) => {
                   className="text-red-500 text-sm mt-1"
                 />
               </div>
-
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction asChild>
-                  <button
-                    type="submit"
-                    className="bg-[#131A45] text-white py-2 px-4 rounded-xl font-semibold hover:bg-[#1a2154]"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Saving..." : "Add Event"}
-                  </button>
-                </AlertDialogAction>
-              </AlertDialogFooter>
+              <div className="flex justify-end gap-4 mt-4">
+                <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                  Cancel
+                </AlertDialogCancel>
+                <button
+                  type="submit"
+                  className="bg-[#131A45] text-white py-2 px-4 rounded-xl font-semibold hover:bg-[#1a2154]"
+                  disabled={isSubmitting || !isValid}
+                >
+                  {isSubmitting
+                    ? "Saving..."
+                    : id
+                    ? "Update Event"
+                    : "Add Event"}
+                </button>
+              </div>
             </Form>
           )}
         </Formik>

@@ -1,7 +1,10 @@
 "use client";
 import React from "react";
 import { Icon } from "@iconify/react";
-const UserCard = ({ name, batch, jobTitle, image }) => (
+import toast from "react-hot-toast";
+import gettoken from "@/app/function/gettoken";
+import Link from "next/link";
+const UserCard = ({ name, id, batch, jobTitle, image }) => (
   <div className="bg-white shadow-md rounded-xl p-2 flex items-start space-x-4">
     <img
       src={image || "/memberpage/member.png"}
@@ -13,21 +16,50 @@ const UserCard = ({ name, batch, jobTitle, image }) => (
       <p className="text-sm text-[#797979]">{batch}</p>
       <p className="text-sm text-[#797979]">{jobTitle}</p>
     </div>
-    <button className="flex items-center gap-2 text-[#3271FF] font-medium hover:text-[#3570f9]">
+    <Link
+      href={`/alumni/chat/${id}`}
+      className="flex items-center gap-2 text-[#3271FF] font-medium hover:text-[#3570f9]"
+    >
       <Icon icon="tabler:send" width="24" height="24" /> Message
-    </button>
+    </Link>
   </div>
 );
 
 const Allmembers = () => {
   const [activeTab, setActiveTab] = React.useState("faculties");
+  const [memberdata, setMemberData] = React.useState([]);
 
-  const users = Array(6).fill({
-    name: "John Doe",
-    batch: "Batch of 2010",
-    jobTitle: "Software Engineer",
-    image: "",
-  });
+  const url = process.env.NEXT_PUBLIC_URL;
+  React.useEffect(() => {
+    getUser();
+  }, []);
+
+  const getUser = async () => {
+    try {
+      const token = await gettoken();
+      console.log(token);
+
+      const response = await fetch(`${url}/api/members/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token in headers
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log(data);
+        setMemberData(data);
+      } else {
+        toast.error(data?.message || "failed.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An error occurred. Please try again.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 pt-8 px-4 sm:p-8">
@@ -70,17 +102,18 @@ const Allmembers = () => {
         </div>
 
         {/* Results Count */}
-        <p className="mb-4 mt-6 text-gray-700">120 Results</p>
+        <p className="mb-4 mt-6 text-gray-700">{memberdata?.length} Results</p>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {users.map((user, index) => (
+          {memberdata.map((user, index) => (
             <UserCard
               key={index}
+              id={user._id}
               name={user.name}
-              batch={user.batch}
-              jobTitle={user.jobTitle}
-              image={user.image}
+              // batch={user.batch}
+              jobTitle={user.role}
+              // image={user.image}
             />
           ))}
         </div>

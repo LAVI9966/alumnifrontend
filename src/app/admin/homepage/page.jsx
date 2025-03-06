@@ -7,9 +7,9 @@ const page = () => {
       <h2 className="text-custom-blue font-semibold text-2xl">Overview</h2>
       <div className="flex gap-3 w-full mt-4 ">
         <Homepagecard title="Total Alumnis" desc="324" btnlink="#" />
-        <Homepagecard title="Total Alumnis" desc="324" btnlink="#" />
-        <Homepagecard title="Total Alumnis" desc="324" btnlink="#" />
-        <Homepagecard title="Total Alumnis" desc="324" btnlink="#" />
+        <Homepagecard title="Total Users" desc="900" btnlink="#" />
+        <Homepagecard title="Total Events" desc="10" btnlink="#" />
+        <Homepagecard title="New Users" desc="204" btnlink="#" />
       </div>
     </div>
   );

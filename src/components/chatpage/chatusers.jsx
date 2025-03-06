@@ -1,6 +1,8 @@
+import gettoken from "@/app/function/gettoken";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import React from "react";
+import toast from "react-hot-toast";
 
 const users = [
   {
@@ -125,6 +127,39 @@ const users = [
 ];
 
 const Chatusers = () => {
+  const [memberdata, setMemberData] = React.useState([]);
+
+  const url = process.env.NEXT_PUBLIC_URL;
+  React.useEffect(() => {
+    getUser();
+  }, []);
+
+  const getUser = async () => {
+    try {
+      const token = await gettoken();
+      console.log(token);
+
+      const response = await fetch(`${url}/api/members/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token in headers
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log(data);
+        setMemberData(data);
+      } else {
+        toast.error(data?.message || "failed.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An error occurred. Please try again.");
+    }
+  };
   return (
     <div className=" w-full bg-white  shadow-md overflow-scroll max-h-[600px] ">
       {/* Search Bar */}
@@ -145,16 +180,16 @@ const Chatusers = () => {
       </div>
       {/* Chat List */}
       <ul className="divide-y divide-gray-200">
-        {users.map((user, index) => (
+        {memberdata?.map((user, index) => (
           <Link
-            href="/alumni/chat/2"
-            key={index}
+            href={`/alumni/chat/${user._id}`}
+            key={user._id}
             className={`flex items-center hover:bg-gray-200 cursor-pointer p-4 space-x-3 ${
               user.active ? "bg-gray-200" : "bg-white"
             }`}
           >
             <img
-              src={user.image}
+              src="https://randomuser.me/api/portraits/men/1.jpg"
               alt={user.name}
               className="w-12 h-12 rounded-full object-cover"
             />

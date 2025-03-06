@@ -14,8 +14,6 @@ const EventCards = () => {
   const getEvent = async () => {
     try {
       const token = await gettoken();
-      console.log(token);
-
       const response = await fetch(`${url}/api/events`, {
         method: "GET",
         headers: {

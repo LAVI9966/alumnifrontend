@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import gettoken from "@/app/function/gettoken";
 
 const ProfilePage = () => {
   const [initialValues, setinitialValues] = useState({
@@ -17,17 +18,9 @@ const ProfilePage = () => {
   const router = useRouter();
   const url = process.env.NEXT_PUBLIC_URL;
   useEffect(() => {
-    console.log("ProfilePage");
     const getProfile = async () => {
-      const storedData = localStorage.getItem("alumni");
-      if (!storedData) {
-        router.push("/signup");
-        return;
-      }
-
       try {
-        const { token } = JSON.parse(storedData);
-      
+        const token = await gettoken();
         const response = await fetch(`${url}/api/profile`, {
           method: "GET",
           headers: {

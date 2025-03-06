@@ -1,8 +1,8 @@
 const gettoken = async () => {
     const storedData = localStorage.getItem("alumni");
     if (!storedData) {
-        router.push("/signup");
-        return;
+        window.location.href = "/login"; // Redirect to login page
+        return null;
     }
     const { token } = await JSON.parse(storedData);
     return token;

@@ -11,13 +11,6 @@ import {
 } from "@tanstack/react-table";
 
 import {
-  ArrowUpDown,
-  ChevronDown,
-  ChevronDownIcon,
-  MoreHorizontal,
-} from "lucide-react";
-
-import {
   Table,
   TableBody,
   TableCell,
@@ -28,103 +21,160 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { Icon } from "@iconify/react";
-
-const data = [
-  {
-    id: 1,
-    name: "John Doe",
-    collegeNo: "12345",
-    role: "Student",
-    mobile: "9876543210",
-    email: "john@example.com",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    collegeNo: "67890",
-    role: "Admin",
-    mobile: "9876543211",
-    email: "jane@example.com",
-  },
-];
-
-export const columns = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-  },
-  {
-    accessorKey: "collegeNo",
-    header: "college No",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("collegeNo")}</div>
-    ),
-  },
-  {
-    accessorKey: "role",
-    header: "Role",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("role")}</div>,
-  },
-  {
-    accessorKey: "mobile",
-    header: "Mobile",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("mobile")}</div>
-    ),
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("email")}</div>
-    ),
-  },
-  {
-    id: "actions",
-    header: "Action",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const student = row.original;
-
-      return (
-        <div>
-          <button className="underline">Edit</button>
-          <button className="text-red-600 underline ml-2">Delete</button>{" "}
-        </div>
-      );
-    },
-  },
-];
+import AddUser from "./addUserDialogue";
+import gettoken from "@/app/function/gettoken";
+import toast from "react-hot-toast";
 
 export function UserDataTable() {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [data, setData] = React.useState([]);
 
+  const url = process.env.NEXT_PUBLIC_URL;
+  React.useEffect(() => {
+    getUser();
+  }, []);
+
+  const getUser = async () => {
+    try {
+      const token = await gettoken();
+      console.log(token);
+
+      const response = await fetch(`${url}/api/members/admin`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token in headers
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log(data);
+        setData(data);
+      } else {
+        toast.error(data?.message || "failed.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An error occurred. Please try again.");
+    }
+  };
+  const handleDelete = async (id) => {
+    try {
+      const token = await gettoken();
+      console.log(token);
+      const response = await fetch(`${url}/api/members/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token in headers
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success(data?.message || "successfully deleted.");
+        getUser();
+      } else {
+        toast.error(data?.message || "failed.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+    }
+  };
+  const columns = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "name",
+      header: "Name",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("name")}</div>
+      ),
+    },
+
+    {
+      accessorKey: "collegeNo",
+      header: "College No.",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("collegeNo")}</div>
+      ),
+    },
+
+    {
+      accessorKey: "role",
+      header: "Role",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("role")}</div>
+      ),
+    },
+
+    {
+      accessorKey: "mobileNumber",
+      header: "Mobile",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("mobileNumber")}</div>
+      ),
+    },
+    {
+      accessorKey: "email",
+      header: "Email",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("email")}</div>
+      ),
+    },
+    {
+      id: "actions",
+      header: "Action",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const event = row.original;
+
+        return (
+          <div>
+            <AddUser
+              collegeNo={event.collegeNo}
+              name={event.name}
+              email={event.email}
+              mobileNumber={event.mobileNumber}
+              getUser={getUser}
+              role={event.role}
+              id={event._id}
+            />
+            <button
+              onClick={() => handleDelete(event._id)}
+              className="text-red-600 underline ml-2"
+            >
+              Delete
+            </button>{" "}
+          </div>
+        );
+      },
+    },
+  ];
   const table = useReactTable({
     data,
     columns,
@@ -156,18 +206,16 @@ export function UserDataTable() {
           />
           <input
             type="text"
-            placeholder="Filter roll number..."
-            value={table.getColumn("collegeNo")?.getFilterValue() ?? ""}
+            placeholder="Search Event..."
+            value={table.getColumn("name")?.getFilterValue() ?? ""}
             onChange={(event) =>
-              table.getColumn("collegeNo")?.setFilterValue(event.target.value)
+              table.getColumn("name")?.setFilterValue(event.target.value)
             }
             className=" w-full outline-none"
           />
         </div>
-        <Button className="bg-custom-blue rounded-xl hover:bg-[#04061c]">
-          <Icon icon="basil:plus-outline" width="24" height="24" />
-          Add New
-        </Button>
+
+        <AddUser getUser={getUser} />
       </div>
       <div className="rounded-md border ">
         <Table>

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 
-const Eventcard = () => {
+const Eventcard = ({ date, title, description }) => {
   return (
     <div className="flex w-[317px] lg:w-full  bg-white shadow-md rounded-lg overflow-hidden p-3">
       <Image
@@ -14,11 +14,14 @@ const Eventcard = () => {
       <div className="flex ml-3 flex-col justify-between">
         <div className="flex flex-col gap-1">
           <p className="text-sm text-gray-400">Event</p>
-          <h3 className="font-bold text-sm">Alumni Meet</h3>
+          <h3 className="font-bold text-sm">{title}</h3>
         </div>
         <div className="flex flex-col gap-1">
-          <p className="text-sm text-gray-700">12 Feb, 25</p>
-          <p className="text-sm text-gray-700">Dummy Location</p>
+          <p className="text-sm text-gray-700">
+            {" "}
+            {new Date(date).toISOString().split("T")[0]}
+          </p>
+          {/* <p className="text-sm text-gray-700">Dummy Location</p> */}
         </div>
       </div>
     </div>

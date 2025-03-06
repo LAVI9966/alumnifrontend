@@ -76,7 +76,7 @@ export function EventDataTable() {
       });
       const data = await response.json();
       if (response.ok) {
-        toast.success(data?.message || "failed.");
+        toast.success(data?.message || "successfully deleted.");
         getEvent();
       } else {
         toast.error(data?.message || "failed.");
@@ -142,7 +142,13 @@ export function EventDataTable() {
 
         return (
           <div>
-            <button className="underline">Edit</button>
+            <AddEvent
+              getEvent={getEvent}
+              id={event._id}
+              title={event.title}
+              description={event.description}
+              date={event.date}
+            />
             <button
               onClick={() => handleDelete(event._id)}
               className="text-red-600 underline ml-2"
@@ -194,7 +200,7 @@ export function EventDataTable() {
           />
         </div>
 
-        <AddEvent getEvent={getEvent}/>
+        <AddEvent getEvent={getEvent} />
       </div>
       <div className="rounded-md border ">
         <Table>

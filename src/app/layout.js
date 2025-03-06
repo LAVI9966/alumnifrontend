@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
           type="image/png"
         />
       </Head>
-      <body
+      <body cz-shortcut-listen="true"
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
