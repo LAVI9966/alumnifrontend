@@ -40,14 +40,14 @@ const EventCards = () => {
       <h2 className="text-2xl font-bold mb-6">Upcoming Events</h2>
       <div className="flex w-full flex-wrap justify-start gap-6 mb-10">
         {allevents?.length > 0 ? (
-          allevents.map((event) => (
+          allevents?.map((event) => (
             <div
-              key={event.id}
+              key={event._id}
               className="bg-white p-4 max-w-[380px] shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
             >
               <img
                 src="/events/events.jfif"
-                alt={event.title}
+                alt={event?.title}
                 className="w-full h-48 object-cover"
               />
               <div className="pt-2">

@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Icon } from "@iconify/react";
-import {
+import DefaultEditor, {
   BtnBold,
   BtnItalic,
   createButton,
@@ -75,8 +75,8 @@ const Createpostdialogue = () => {
               <Icon
                 className=" text-gray-400 "
                 icon="system-uicons:cross"
-                width="21"
-                height="21"
+                width="30"
+                height="30"
               />
             </AlertDialogCancel>
           </div>
@@ -89,7 +89,7 @@ const Createpostdialogue = () => {
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
             /> */}
-            <EditorProvider>
+            {/* <EditorProvider>
               <Toolbar>
                 <BtnBold />
                 <BtnItalic />
@@ -99,19 +99,29 @@ const Createpostdialogue = () => {
                 <BtnAlignCenter />
                 <BtnOrderedList />
                 <BtnUnorderedList />
-              </Toolbar>
-              <Editor
-                value={caption}
-                onChange={(e) => setCaption(e.target.value)}
-                style={{ height: "50px", overflowY: "auto" }}
-              />
-            </EditorProvider>
+              </Toolbar> */}
+            <DefaultEditor
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+              style={{ height: "50px", overflowY: "auto" }}
+            />
+            {/* </EditorProvider> */}
           </div>
         </AlertDialogTitle>
 
         <div className=" bg-white  overflow-hidden">
           {/* Image Preview */}
-          <div className="h-56 bg-gray-300 flex items-center justify-center">
+          <div className="h-56 bg-gray-300 relative flex items-center justify-center">
+            {image && (
+              <Icon
+                onClick={() => setImage(null)}
+                className="cursor-pointer text-gray-800 absolute top-2 right-2 bg-white rounded-full p-2 shadow-sm border border-gray-300"
+                icon="material-symbols:delete-outline-rounded"
+                width="40"
+                height="40"
+              />
+            )}
+
             {image ? (
               <img
                 src={image}

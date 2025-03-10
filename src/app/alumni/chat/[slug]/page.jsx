@@ -1,9 +1,11 @@
 "use client";
+import gettoken from "@/app/function/gettoken";
 import Chatusers from "@/components/chatpage/chatusers";
 import { Icon } from "@iconify/react";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 
 const Chatmain = () => {
   const [messages, setMessages] = React.useState([
@@ -18,6 +20,37 @@ const Chatmain = () => {
     setMessages([...messages, { text: input, sender: "You" }]);
     setInput("");
   };
+  useEffect(() => {
+    const getChat = async () => {
+      try {
+        console.log("hi gaids")
+        const token = await gettoken();
+        console.log("hi gaids")
+        const apiurl =
+          "http://localhost:8000/chat/messages/67c847c73fcad4430caff0a1/67c9682cd02ab83f78b8a591";
+        const response = await fetch(apiurl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        
+        });
+        console.log("hi gaidssss",)
+        const data = await response.json();
+        console.log(data);
+        if (response.ok) {
+          console.log(data);
+        } else {
+          toast.error(data.message || "Something went wrong");
+        }
+      } catch (error) {
+        console.log(error)
+        toast.error("Network error, please try again later.");
+      }
+    };
+    getChat();
+  },[]);
 
   return (
     <div className="min-h-screen max-w-[1200px] w-full mx-auto flex gap-3  bg-white pt-8 ">

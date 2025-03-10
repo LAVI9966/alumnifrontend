@@ -1,7 +1,7 @@
 import gettoken from "@/app/function/gettoken";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 import toast from "react-hot-toast";
 
 const users = [
@@ -127,8 +127,8 @@ const users = [
 ];
 
 const Chatusers = () => {
-  const [memberdata, setMemberData] = React.useState([]);
-
+  const [memberdata, setmemberdata] = React.useState([]);
+  const [searchTerm, setSearchTerm] = React.useState("");
   const url = process.env.NEXT_PUBLIC_URL;
   React.useEffect(() => {
     getUser();
@@ -151,7 +151,7 @@ const Chatusers = () => {
 
       if (response.ok) {
         console.log(data);
-        setMemberData(data);
+        setmemberdata(data);
       } else {
         toast.error(data?.message || "failed.");
       }
@@ -160,11 +160,18 @@ const Chatusers = () => {
       toast.error("An error occurred. Please try again.");
     }
   };
+  const filteredMembers = useMemo(() => {
+    if (!searchTerm.trim()) return memberdata;
+    return memberdata.filter((member) =>
+      member.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm, memberdata]);
+
   return (
-    <div className=" w-full bg-white  shadow-md overflow-scroll max-h-[600px] ">
+    <div className=" w-full bg-white  shadow-md overflow-scroll max-h-[600px] scrollbar-hide ">
       {/* Search Bar */}
       <div className="p-2">
-        <div className="p-2 bg-gray-100 flex items-center space-x-2 rounded-xl ">
+        <div className="p-2 bg-gray-100 flex items-center space-x-2 rounded-xl">
           <Icon
             className="text-gray-500"
             icon="mynaui:search"
@@ -175,12 +182,14 @@ const Chatusers = () => {
             type="text"
             placeholder="Search"
             className="bg-gray-100 w-full outline-none"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
       {/* Chat List */}
       <ul className="divide-y divide-gray-200">
-        {memberdata?.map((user, index) => (
+        {filteredMembers?.map((user, index) => (
           <Link
             href={`/alumni/chat/${user._id}`}
             key={user._id}

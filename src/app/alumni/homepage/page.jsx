@@ -37,7 +37,7 @@ const page = () => {
 
       <div className="flex flex-col md:flex-row-reverse gap-8 w-full md:w-[69%]">
         {/* Create Post Button */}
-        <div className="w-full md:w-[18%]">
+        <div className="mt-3 md:mt-0 w-full md:w-[18%]">
           <Createpostdialogue/>
          
         </div>

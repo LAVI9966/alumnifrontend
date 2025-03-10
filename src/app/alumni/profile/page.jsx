@@ -15,6 +15,7 @@ const ProfilePage = () => {
     mobileNumber: "",
     name: "",
   });
+  const [image, setImage] = useState(null);
   const router = useRouter();
   const url = process.env.NEXT_PUBLIC_URL;
   useEffect(() => {
@@ -61,14 +62,11 @@ const ProfilePage = () => {
 
   // Form submit handler
   const handleSubmit = async (values, { setSubmitting }) => {
-    const storedData = localStorage.getItem("alumni");
-    if (!storedData) {
-      router.push("/signup");
-      return;
-    }
+ 
 
     try {
-      const { token } = JSON.parse(storedData);
+      const token = await gettoken();
+      console.log(token);
       const response = await fetch(`${url}/api/profile`, {
         method: "POST",
         headers: {
@@ -90,18 +88,101 @@ const ProfilePage = () => {
       setSubmitting(false);
     }
   };
+  const handleImageUpload = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSaveProfilepic = async () => {
+    if (!image) {
+      toast.error("Please select an image first.");
+      return;
+
+    }
+    const formData = new FormData();
+    formData.append("profilePicture", image);
+    console.log(formData)
+    try {
+      console.log("hi gaurav")
+      const token = await gettoken();
+      const response = await fetch(
+        `${url}/api/profile/upload-profile-picture`,
+        {
+          method: "POST",
+          headers: {
+            //  "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Add token in headers
+          },
+          formData
+          ,
+        }
+      );
+      console.log(response)
+      console.log("hi gaurav 33333333333")
+      if (response.ok) {
+        return;
+        router.push("/alumni/homepage");
+      }
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 pt-2 px-4 sm:p-4">
       <div className="w-full bg-white py-6 lg:p-8 rounded-lg mx-auto my-2 lg:my-8 max-w-[800px]">
         <div>
-          <div className="m-auto relative w-40 h-40">
+          {/* <div className="m-auto relative w-40 h-40">
             <div className="w-full h-full rounded-full border-2 border-[#C7A006] flex items-center justify-center">
               <Icon icon="mynaui:user-solid" width="80%" height="80%" />
             </div>
             <div className="absolute bottom-2 right-2 bg-[#C7A006] p-2 rounded-full cursor-pointer">
               <Icon icon="typcn:camera" width="24" height="24" />
             </div>
+          </div> */}
+          {/* Profile Image Upload */}
+          <div className="relative m-auto w-40 h-40">
+            <label className="w-full h-full rounded-full border-2 border-[#C7A006] flex items-center justify-center cursor-pointer overflow-hidden">
+              {image ? (
+                <img
+                  src={image}
+                  alt="Profile"
+                  className="w-full h-full object-cover rounded-full"
+                />
+              ) : (
+                <Icon icon="mynaui:user-solid" width="80%" height="80%" />
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+            </label>
+            <div className="absolute bottom-2 right-2 bg-[#C7A006] p-2 rounded-full cursor-pointer">
+              {image ? (
+                <Icon
+                  onClick={() => setImage(null)}
+                  icon="material-symbols:delete-outline"
+                  width="24"
+                  height="24"
+                />
+              ) : (
+                <Icon icon="typcn:camera" width="24" height="24" />
+              )}
+            </div>
+          </div>
+          <div className="flex justify-center mt-3">
+            {" "}
+            <button onClick={handleSaveProfilepic} className="w-[70px] m-auto bg-[#131A45] text-white py-2 rounded-xl font-semibold hover:bg-[#1a2154]">
+              Save
+            </button>
           </div>
         </div>
 

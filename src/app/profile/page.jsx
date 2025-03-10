@@ -34,7 +34,12 @@ export default function ProfilePictureUpload() {
   };
 
   const handleContinue = async () => {
-    if (!image) toast.warning("Please select an image first.");
+    if (!image) {
+      toast.error("Please select an image first.");
+      return;
+
+    }
+  
     const storedData = localStorage.getItem("alumni");
     if (!storedData) {
       router.push("/signup");
