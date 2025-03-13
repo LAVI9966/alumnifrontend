@@ -40,7 +40,7 @@ export function UserDataTable() {
   const getUser = async () => {
     try {
       const token = await gettoken();
-      console.log(token);
+    
 
       const response = await fetch(`${url}/api/members/admin`, {
         method: "GET",
@@ -53,7 +53,7 @@ export function UserDataTable() {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data);
+      
         setData(data);
       } else {
         toast.error(data?.message || "failed.");
@@ -66,7 +66,7 @@ export function UserDataTable() {
   const handleDelete = async (id) => {
     try {
       const token = await gettoken();
-      console.log(token);
+    
       const response = await fetch(`${url}/api/members/${id}`, {
         method: "DELETE",
         headers: {

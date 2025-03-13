@@ -37,7 +37,6 @@ const Allmembers = () => {
   const getUser = async () => {
     try {
       const token = await gettoken();
-      console.log(token);
 
       const response = await fetch(`${url}/api/members/`, {
         method: "GET",
@@ -50,7 +49,6 @@ const Allmembers = () => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data);
         setMemberData(data);
       } else {
         toast.error(data?.message || "failed.");

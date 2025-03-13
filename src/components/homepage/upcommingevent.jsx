@@ -25,7 +25,7 @@ const Upcommingevent = () => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data);
+     
         setallEvents(data);
       } else {
         toast.error(data?.message || "failed.");

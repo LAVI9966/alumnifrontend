@@ -14,36 +14,44 @@ const ProfilePage = () => {
     email: "",
     mobileNumber: "",
     name: "",
+    profilePicture: "",
   });
   const [image, setImage] = useState(null);
+  const [uploadimage, setUploadimage] = useState(null);
   const router = useRouter();
   const url = process.env.NEXT_PUBLIC_URL;
   useEffect(() => {
-    const getProfile = async () => {
-      try {
-        const token = await gettoken();
-        const response = await fetch(`${url}/api/profile`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Add token in headers
-          },
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          setinitialValues(data.user);
-        } else {
-          toast.error(data?.message || "failed.");
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error("An error occurred. Please try again.");
-      }
-    };
     getProfile();
   }, []);
+  const getProfile = async () => {
+    try {
+      const token = await gettoken();
+      const response = await fetch(`${url}/api/profile`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token in headers
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setinitialValues(data.user);
+        const profilePicUrl = data.user.profilePicture
+          ? `${url}/uploads/${data.user.profilePicture.split("\\").pop()}`
+          : "/default-profile.png"; // Fallback image
+
+        setImage(profilePicUrl);
+        // setImage(data.user.profilePicture);
+      } else {
+        toast.error(data?.message || "failed.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An error occurred. Please try again.");
+    }
+  };
   // Logout function: remove token and redirect to login
   const handleLogout = () => {
     localStorage.removeItem("alumni");
@@ -62,13 +70,13 @@ const ProfilePage = () => {
 
   // Form submit handler
   const handleSubmit = async (values, { setSubmitting }) => {
- 
-
+    delete values.profilePicture;
+    // Remove profilePicture
     try {
       const token = await gettoken();
-      console.log(token);
-      const response = await fetch(`${url}/api/profile`, {
-        method: "POST",
+
+      const response = await fetch(`${url}/api/profile/update`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -78,19 +86,21 @@ const ProfilePage = () => {
 
       const data = await response.json();
       if (response.ok) {
-        alert("Profile updated successfully!");
+        toast.success("Profile updated successfully!");
+        getProfile();
       } else {
-        alert(data.message || "Something went wrong");
+        toast.error(data.message || "Something went wrong");
       }
     } catch (error) {
-      alert("Network error, please try again later.");
-    } finally {
-      setSubmitting(false);
+      console.log(error);
+      toast.error("Network error, please try again later.");
     }
   };
   const handleImageUpload = (event) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
+      setUploadimage(file);
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setImage(reader.result);
@@ -100,34 +110,29 @@ const ProfilePage = () => {
   };
 
   const handleSaveProfilepic = async () => {
-    if (!image) {
+    if (!uploadimage) {
       toast.error("Please select an image first.");
       return;
-
     }
     const formData = new FormData();
-    formData.append("profilePicture", image);
-    console.log(formData)
+    formData.append("profilePicture", uploadimage);
+
     try {
-      console.log("hi gaurav")
       const token = await gettoken();
       const response = await fetch(
         `${url}/api/profile/upload-profile-picture`,
         {
           method: "POST",
           headers: {
-            //  "Content-Type": "application/json",
             Authorization: `Bearer ${token}`, // Add token in headers
           },
-          formData
-          ,
+          body: formData,
         }
       );
-      console.log(response)
-      console.log("hi gaurav 33333333333")
+
       if (response.ok) {
+        toast.success("successfully uploaded");
         return;
-        router.push("/alumni/homepage");
       }
     } catch (error) {
       console.error("Error uploading profile picture:", error);
@@ -138,14 +143,6 @@ const ProfilePage = () => {
     <div className="min-h-screen bg-gray-100 pt-2 px-4 sm:p-4">
       <div className="w-full bg-white py-6 lg:p-8 rounded-lg mx-auto my-2 lg:my-8 max-w-[800px]">
         <div>
-          {/* <div className="m-auto relative w-40 h-40">
-            <div className="w-full h-full rounded-full border-2 border-[#C7A006] flex items-center justify-center">
-              <Icon icon="mynaui:user-solid" width="80%" height="80%" />
-            </div>
-            <div className="absolute bottom-2 right-2 bg-[#C7A006] p-2 rounded-full cursor-pointer">
-              <Icon icon="typcn:camera" width="24" height="24" />
-            </div>
-          </div> */}
           {/* Profile Image Upload */}
           <div className="relative m-auto w-40 h-40">
             <label className="w-full h-full rounded-full border-2 border-[#C7A006] flex items-center justify-center cursor-pointer overflow-hidden">
@@ -168,7 +165,10 @@ const ProfilePage = () => {
             <div className="absolute bottom-2 right-2 bg-[#C7A006] p-2 rounded-full cursor-pointer">
               {image ? (
                 <Icon
-                  onClick={() => setImage(null)}
+                  onClick={() => {
+                    setImage(null);
+                    setUploadimage(null);
+                  }}
                   icon="material-symbols:delete-outline"
                   width="24"
                   height="24"
@@ -180,7 +180,10 @@ const ProfilePage = () => {
           </div>
           <div className="flex justify-center mt-3">
             {" "}
-            <button onClick={handleSaveProfilepic} className="w-[70px] m-auto bg-[#131A45] text-white py-2 rounded-xl font-semibold hover:bg-[#1a2154]">
+            <button
+              onClick={handleSaveProfilepic}
+              className="w-[70px] m-auto bg-[#131A45] text-white py-2 rounded-xl font-semibold hover:bg-[#1a2154]"
+            >
               Save
             </button>
           </div>
@@ -201,6 +204,7 @@ const ProfilePage = () => {
                     name="collegeNo"
                     placeholder="College No. eg. 1407PS0262"
                     className="custom-input w-full"
+                    disabled
                   />
                   <ErrorMessage
                     name="collegeNo"
@@ -230,6 +234,7 @@ const ProfilePage = () => {
                     name="email"
                     placeholder="john@example.com"
                     className="custom-input w-full"
+                    disabled
                   />
                   <ErrorMessage
                     name="email"

@@ -23,9 +23,9 @@ const Chatmain = () => {
   useEffect(() => {
     const getChat = async () => {
       try {
-        console.log("hi gaids")
+      
         const token = await gettoken();
-        console.log("hi gaids")
+       
         const apiurl =
           "http://localhost:8000/chat/messages/67c847c73fcad4430caff0a1/67c9682cd02ab83f78b8a591";
         const response = await fetch(apiurl, {
@@ -36,9 +36,9 @@ const Chatmain = () => {
           },
         
         });
-        console.log("hi gaidssss",)
+      
         const data = await response.json();
-        console.log(data);
+      
         if (response.ok) {
           console.log(data);
         } else {
@@ -49,7 +49,7 @@ const Chatmain = () => {
         toast.error("Network error, please try again later.");
       }
     };
-    getChat();
+    // getChat();
   },[]);
 
   return (

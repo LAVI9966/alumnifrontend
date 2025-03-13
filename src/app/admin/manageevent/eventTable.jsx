@@ -40,7 +40,7 @@ export function EventDataTable() {
   const getEvent = async () => {
     try {
       const token = await gettoken();
-      console.log(token);
+     
 
       const response = await fetch(`${url}/api/events`, {
         method: "GET",
@@ -53,20 +53,20 @@ export function EventDataTable() {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data);
+    
         setData(data);
       } else {
         toast.error(data?.message || "failed.");
       }
     } catch (error) {
-      console.log(error);
-      toast.error("An error occurred. Please try again.");
+    
+      toast.error(error || "An error occurred. Please try again.");
     }
   };
   const handleDelete = async (id) => {
     try {
       const token = await gettoken();
-      console.log(token);
+
       const response = await fetch(`${url}/api/events/${id}`, {
         method: "DELETE",
         headers: {

@@ -12,7 +12,8 @@ const Logo = ({ textwhite, isfooter }) => {
         <Image
           src="/logoimage.png"
           alt="Rimcollian Logo"
-          fill
+          width="100"
+          height="100"
           className="rounded-full object-contain"
         />
       </div>

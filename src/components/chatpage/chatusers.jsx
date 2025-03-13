@@ -137,7 +137,7 @@ const Chatusers = () => {
   const getUser = async () => {
     try {
       const token = await gettoken();
-      console.log(token);
+    
 
       const response = await fetch(`${url}/api/members/`, {
         method: "GET",
@@ -150,7 +150,7 @@ const Chatusers = () => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data);
+   
         setmemberdata(data);
       } else {
         toast.error(data?.message || "failed.");

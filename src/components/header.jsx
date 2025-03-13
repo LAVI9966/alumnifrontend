@@ -1,11 +1,23 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Logo from "./logo";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const router = useRouter();
+  const pathname = usePathname(); // Get current route
+
+  // Close menu whenever the route changes
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+  const handleLogout = () => {
+    localStorage.removeItem("alumni");
+    router.push("/login");
+  };
 
   return (
     <header className="bg-custom-blue text-white p-4 flex justify-between items-center relative">
@@ -40,13 +52,19 @@ const Header = () => {
 
       {/* Icons */}
       <div className=" gap-3  hidden md:flex">
-        <Link  href="/alumni/chat" className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg">
+        <Link
+          href="/alumni/chat"
+          className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg"
+        >
           <Icon icon="iconoir:message" width="24" height="24" />
         </Link>
         <div className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg">
           <Icon icon="line-md:bell" width="24" height="24" />
         </div>
-        <Link href="/alumni/profile" className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg">
+        <Link
+          href="/alumni/profile"
+          className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg"
+        >
           <Icon icon="lucide:user" width="24" height="24" />
         </Link>
       </div>
@@ -92,18 +110,18 @@ const Header = () => {
             </Link>
           </li>
           <li className="flex justify-end ">
-            <Link
-              href="/login"
+            <div
+              onClick={handleLogout}
               className="bg-[#FFFFFF]  flex items-center text-center hover:bg-gray-200 text-[#131A45] text-sm font-bold py-3 px-10 w-[150px] rounded-lg"
             >
-              Login
+              Logout
               <Icon
                 className="ml-2"
                 icon="material-symbols-light:logout"
                 width="20"
                 height="20"
               />
-            </Link>
+            </div>
           </li>
         </ul>
       </nav>

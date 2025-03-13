@@ -1,15 +1,58 @@
+"use client";
+import gettoken from "@/app/function/gettoken";
 import Homepagecard from "@/components/admin/homepagecard";
 import React from "react";
 
 const page = () => {
+  const [data, setData] = React.useState();
+  const url = process.env.NEXT_PUBLIC_URL;
+  React.useEffect(() => {
+    getstats();
+  }, []);
+
+  const getstats = async () => {
+    try {
+      const token = await gettoken();
+  
+
+      const response = await fetch(`${url}/api/stats/users-stats`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token in headers
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+      
+        setData(data);
+      } else {
+        toast.error(data?.message || "failed.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An error occurred. Please try again.");
+    }
+  };
+
   return (
     <div className="mx-6 ">
       <h2 className="text-custom-blue font-semibold text-2xl">Overview</h2>
       <div className="flex gap-3 w-full mt-4 ">
-        <Homepagecard title="Total Alumnis" desc="324" btnlink="#" />
-        <Homepagecard title="Total Users" desc="900" btnlink="#" />
-        <Homepagecard title="Total Events" desc="10" btnlink="#" />
-        <Homepagecard title="New Users" desc="204" btnlink="#" />
+        <Homepagecard
+          title="Total Alumnis"
+          desc={data?.totalAlumni}
+          btnlink="manageusers"
+        />
+        <Homepagecard title="Total Users" desc={data?.totalUsers} btnlink="manageusers" />
+        <Homepagecard
+          title="Total Events"
+          desc={data?.totalEvents}
+          btnlink="manageevent"
+        />
+        {/* <Homepagecard title="New Users" desc="204" btnlink="#" /> */}
       </div>
     </div>
   );

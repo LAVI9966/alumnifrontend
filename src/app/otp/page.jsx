@@ -12,7 +12,7 @@ export default function SignupPage() {
   const [otp, setOtp] = React.useState(["", "", "", ""]);
   const inputRefs = useRef([]);
   const url = process.env.NEXT_PUBLIC_URL;
-  console.log(url);
+ 
   const router = useRouter();
   const handleChange = (value, index) => {
     if (/^[0-9]$/.test(value) || value === "") {
@@ -60,7 +60,7 @@ export default function SignupPage() {
       });
 
       const data = await response.json();
-      console.log(data);
+     
       if (response.ok) {
         toast.success(data?.message || "OTP verified successfully!");
         //  router.push("/login");

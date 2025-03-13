@@ -34,9 +34,7 @@ const Layout = ({ children }) => {
           console.error("Invalid token:", data.message);
           localStorage.removeItem("alumni");
           router.push("/login");
-        } else {
-          console.log("Token is valid:", data);
-        }
+        } 
       } catch (error) {
         
         console.error("Error checking token:", error);

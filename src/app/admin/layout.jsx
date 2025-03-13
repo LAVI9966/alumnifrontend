@@ -48,7 +48,7 @@ const Layout = ({ children }) => {
           },
         });
         const data = await response.json();
-        console.log(data);
+        
         if (!response.ok) {
           console.error("Invalid token:", data.message);
           localStorage.removeItem("alumni");
@@ -58,7 +58,7 @@ const Layout = ({ children }) => {
             router.push("/login");
           }
           setLoading(false);
-          console.log("Token is valid:", data);
+        
         }
       } catch (error) {
         console.error("Error checking token:", error);

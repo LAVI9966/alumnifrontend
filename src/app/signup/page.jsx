@@ -77,7 +77,7 @@ export default function SignupPage() {
                   body: JSON.stringify(values),
                 });
                 const data = await response.json();
-                console.log(data);
+              
                 if (response.ok) {
                   toast.success(data.message || "Registration successful!");
 

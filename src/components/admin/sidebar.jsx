@@ -31,7 +31,7 @@ const AdminSidebar = () => {
         const data = await response.json();
 
         if (response.ok) {
-          console.log(data.user);
+        
           setUserData(data.user);
         } else {
           toast.error(data?.message || "failed.");
