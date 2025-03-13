@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import gettoken from "@/app/function/gettoken";
 
-export const EventCardSkeleton = () => {
+const EventCardSkeleton = () => {
   return (
     <div className="bg-white p-4 max-w-[380px] shadow-lg rounded-lg overflow-hidden animate-pulse">
       {/* Image Skeleton */}
