@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import toast from "react-hot-toast";
 import gettoken from "@/app/function/gettoken";
 import Link from "next/link";
-const UserCard = ({ name, id, batch, jobTitle, image }) => (
+const UserCard = ({ name, id, batch, jobTitle, image, userid }) => (
   <div className="bg-white shadow-md rounded-xl p-2 flex items-start space-x-4">
     <img
       src={image || "/memberpage/member.png"}
@@ -16,19 +16,27 @@ const UserCard = ({ name, id, batch, jobTitle, image }) => (
       <p className="text-sm text-[#797979]">{batch}</p>
       <p className="text-sm text-[#797979]">{jobTitle}</p>
     </div>
-    <Link
-      href={`/alumni/chat/${id}`}
-      className="flex items-center gap-2 text-[#3271FF] font-medium hover:text-[#3570f9]"
-    >
-      <Icon icon="tabler:send" width="24" height="24" /> Message
-    </Link>
+    {console.log(id, userid)}
+    {userid === id ? (
+      ""
+    ) : (
+      <Link
+        href={`/alumni/chat/${id}`}
+        className="flex items-center gap-2 text-[#3271FF] font-medium hover:text-[#3570f9]"
+      >
+        <Icon icon="tabler:send" width="24" height="24" /> Message
+      </Link>
+    )}
   </div>
 );
 
 const Allmembers = () => {
   const [activeTab, setActiveTab] = React.useState("faculties");
   const [memberdata, setMemberData] = React.useState([]);
+  const storedData = localStorage.getItem("alumni");
 
+  const { user } = JSON.parse(storedData);
+  console.log(user.id);
   const url = process.env.NEXT_PUBLIC_URL;
   React.useEffect(() => {
     getUser();
@@ -47,7 +55,7 @@ const Allmembers = () => {
       });
 
       const data = await response.json();
-
+      console.log(data);
       if (response.ok) {
         setMemberData(data);
       } else {
@@ -58,7 +66,7 @@ const Allmembers = () => {
       toast.error("An error occurred. Please try again.");
     }
   };
-
+  console.log(memberdata[0]?._id === user.id);
   return (
     <div className="min-h-screen bg-gray-100 pt-8 px-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
@@ -104,14 +112,15 @@ const Allmembers = () => {
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {memberdata.map((user, index) => (
+          {memberdata.map((val, index) => (
             <UserCard
               key={index}
-              id={user._id}
-              name={user.name}
-              // batch={user.batch}
-              jobTitle={user.role}
-              // image={user.image}
+              id={val._id}
+              name={val.name}
+              // batch={val.batch}
+              jobTitle={val.role}
+              // image={val.image}
+              userid={user?.id}
             />
           ))}
         </div>
