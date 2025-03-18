@@ -7,7 +7,8 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
 
-const socket = io("ws://localhost:8000"); // Adjust based on your backend
+// const socket = io("ws://localhost:8000"); 
+const socket = io(process.env.WEB_SOCKET_URL);
 
 const Chatmain = () => {
   const [messages, setMessages] = useState([]);
