@@ -8,7 +8,8 @@ import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
 
 // const socket = io("ws://localhost:8000");
-const socket = io(process.env.WEB_SOCKET_URL);
+const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL);
+
 
 const Chatmain = () => {
   const [messages, setMessages] = useState([]);
