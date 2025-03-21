@@ -16,7 +16,7 @@ const UserCard = ({ name, id, batch, jobTitle, image, userid }) => (
       <p className="text-sm text-[#797979]">{batch}</p>
       <p className="text-sm text-[#797979]">{jobTitle}</p>
     </div>
-    {console.log(id, userid)}
+
     {userid === id ? (
       ""
     ) : (
@@ -33,11 +33,23 @@ const UserCard = ({ name, id, batch, jobTitle, image, userid }) => (
 const Allmembers = () => {
   const [activeTab, setActiveTab] = React.useState("faculties");
   const [memberdata, setMemberData] = React.useState([]);
-  const storedData = localStorage.getItem("alumni");
   const [searchTerm, setSearchTerm] = React.useState("");
-  const { user } = JSON.parse(storedData);
-  console.log(user.id);
+  const [user, setUser] = React.useState(null);
+
   const url = process.env.NEXT_PUBLIC_URL;
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedData = localStorage.getItem("alumni");
+      if (storedData) {
+        try {
+          const parsedData = JSON.parse(storedData);
+          setUser(parsedData.user);
+        } catch (error) {
+          console.error("Error parsing localStorage data:", error);
+        }
+      }
+    }
+  }, []);
   React.useEffect(() => {
     getUser();
   }, [searchTerm]);
@@ -55,7 +67,7 @@ const Allmembers = () => {
       });
 
       const data = await response.json();
-      console.log(data);
+
       if (response.ok) {
         setMemberData(data);
       } else {

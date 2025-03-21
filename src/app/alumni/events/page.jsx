@@ -66,15 +66,13 @@ const EventCards = () => {
     }
   };
   const handleRegister = async (eventid) => {
-    console.log(eventid);
-  
     try {
       const token = await gettoken();
       if (!token) {
         toast.error("Authentication failed. Please log in again.");
         return;
       }
-  
+
       const response = await fetch(`${url}/api/events/register`, {
         method: "POST",
         headers: {
@@ -83,10 +81,9 @@ const EventCards = () => {
         },
         body: JSON.stringify({ eventIds: eventid }), // Ensure body is a string
       });
-  
+
       const data = await response.json();
-      console.log(data);
-  
+
       if (response.ok) {
         toast.success(data?.message || "Registration successful!");
       } else {
@@ -97,7 +94,7 @@ const EventCards = () => {
       toast.error("An error occurred. Please try again.");
     }
   };
-  
+
   return (
     <div className="min-h-screen max-w-[1200px] w-full mx-auto pt-8 px-4 sm:p-8">
       <div className="flex justify-between items-center">
