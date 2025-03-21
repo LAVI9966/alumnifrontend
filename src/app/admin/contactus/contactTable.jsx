@@ -21,11 +21,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { Icon } from "@iconify/react";
-import AddEvent from "./addEventDialogue";
 import gettoken from "@/app/function/gettoken";
 import toast from "react-hot-toast";
 
-export function EventDataTable() {
+export function ContactDataTable() {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -33,58 +32,34 @@ export function EventDataTable() {
   const [data, setData] = React.useState([]);
 
   const url = process.env.NEXT_PUBLIC_URL;
+
   React.useEffect(() => {
-    getEvent();
+    getContacts();
   }, []);
 
-  const getEvent = async () => {
+  const getContacts = async () => {
     try {
       const token = await gettoken();
-     
-
-      const response = await fetch(`${url}/api/events`, {
+      const response = await fetch(`${url}/api/contact`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Add token in headers
+          Authorization: `Bearer ${token}`,
         },
       });
 
       const data = await response.json();
 
       if (response.ok) {
-    
         setData(data);
       } else {
-        toast.error(data?.message || "failed.");
-      }
-    } catch (error) {
-    
-      toast.error(error || "An error occurred. Please try again.");
-    }
-  };
-  const handleDelete = async (id) => {
-    try {
-      const token = await gettoken();
-
-      const response = await fetch(`${url}/api/events/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Add token in headers
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        toast.success(data?.message || "successfully deleted.");
-        getEvent();
-      } else {
-        toast.error(data?.message || "failed.");
+        toast.error(data?.message || "Failed to fetch contacts.");
       }
     } catch (error) {
       toast.error("An error occurred. Please try again.");
     }
   };
+
   const columns = [
     {
       id: "select",
@@ -109,65 +84,44 @@ export function EventDataTable() {
       enableHiding: false,
     },
     {
-      accessorKey: "title",
-      header: "Event Name",
+      accessorKey: "name",
+      header: "Name",
       cell: ({ row }) => (
-        <div className="capitalize max-w-[200px]">{row.getValue("title")}</div>
+        <div className="capitalize">{row.getValue("name")}</div>
       ),
     },
     {
-      accessorKey: "date",
+      accessorKey: "email",
+      header: "Email",
+      cell: ({ row }) => <div>{row.getValue("email")}</div>,
+    },
+    {
+      accessorKey: "subject",
+      header: "Subject",
+      cell: ({ row }) => <div>{row.getValue("subject")}</div>,
+    },
+    {
+      accessorKey: "message",
+      header: "Message",
+      cell: ({ row }) => <div className=" w-40">{row.getValue("message")}</div>,
+    },
+    {
+      accessorKey: "createdAt",
       header: "Date",
       cell: ({ row }) => (
-        <div className="capitalize">
-          {new Date(row.getValue("date")).toISOString().split("T")[0]}
-        </div>
+        <div>{new Date(row.getValue("createdAt")).toLocaleDateString()}</div>
       ),
-    },
-
-    {
-      accessorKey: "description",
-      header: "Description",
-      cell: ({ row }) => (
-        <div className="capitalize max-w-[300px]">{row.getValue("description")}</div>
-      ),
-    },
-
-    {
-      id: "actions",
-      header: "Action",
-      enableHiding: false,
-      cell: ({ row }) => {
-        const event = row.original;
-
-        return (
-          <div>
-            <AddEvent
-              getEvent={getEvent}
-              id={event._id}
-              title={event.title}
-              description={event.description}
-              date={event.date}
-            />
-            <button
-              onClick={() => handleDelete(event._id)}
-              className="text-red-600 underline ml-2"
-            >
-              Delete
-            </button>{" "}
-          </div>
-        );
-      },
     },
   ];
+
   const table = useReactTable({
     data,
     columns,
     initialState: {
-      pagination: {
-        pageSize: 10, // Show only 10 rows per page
+        pagination: {
+          pageSize: 10, // Show only 10 rows per page
+        },
       },
-    },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -186,8 +140,8 @@ export function EventDataTable() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-end gap-3  py-4">
-        <div className="p-2 bg-white flex items-center min-w-[352px] space-x-2 rounded-3xl ">
+      <div className="flex items-center justify-end gap-3 py-4">
+        <div className="p-2 bg-white flex items-center min-w-[352px] space-x-2 rounded-3xl">
           <Icon
             className="text-gray-500"
             icon="mynaui:search"
@@ -196,34 +150,30 @@ export function EventDataTable() {
           />
           <input
             type="text"
-            placeholder="Search Event..."
-            value={table.getColumn("title")?.getFilterValue() ?? ""}
+            placeholder="Search by Name..."
+            value={table.getColumn("name")?.getFilterValue() ?? ""}
             onChange={(event) =>
-              table.getColumn("title")?.setFilterValue(event.target.value)
+              table.getColumn("name")?.setFilterValue(event.target.value)
             }
-            className=" w-full outline-none"
+            className="w-full outline-none"
           />
         </div>
-
-        <AddEvent getEvent={getEvent} />
       </div>
-      <div className="rounded-md border ">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -258,7 +208,7 @@ export function EventDataTable() {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+      <div className="flex-1 text-sm text-muted-foreground">
         Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
         </div>
         <div className="space-x-2">

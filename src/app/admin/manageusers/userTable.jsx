@@ -40,7 +40,6 @@ export function UserDataTable() {
   const getUser = async () => {
     try {
       const token = await gettoken();
-    
 
       const response = await fetch(`${url}/api/members/admin`, {
         method: "GET",
@@ -53,7 +52,6 @@ export function UserDataTable() {
       const data = await response.json();
 
       if (response.ok) {
-      
         setData(data);
       } else {
         toast.error(data?.message || "failed.");
@@ -66,7 +64,7 @@ export function UserDataTable() {
   const handleDelete = async (id) => {
     try {
       const token = await gettoken();
-    
+
       const response = await fetch(`${url}/api/members/${id}`, {
         method: "DELETE",
         headers: {
@@ -178,6 +176,11 @@ export function UserDataTable() {
   const table = useReactTable({
     data,
     columns,
+    initialState: {
+      pagination: {
+        pageSize: 10, // Show only 10 rows per page
+      },
+    },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -269,8 +272,8 @@ export function UserDataTable() {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
         </div>
         <div className="space-x-2">
           <Button

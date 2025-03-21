@@ -9,6 +9,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import useVerifyToken from "@/hook/useVerifyToken";
 export default function SignupPage() {
   const [passwordVisible, setPasswordVisible] = React.useState(false);
   const togglePasswordVisibility = () => {
@@ -16,6 +17,8 @@ export default function SignupPage() {
   };
   const router = useRouter();
   const url = process.env.NEXT_PUBLIC_URL;
+
+  useVerifyToken();
   return (
     <div className="min-h-screen bg-[#ffffff] flex">
       <div className="w-full mb-10">
@@ -121,7 +124,7 @@ export default function SignupPage() {
               <div className="flex justify-center">
                 <Image src={captcha} alt="captcha" />
               </div> */}
-
+                {/* 
                 <div className="mt-4 text-center text-[#000000]">
                   <p className="text-sm">
                     Forgot Password?{" "}
@@ -129,7 +132,7 @@ export default function SignupPage() {
                       Click here
                     </Link>
                   </p>
-                </div>
+                </div> */}
 
                 <div className="w-full flex justify-center">
                   <button
@@ -151,9 +154,9 @@ export default function SignupPage() {
                 Register Now
               </Link>
             </p>
-            <button className="border mt-3 border-[#C7A006] rounded-lg w-36 p-1">
+            {/* <button className="border mt-3 border-[#C7A006] rounded-lg w-36 p-1">
               Need Help?
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

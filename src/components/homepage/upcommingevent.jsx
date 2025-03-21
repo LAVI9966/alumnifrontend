@@ -48,7 +48,7 @@ const Upcommingevent = () => {
           className="flex  flex-row lg:flex-col gap-0 lg:gap-2 overflow-x-auto scrollbar-hide space-x-4 lg:space-x-0  overflow-hidden"
           style={{ whiteSpace: "nowrap" }}
         >
-          {event.map((val) => (
+          {event.slice(0,3).map((val) => (
             <div key={val._id} className="lg:flex-none">
               <Eventcard
                 date={val.date}

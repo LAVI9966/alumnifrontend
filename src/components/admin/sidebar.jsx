@@ -5,12 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const AllMenu = [
   { text: "Dashboard", link: "/admin/homepage" },
   { text: "Manage Users", link: "/admin/manageusers" },
   { text: "Manage Events", link: "/admin/manageevent" },
-  { text: "Feedback", link: "#" },
+  { text: "Manage Contacts", link: "/admin/contactus" },
 ];
 const AdminSidebar = () => {
   const [userData, setUserData] = useState(null);
@@ -31,7 +32,6 @@ const AdminSidebar = () => {
         const data = await response.json();
 
         if (response.ok) {
-        
           setUserData(data.user);
         } else {
           toast.error(data?.message || "failed.");
@@ -50,7 +50,7 @@ const AdminSidebar = () => {
   };
 
   return (
-    <aside className="w-64 bg-[#FFFFFF] text-custom-blue p-4 space-y-6 border-r-[1px] flex flex-col justify-between border-[#E5E5E5]">
+    <aside className="w-64 bg-[#FFFFFF] text-custom-blue p-4  space-y-6 border-r-[1px] flex flex-col justify-between border-[#E5E5E5]">
       <nav>
         <Link href="/admin/homepage">
           <Image
@@ -84,14 +84,14 @@ const AdminSidebar = () => {
             <p className="text-gray-500 text-sm">{userData?.role || "Admin"}</p>
           </div>
         </div>
-        <div className="w-full flex justify-between ">
-          <button className="flex items-center text-sm text-gray-800 hover:text-gray-600">
+        <div className={"w-full flex justify-start"}>
+          {/* <button className="flex items-center text-sm text-gray-800 hover:text-gray-600">
             <Icon icon="uil:setting" width="24" height="24" className="mr-2" />{" "}
             Settings
-          </button>
+          </button> */}
           <button
             onClick={handleLogout}
-            className="flex text-sm items-center text-gray-800 hover:text-gray-600"
+            className="flex text-sm items-center ml-2 text-gray-800 hover:text-gray-600"
           >
             <Icon
               icon="material-symbols:logout-rounded"

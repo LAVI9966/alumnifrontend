@@ -1,5 +1,6 @@
 import React from "react";
 import Logo from "./logo";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -9,15 +10,15 @@ const Footer = () => {
       </div>
       <p>&copy; 2025 ROBA. All rights reserved.</p>
       <div className="mt-2">
-        <a href="#" className="text-white hover:underline mx-2">
+        <Link href="about" className="text-white hover:underline mx-2">
           About
-        </a>
-        <a href="#" className="text-white hover:underline mx-2">
+        </Link>
+        <Link href="contact" className="text-white hover:underline mx-2">
           Contact
-        </a>
-        <a href="#" className="text-white hover:underline mx-2">
+        </Link>
+        <Link href="#" className="text-white hover:underline mx-2">
           Privacy Policy
-        </a>
+        </Link>
       </div>
     </footer>
   );

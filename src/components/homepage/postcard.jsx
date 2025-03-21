@@ -2,10 +2,17 @@
 import { Icon } from "@iconify/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import Image from "next/image";
-export const timeAgo = ({ timestamp }) => {
+export const timeAgo = (timestamp) => {
+  if (!timestamp) return "Invalid date";
+
   const now = new Date();
   const past = new Date(timestamp);
+
+  if (isNaN(past.getTime())) return "Invalid date"; // Handle invalid timestamps
+
   const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+
+  if (diffInSeconds < 1) return "Just now"; // If less than 1 second difference
 
   const intervals = {
     year: 31536000,
@@ -18,7 +25,7 @@ export const timeAgo = ({ timestamp }) => {
 
   for (const [unit, seconds] of Object.entries(intervals)) {
     const count = Math.floor(diffInSeconds / seconds);
-    if (count >= 1) {
+    if (count > 0) {
       return `${count} ${unit}${count !== 1 ? "s" : ""} ago`;
     }
   }
@@ -30,10 +37,7 @@ import React from "react";
 const Postcard = ({ postData }) => {
   const [showComments, setShowComments] = React.useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
-  // const profilePicUrl = ({ pic }) => {
-  //   console.log(pic);
-  //   return `${url}/uploads/${pic?.split("\\").pop()}`;
-  // };
+
   return (
     <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
       {/* User Info */}
@@ -65,32 +69,20 @@ const Postcard = ({ postData }) => {
       <div className="w-full h-auto bg-gray-200 mt-3">
         <Image
           priority
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          src={postData?.imageUrl}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          src={`${url}/uploads/${postData?.imageUrl?.split("\\").pop()}`}
           alt="postimg"
           width={400}
           height={400}
           style={{ objectFit: "contain", width: "100%" }}
+          className="max-h-[400px]"
         />
       </div>
-
-     
     </div>
   );
 };
 
 export default Postcard;
-
-
-
-
-
-
-
-
-
-
-
 
 //  {/* Like & Comment Icons */}
 //  <div className="flex justify-between items-center mt-3 text-gray-500 text-sm">

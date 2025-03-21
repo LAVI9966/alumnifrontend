@@ -6,29 +6,6 @@ import toast from "react-hot-toast";
 import gettoken from "@/app/function/gettoken";
 import EventCardSkeleton from "../../../components/homepage/eventCardSkeleton.jsx";
 import Link from "next/link.js";
-// const EventCardSkeleton = () => {
-//   return (
-//     <div className="bg-white p-4 max-w-[380px] shadow-lg rounded-lg overflow-hidden animate-pulse">
-//       {/* Image Skeleton */}
-//       <div className="w-full h-48 bg-gray-300 rounded"></div>
-
-//       {/* Title Skeleton */}
-//       <div className="mt-4 h-6 bg-gray-300 w-3/4 rounded"></div>
-
-//       {/* Date & Icon Skeleton */}
-//       <div className="mt-2 flex items-center gap-2">
-//         <div className="w-5 h-5 bg-gray-300 rounded"></div>
-//         <div className="h-4 bg-gray-300 w-1/3 rounded"></div>
-//       </div>
-
-//       {/* Description Skeleton */}
-//       <div className="mt-2 h-4 bg-gray-300 w-5/6 rounded"></div>
-
-//       {/* Button Skeleton */}
-//       <div className="mt-4 h-8 bg-gray-300 w-24 rounded"></div>
-//     </div>
-//   );
-// };
 
 const EventCards = () => {
   const [allevents, setallEvents] = useState([]);
@@ -41,7 +18,7 @@ const EventCards = () => {
     setLoading(true);
     try {
       const token = await gettoken();
-      const response = await fetch(`${url}/api/events`, {
+      const response = await fetch(`${url}/api/events/my-registrations`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -50,11 +27,11 @@ const EventCards = () => {
       });
 
       const data = await response.json();
-
+      console.log(data);
       if (response.ok) {
         setLoading(false);
 
-        setallEvents(data);
+        setallEvents(data?.registrations);
       } else {
         toast.error(data?.message || "failed.");
         setLoading(false);
@@ -65,51 +42,18 @@ const EventCards = () => {
       setLoading(false);
     }
   };
-  const handleRegister = async (eventid) => {
-    console.log(eventid);
-  
-    try {
-      const token = await gettoken();
-      if (!token) {
-        toast.error("Authentication failed. Please log in again.");
-        return;
-      }
-  
-      const response = await fetch(`${url}/api/events/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Add token in headers
-        },
-        body: JSON.stringify({ eventIds: eventid }), // Ensure body is a string
-      });
-  
-      const data = await response.json();
-      console.log(data);
-  
-      if (response.ok) {
-        toast.success(data?.message || "Registration successful!");
-      } else {
-        toast.error(data?.message || "Registration failed.");
-      }
-    } catch (error) {
-      console.error("Error registering event:", error);
-      toast.error("An error occurred. Please try again.");
-    }
-  };
-  
+
   return (
     <div className="min-h-screen max-w-[1200px] w-full mx-auto pt-8 px-4 sm:p-8">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold mb-6">Upcoming Events</h2>
+        <h2 className="text-2xl font-bold mb-6">Registered Events</h2>
         <Link
-          href="registeredevent"
+          href="events"
           className="px-4 py-2 flex justify-center items-center bg-custom-blue text-white rounded-lg shadow-md hover:bg-black transition"
         >
-          Registered Event
+          All Events
         </Link>
       </div>
-
       {/* Show loading first before anything else */}
       {loading ? (
         <div>
@@ -147,10 +91,7 @@ const EventCards = () => {
                       {new Date(event.date).toISOString().split("T")[0]}
                     </div>
                   </div>
-                  <button
-                    onClick={() => handleRegister(event?._id)}
-                    className="border border-[#C7A006] text-sm rounded-lg w-24 p-1"
-                  >
+                  <button className="border border-[#C7A006] text-sm rounded-lg w-24 p-1">
                     Register
                   </button>
                 </div>

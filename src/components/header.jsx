@@ -58,9 +58,11 @@ const Header = () => {
         >
           <Icon icon="iconoir:message" width="24" height="24" />
         </Link>
-        <div className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg">
+      
+        <Link
+          href="/alumni/notification" className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg">
           <Icon icon="line-md:bell" width="24" height="24" />
-        </div>
+        </Link>
         <Link
           href="/alumni/profile"
           className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg"

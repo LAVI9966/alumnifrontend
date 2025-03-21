@@ -7,7 +7,7 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
 
-// const socket = io("ws://localhost:8000"); 
+// const socket = io("ws://localhost:8000");
 const socket = io(process.env.WEB_SOCKET_URL);
 
 const Chatmain = () => {
@@ -15,10 +15,38 @@ const Chatmain = () => {
   const [input, setInput] = useState("");
   const [roomId, setRoomId] = useState("");
   const [receiverId, setReceiverId] = useState("");
+  const [memberdata, setMemberData] = useState([]);
   const url = process.env.NEXT_PUBLIC_URL;
   const { slug } = useParams();
   const messagesEndRef = useRef(null);
+  useEffect(() => {
+    getUser();
+  }, []);
 
+  const getUser = async () => {
+    try {
+      const token = await gettoken();
+
+      const response = await fetch(`${url}/api/members/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token in headers
+        },
+      });
+
+      const data = await response.json();
+      console.log(data);
+      if (response.ok) {
+        setMemberData(data);
+      } else {
+        toast.error(data?.message || "failed.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An error occurred. Please try again.");
+    }
+  };
   // Get current user ID from local storage
   useEffect(() => {
     const storedData = localStorage.getItem("alumni");
@@ -69,7 +97,7 @@ const Chatmain = () => {
         });
 
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         if (response.ok) {
           setMessages(data.data);
         } else {
@@ -83,7 +111,13 @@ const Chatmain = () => {
 
     getChat();
   }, [slug]);
+  const getName = (id) => {
+    const member = memberdata.find((val) => val._id === id);
+    return member ? member.name : "User"; // Return name if found, else "Not Found"
+  };
 
+  // console.log(id, memberdata);
+  // return;
   // Send message
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -113,8 +147,10 @@ const Chatmain = () => {
     const ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12 || 12; // Convert 0 to 12 for 12-hour format
 
-    return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")} ${ampm}`;
-}
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")} ${ampm}`;
+  }
   return (
     <div className="min-h-screen max-w-[1200px] w-full mx-auto flex gap-3 bg-white pt-8">
       <div className="w-full lg:w-[25%] hidden md:block">
@@ -125,31 +161,48 @@ const Chatmain = () => {
         <div className="flex items-center justify-between py-3 px-4 bg-white border-b border-[#D9D9D9]">
           <div className="flex items-center space-x-2">
             <div className="text-black flex flex-col gap-2">
-              <p className="text-sm font-semibold">Chat with {receiverId}</p>
-              <p className="text-xs text-gray-500">Room ID: {roomId?.slice(0, 4)}</p>
+              <p className="font-semibold">
+                {receiverId && getName(receiverId)}
+              </p>
+              <p className="text-xs text-gray-500">
+                Room ID: {roomId?.slice(0, 4)}
+              </p>
             </div>
           </div>
         </div>
 
         {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-2">
+        <div className="flex-1 overflow-y-auto p-4 space-y-2 ">
           {messages?.map((msg, index) => (
-            <div key={index} className={`flex ${msg.senderId !== slug ? "justify-end" : "justify-start"}`}>
+            <div
+              key={index}
+              className={`flex ${
+                msg.senderId !== slug ? "justify-end" : "justify-start"
+              }`}
+            >
               <div className="flex gap-2">
                 {msg.senderId === slug && (
                   <Avatar className="cursor-pointer">
-                    <AvatarImage className="w-10 h-10 rounded-full" src="https://github.com/shadcn.png" alt="avatar" />
+                    <AvatarImage
+                      className="w-10 h-10 rounded-full"
+                      src="https://github.com/shadcn.png"
+                      alt="avatar"
+                    />
                   </Avatar>
                 )}
                 <div>
-                <div
-            className={`p-2 rounded-lg max-w-xs break-words whitespace-normal ${
-              msg.senderId !== slug ? "bg-[#3271FF] text-white" : "bg-[#D9D9D9] text-[#797979]"
-            }`}
-          >
+                  <div
+                    className={`p-2 rounded-lg max-w-xs break-words whitespace-normal ${
+                      msg.senderId !== slug
+                        ? "bg-[#3271FF] text-white"
+                        : "bg-[#D9D9D9] text-[#797979]"
+                    }`}
+                  >
                     {msg.message}
                   </div>
-                  <div className="text-[#797979] text-xs mt-2">{extractTime12Hour(msg?.timestamp)}</div>
+                  <div className="text-[#797979] text-xs mt-2">
+                    {extractTime12Hour(msg?.timestamp)}
+                  </div>
                 </div>
               </div>
             </div>
@@ -158,7 +211,10 @@ const Chatmain = () => {
         </div>
 
         {/* Message Input */}
-        <form onSubmit={handleSendMessage} className="flex items-center border-t border-gray-300 p-3 bg-gray-100">
+        <form
+          onSubmit={handleSendMessage}
+          className="flex items-center border-t border-gray-300 p-3 bg-gray-100"
+        >
           <input
             type="text"
             placeholder="Type a message..."
@@ -166,7 +222,10 @@ const Chatmain = () => {
             onChange={(e) => setInput(e.target.value)}
             className="flex-1 px-3 py-2 rounded-lg bg-white border border-gray-300 focus:outline-none"
           />
-          <button type="submit" className="ml-2 text-center bg-custom-blue text-white px-3 lg:px-8 py-2 rounded-lg">
+          <button
+            type="submit"
+            className="ml-2 text-center bg-custom-blue text-white px-3 lg:px-8 py-2 rounded-lg"
+          >
             Send
           </button>
         </form>

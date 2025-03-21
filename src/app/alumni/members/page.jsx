@@ -34,13 +34,13 @@ const Allmembers = () => {
   const [activeTab, setActiveTab] = React.useState("faculties");
   const [memberdata, setMemberData] = React.useState([]);
   const storedData = localStorage.getItem("alumni");
-
+  const [searchTerm, setSearchTerm] = React.useState("");
   const { user } = JSON.parse(storedData);
   console.log(user.id);
   const url = process.env.NEXT_PUBLIC_URL;
   React.useEffect(() => {
     getUser();
-  }, []);
+  }, [searchTerm]);
 
   const getUser = async () => {
     try {
@@ -66,25 +66,36 @@ const Allmembers = () => {
       toast.error("An error occurred. Please try again.");
     }
   };
-  console.log(memberdata[0]?._id === user.id);
+  const handleSearch = () => {
+    const filtered = memberdata?.filter((member) =>
+      member.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setMemberData(filtered);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 pt-8 px-4 sm:p-8">
       <div className="max-w-6xl mx-auto">
+        <h2 className="text-2xl font-bold mb-6">All Alumni Member</h2>
         {/* Search Section */}
         <div className="flex items-center gap-2 mb-6">
           <input
             type="text"
             placeholder="Search by name, batch year"
             className="flex-1 px-4 py-2 border rounded-md focus:outline-none w-[60%]"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button className="bg-custom-blue text-white px-6 py-2 rounded-md w-[30%] sm:w-60">
+          <button
+            className="bg-custom-blue text-white px-6 py-2 rounded-md w-[30%] sm:w-60"
+            onClick={handleSearch}
+          >
             Search
           </button>
         </div>
-
         {/* Tabs */}
 
-        <div className="flex">
+        {/* <div className="flex">
           <button
             className={`flex-1 px-4 border-b-2  py-2 font-medium transition-all duration-300 ${
               activeTab === "faculties"
@@ -105,7 +116,7 @@ const Allmembers = () => {
           >
             Member
           </button>
-        </div>
+        </div> */}
 
         {/* Results Count */}
         <p className="mb-4 mt-6 text-gray-700">{memberdata?.length} Results</p>

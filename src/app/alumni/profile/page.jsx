@@ -114,6 +114,7 @@ const ProfilePage = () => {
       toast.error("Please select an image first.");
       return;
     }
+    console.log(uploadimage)
     const formData = new FormData();
     formData.append("profilePicture", uploadimage);
 

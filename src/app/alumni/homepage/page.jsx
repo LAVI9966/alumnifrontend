@@ -3,21 +3,25 @@ import gettoken from "@/app/function/gettoken";
 import Alumnihomepagecard from "@/components/homepage/alumnihomepagecard";
 import Createpostdialogue from "@/components/homepage/createpostdialogue";
 import Eventcard from "@/components/homepage/eventcard";
+import EventCardSkeleton from "@/components/homepage/eventCardSkeleton";
 import Postcard from "@/components/homepage/postcard";
 import Upcommingevent from "@/components/homepage/upcommingevent";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
+import toast from "react-hot-toast";
+// import EventCardSkeleton from "../../../components/homepage/eventCardSkeleton.jsx";
 const page = () => {
   const [allposts, setAllposts] = useState([]);
+  const [isloading, setIsloading] = useState(false);
   const router = useRouter();
   const url = process.env.NEXT_PUBLIC_URL;
   useEffect(() => {
     getPosts();
   }, []);
   const getPosts = async () => {
+    setIsloading(true);
     try {
       const token = await gettoken();
       const response = await fetch(`${url}/api/posts`, {
@@ -32,13 +36,14 @@ const page = () => {
 
       if (response.ok) {
         setAllposts(data);
-        console.log(data);
+        setIsloading(false);
       } else {
         toast.error(data?.message || "failed.");
       }
     } catch (error) {
       console.log(error);
       toast.error("An error occurred. Please try again.");
+      setIsloading(false);
     }
   };
   return (
@@ -59,28 +64,42 @@ const page = () => {
             targetlink="/alumni/events"
             buttonname="View Events"
           />
-          <Alumnihomepagecard
+          {/* <Alumnihomepagecard
             title="Career Opportunities"
             desc="Discover job postings and mentorship programs shared by alumni."
             targetlink="#"
             buttonname="Find Opportunities"
-          />
+          /> */}
         </div>
       </div>
 
       <div className="flex flex-col md:flex-row-reverse gap-8 w-full md:w-[69%]">
         {/* Create Post Button */}
         <div className="mt-3 md:mt-0 w-full md:w-[18%]">
-          <Createpostdialogue />
+          <Createpostdialogue getPosts={getPosts} />
         </div>
         {/* Post Card */}
         <div className="flex  w-full md:w-[82%] flex-col gap-2  mb-8">
-          {allposts.map((val) => (
-            <div key={val._id}>
-              <Postcard postData={val} />
+          {isloading ? (
+            <div>
+              <div className="animate-pulse flex flex-col  gap-6">
+                {/* Simulating grid items */}
+                <div className="grid w-full mb-10  gap-4">
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i}>
+                      <EventCardSkeleton />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          ))}
-
+          ) : (
+            allposts.map((val) => (
+              <div key={val._id}>
+                <Postcard postData={val} />
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

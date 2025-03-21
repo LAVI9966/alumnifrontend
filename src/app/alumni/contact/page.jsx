@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
@@ -20,6 +20,7 @@ const ContactForm = () => {
     email: Yup.string().email("Invalid email").required("Email is required"),
     message: Yup.string().required("Message is required"),
   });
+
   const url = process.env.NEXT_PUBLIC_URL;
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {

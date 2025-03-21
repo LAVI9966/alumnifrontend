@@ -1,7 +1,6 @@
 "use client";
-
-import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { useState } from "react";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import {
   AlertDialog,
@@ -13,120 +12,134 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Icon } from "@iconify/react";
-import toast from "react-hot-toast";
 import gettoken from "@/app/function/gettoken";
+import toast from "react-hot-toast";
 
-const CreatePostDialog = () => {
+const CreatePostDialogue = ({ getPosts }) => {
+  const [previewImage, setPreviewImage] = useState(null);
+  const [isOpen, setIsOpen] = useState(false); // State for modal visibility
   const url = process.env.NEXT_PUBLIC_URL;
 
-  // ✅ Form validation schema  
-  const validationSchema = Yup.object().shape({
-    content: Yup.string().required("Content is required"),
-    imageUrl: Yup.string()
-      .url("Invalid URL format")
-      .required("Image URL is required"),
-  });
-
-  // ✅ Form submission handler
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    try {
-      const token = await gettoken();
-      const response = await fetch(`${url}/api/posts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(values),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        toast.success("Post created successfully!");
-        resetForm(); // Reset form after submission
-      } else {
-        toast.error(data.message || "Something went wrong");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Network error, please try again later.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
-    <AlertDialog>
-      <AlertDialogTrigger className="w-full bg-custom-blue text-white py-2 rounded-lg">
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+      <AlertDialogTrigger
+        className="w-full bg-custom-blue text-white py-2 rounded-lg"
+        onClick={() => setIsOpen(true)}
+      >
         Create Post
       </AlertDialogTrigger>
       <AlertDialogContent className="p-0 max-w-2xl px-4 md:px-0 gap-0">
         <Formik
-          initialValues={{ content: "", imageUrl: "" }}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+          initialValues={{ content: "", imageUrl: null }}
+          validationSchema={Yup.object({
+            content: Yup.string().required("Caption is required"),
+            imageUrl: Yup.mixed().required("Image is required"),
+          })}
+          onSubmit={async (values, { setSubmitting, resetForm }) => {
+            try {
+              const formData = new FormData();
+              formData.append("content", values.content);
+
+              if (values.imageUrl) {
+                formData.append("image", values.imageUrl);
+              }
+
+              const response = await fetch(`${url}/api/posts`, {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${await gettoken()}`,
+                },
+                body: formData,
+              });
+
+              const data = await response.json();
+              if (response.ok) {
+                toast.success("Post created successfully!");
+                resetForm();
+                setPreviewImage(null);
+                getPosts();
+                setIsOpen(false); // Close modal on success
+              } else {
+                toast.error(data.message || "Something went wrong");
+              }
+            } catch (error) {
+              console.error(error);
+              toast.error("Network error, please try again later.");
+            } finally {
+              setSubmitting(false);
+            }
+          }}
         >
-          {({ isSubmitting }) => (
+          {({ setFieldValue, values, isSubmitting }) => (
             <Form>
               <AlertDialogTitle>
-                {/* Header */}
-                <div className="p-4 border-b flex items-center justify-between">
-                  <span className="text-lg font-semibold">Create Post</span>
-                  <AlertDialogCancel className="text-gray-400">
-                    <Icon
-                      className="text-gray-400"
-                      icon="system-uicons:cross"
-                      width="30"
-                      height="30"
+                <div className="p-2 border-b flex items-center justify-between">
+                  <label className="cursor-pointer">
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="image/*"
+                      onChange={(event) => {
+                        const file = event.currentTarget.files[0];
+                        if (file) {
+                          setFieldValue("imageUrl", event.target.files[0]);
+                          setPreviewImage(URL.createObjectURL(file));
+                        }
+                      }}
                     />
+                    <Icon
+                      icon="solar:gallery-broken"
+                      width="20"
+                      height="20"
+                      className="text-gray-400"
+                    />
+                  </label>
+                  <AlertDialogCancel
+                    className="text-gray-400"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Icon icon="system-uicons:cross" width="30" height="30" />
                   </AlertDialogCancel>
                 </div>
+                <div>
+                  <Field
+                    as="textarea"
+                    name="content"
+                    placeholder="Say something..."
+                    className="w-full outline-none p-2 text-sm text-gray-600"
+                  />
+                </div>
               </AlertDialogTitle>
-
-              {/* Content Input */}
-              <div className="p-4">
-                <label className="block mb-2 text-sm font-medium text-gray-600">
-                  Post Content
-                </label>
-                <Field
-                  as="textarea"
-                  name="content"
-                  placeholder="Write something..."
-                  className="w-full custom-input"
-                  rows="3"
-                />
-                <ErrorMessage
-                  name="content"
-                  component="div"
-                  className="text-red-500 text-sm mt-1"
-                />
+              <div className="bg-white overflow-hidden">
+                <div className="h-56 bg-gray-300 relative flex items-center justify-center">
+                  {previewImage && (
+                    <>
+                      <Icon
+                        onClick={() => {
+                          setFieldValue("imageUrl", null);
+                          setPreviewImage(null);
+                        }}
+                        className="cursor-pointer text-gray-800 absolute top-2 right-2 bg-white rounded-full p-2 shadow-sm border border-gray-300"
+                        icon="material-symbols:delete-outline-rounded"
+                        width="40"
+                        height="40"
+                      />
+                      <img
+                        src={previewImage}
+                        alt="Preview"
+                        className="max-h-full max-w-full object-cover"
+                      />
+                    </>
+                  )}
+                </div>
               </div>
-
-              {/* Image URL Input */}
-              <div className="p-4">
-                <label className="block mb-2 text-sm font-medium text-gray-600">
-                  Image URL
-                </label>
-                <Field
-                  type="text"
-                  name="imageUrl"
-                  placeholder="Enter image URL..."
-                  className="w-full custom-input"
-                />
-                <ErrorMessage
-                  name="imageUrl"
-                  component="div"
-                  className="text-red-500 text-sm mt-1"
-                />
-              </div>
-
-              <AlertDialogFooter className="p-4">
+              <AlertDialogFooter className="p-2">
                 <button
                   type="submit"
+                  className="bg-custom-blue text-white py-2 px-10 rounded-lg"
                   disabled={isSubmitting}
-                  className="cursor-pointer bg-custom-blue text-white py-2 px-10 rounded-lg  "
                 >
-                  {isSubmitting ? "Uploading..." : "Upload"}
+                  Upload
                 </button>
               </AlertDialogFooter>
             </Form>
@@ -137,9 +150,8 @@ const CreatePostDialog = () => {
   );
 };
 
-export default CreatePostDialog;
+export default CreatePostDialogue;
 
-// "use client";
 // import React from "react";
 // import {
 //   AlertDialog,
@@ -174,11 +186,11 @@ export default CreatePostDialog;
 //       reader.readAsDataURL(file);
 //     }
 //   };
-//   const handleSubmit = async (values, { setSubmitting }) => {
+//   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
 //     try {
 //       const token = await gettoken();
-//       const response = await fetch(`${url}/api/profile/update`, {
-//         method: "PUT",
+//       const response = await fetch(`${url}/api/posts`, {
+//         method: "POST",
 //         headers: {
 //           "Content-Type": "application/json",
 //           Authorization: `Bearer ${token}`,
@@ -188,16 +200,19 @@ export default CreatePostDialog;
 
 //       const data = await response.json();
 //       if (response.ok) {
-//         toast.success("Profile updated successfully!");
-//         getProfile();
+//         toast.success("Post created successfully!");
+//         resetForm(); // Reset form after submission
 //       } else {
 //         toast.error(data.message || "Something went wrong");
 //       }
 //     } catch (error) {
 //       console.log(error);
 //       toast.error("Network error, please try again later.");
+//     } finally {
+//       setSubmitting(false);
 //     }
 //   };
+
 //   return (
 //     <AlertDialog>
 //       <AlertDialogTrigger className="w-full  bg-custom-blue text-white py-2 rounded-lg  ">

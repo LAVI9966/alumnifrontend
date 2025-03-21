@@ -77,7 +77,7 @@ const Layout = ({ children }) => {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen">
       <AdminSidebar />
       <div className="flex-1  min-h-screen overflow-y-scroll flex flex-col">
         <AdminHeader />

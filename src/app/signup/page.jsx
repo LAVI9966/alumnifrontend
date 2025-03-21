@@ -9,6 +9,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import useVerifyToken from "@/hook/useVerifyToken";
 
 export default function SignupPage() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -31,7 +32,7 @@ export default function SignupPage() {
       .min(6, "Password must be at least 6 characters")
       .required("Password is required"),
   });
-
+  useVerifyToken()
   return (
     <div className="min-h-screen bg-[#ffffff] flex">
       <div className="w-full">
@@ -77,7 +78,7 @@ export default function SignupPage() {
                   body: JSON.stringify(values),
                 });
                 const data = await response.json();
-              
+
                 if (response.ok) {
                   toast.success(data.message || "Registration successful!");
 

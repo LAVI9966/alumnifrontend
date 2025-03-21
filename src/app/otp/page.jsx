@@ -12,7 +12,7 @@ export default function SignupPage() {
   const [otp, setOtp] = React.useState(["", "", "", ""]);
   const inputRefs = useRef([]);
   const url = process.env.NEXT_PUBLIC_URL;
- 
+
   const router = useRouter();
   const handleChange = (value, index) => {
     if (/^[0-9]$/.test(value) || value === "") {
@@ -60,7 +60,7 @@ export default function SignupPage() {
       });
 
       const data = await response.json();
-     
+
       if (response.ok) {
         toast.success(data?.message || "OTP verified successfully!");
         //  router.push("/login");
@@ -113,7 +113,7 @@ export default function SignupPage() {
                 />
               ))}
             </div>
-
+            {/* 
             <div className="mt-4 text-center text-[#000000]">
               <p className="text-sm">
                 Didn’t receive yet ?{" "}
@@ -121,7 +121,7 @@ export default function SignupPage() {
                   Resend OTP
                 </a>
               </p>
-            </div>
+            </div> */}
             <div className="w-full flex justify-center">
               <button
                 onClick={verifyOtp}

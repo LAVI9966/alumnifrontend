@@ -1,9 +1,14 @@
+"use client"
 import Logo from '@/components/logo';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import gettoken from './function/gettoken';
+import { useRouter } from 'next/navigation';
+import useVerifyToken from '@/hook/useVerifyToken';
 
 const Page = () => {
+  useVerifyToken()
   return (
     <div
       style={{

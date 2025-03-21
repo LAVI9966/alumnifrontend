@@ -14,7 +14,7 @@ const Eventcard = ({ date, title, description }) => {
       <div className="flex ml-3 flex-col justify-between">
         <div className="flex flex-col gap-1">
           <p className="text-sm text-gray-400">Event</p>
-          <h3 className="font-bold text-sm">{title}</h3>
+          <h3 className="font-bold text-sm truncate max-w-[160px]">{title}</h3>
         </div>
         <div className="flex flex-col gap-1">
           <p className="text-sm text-gray-700">

@@ -8,7 +8,7 @@ const Homepagecard = ({ title, desc, btnlink }) => {
       <p className="text-custom-blue text-3xl font-bold">{desc}</p>
       <Link
         href={btnlink}
-        className="border-[1px] border-[#C7A006] p-1 text-center rounded-lg"
+        className="border-[1px] border-[#C7A006] p-1 text-center rounded-lg hover:shadow-md"
       >
         View
       </Link>
