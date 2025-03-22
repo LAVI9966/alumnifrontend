@@ -50,7 +50,7 @@ export function UserDataTable() {
       });
 
       const data = await response.json();
-
+      console.log(data);
       if (response.ok) {
         setData(data);
       } else {
@@ -83,6 +83,75 @@ export function UserDataTable() {
       toast.error("An error occurred. Please try again.");
     }
   };
+  // const handlestatus = async (val) => {
+  //   console.log(val);
+
+  //   try {
+  //     const token = await gettoken();
+
+  //     const response = await fetch(`${url}/api/members/${val.id}/verify`, {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`, // Add token in headers
+  //       },
+  //       body: JSON.stringify({ status: val.status }),
+  //     });
+  //     const data = await response.json();
+  //     console.log(data);
+  //     if (response.ok) {
+  //       toast.success(data?.message || "successfully Changed Status.");
+  //       getUser();
+  //     } else {
+  //       toast.error(data?.message || "failed.");
+  //     }
+  //   } catch (error) {
+  //     toast.error("An error occurred. Please try again.");
+  //   }
+  // };
+  const handlestatus = async (val) => {
+    console.log(val);
+    if (!val?._id || !val?.status) {
+      toast.error("Invalid user ID or status.");
+      return;
+    }
+
+    try {
+      const token = await gettoken();
+      if (!token) {
+        toast.error("Authentication failed. Please log in again.");
+        return;
+      }
+
+      const response = await fetch(`${url}/api/members/${val._id}/verify`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          status: val.status === "pending" ? "verified" : "pending",
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData?.message || "Failed to change status.");
+      }
+
+      const data = await response.json();
+      if (val.status === "pending") {
+        toast.success(data?.message || "Successfully changed status.");
+      } else {
+        toast.success("Successfully changed status.");
+      }
+
+      getUser(); // Refresh user list
+    } catch (error) {
+      toast.error(error.message || "An error occurred. Please try again.");
+    }
+  };
+
   const columns = [
     {
       id: "select",
@@ -143,6 +212,41 @@ export function UserDataTable() {
       cell: ({ row }) => (
         <div className="capitalize">{row.getValue("email")}</div>
       ),
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const val = row?.original;
+        console.log(val);
+        return (
+          <>
+            <label className="flex cursor-pointer select-none items-center">
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  checked={val.status === "verified"}
+                  onChange={() => handlestatus(val)}
+                  className="sr-only"
+                />
+                <div
+                  className={`block h-8 w-14 rounded-full transition ${
+                    val.status === "verified" ? "bg-green-500" : "bg-gray-300"
+                  }`}
+                ></div>
+                <div
+                  className={`dot absolute top-1 h-6 w-6 rounded-full bg-white transition ${
+                    val.status === "verified"
+                      ? "translate-x-6"
+                      : "translate-x-1"
+                  }`}
+                ></div>
+              </div>
+            </label>
+          </>
+        );
+        // <div className="capitalize">{row.getValue("status")}</div>
+      },
     },
     {
       id: "actions",
