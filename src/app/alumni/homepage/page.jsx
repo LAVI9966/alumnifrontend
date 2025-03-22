@@ -15,8 +15,22 @@ import toast from "react-hot-toast";
 const page = () => {
   const [allposts, setAllposts] = useState([]);
   const [isloading, setIsloading] = useState(false);
+    const [user, setUser] = React.useState(null);
   const router = useRouter();
   const url = process.env.NEXT_PUBLIC_URL;
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedData = localStorage.getItem("alumni");
+      if (storedData) {
+        try {
+          const parsedData = JSON.parse(storedData);
+          setUser(parsedData.user);
+        } catch (error) {
+          console.error("Error parsing localStorage data:", error);
+        }
+      }
+    }
+  }, []);
   useEffect(() => {
     getPosts();
   }, []);
@@ -96,7 +110,7 @@ const page = () => {
           ) : (
             allposts.map((val) => (
               <div key={val._id}>
-                <Postcard postData={val} />
+                <Postcard postData={val} getPosts={getPosts}  userid={user?.id} />
               </div>
             ))
           )}

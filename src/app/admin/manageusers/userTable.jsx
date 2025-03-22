@@ -50,14 +50,14 @@ export function UserDataTable() {
       });
 
       const data = await response.json();
-      console.log(data);
+   
       if (response.ok) {
         setData(data);
       } else {
         toast.error(data?.message || "failed.");
       }
     } catch (error) {
-      console.log(error);
+   
       toast.error("An error occurred. Please try again.");
     }
   };
@@ -83,34 +83,9 @@ export function UserDataTable() {
       toast.error("An error occurred. Please try again.");
     }
   };
-  // const handlestatus = async (val) => {
-  //   console.log(val);
 
-  //   try {
-  //     const token = await gettoken();
-
-  //     const response = await fetch(`${url}/api/members/${val.id}/verify`, {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`, // Add token in headers
-  //       },
-  //       body: JSON.stringify({ status: val.status }),
-  //     });
-  //     const data = await response.json();
-  //     console.log(data);
-  //     if (response.ok) {
-  //       toast.success(data?.message || "successfully Changed Status.");
-  //       getUser();
-  //     } else {
-  //       toast.error(data?.message || "failed.");
-  //     }
-  //   } catch (error) {
-  //     toast.error("An error occurred. Please try again.");
-  //   }
-  // };
   const handlestatus = async (val) => {
-    console.log(val);
+ 
     if (!val?._id || !val?.status) {
       toast.error("Invalid user ID or status.");
       return;
@@ -218,7 +193,7 @@ export function UserDataTable() {
       header: "Status",
       cell: ({ row }) => {
         const val = row?.original;
-        console.log(val);
+       
         return (
           <>
             <label className="flex cursor-pointer select-none items-center">

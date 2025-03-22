@@ -4,128 +4,6 @@ import Link from "next/link";
 import React, { useMemo } from "react";
 import toast from "react-hot-toast";
 
-const users = [
-  {
-    name: "Pratyush Solanki",
-    message: "Hi",
-    time: "1d",
-    image: "https://randomuser.me/api/portraits/men/1.jpg",
-    active: true,
-  },
-  {
-    name: "Neha Pramod",
-    message: "Hi",
-    time: "1m",
-    image: "https://randomuser.me/api/portraits/women/2.jpg",
-    active: false,
-  },
-  {
-    name: "Ayush Dhyan",
-    message: "Hi",
-    time: "36s",
-    image: "https://randomuser.me/api/portraits/men/3.jpg",
-    active: false,
-  },
-  {
-    name: "Ravi Agarwal",
-    message: "Hi",
-    time: "3w",
-    image: "https://randomuser.me/api/portraits/men/4.jpg",
-    active: false,
-  },
-  {
-    name: "Param N",
-    message: "Hi",
-    time: "12m",
-    image: "https://randomuser.me/api/portraits/men/5.jpg",
-    active: false,
-  },
-  {
-    name: "Surya Kala",
-    message: "Hi",
-    time: "1h",
-    image: "https://randomuser.me/api/portraits/men/6.jpg",
-    active: false,
-  },
-  {
-    name: "Devdas B",
-    message: "Hi",
-    time: "5m",
-    image: "https://randomuser.me/api/portraits/men/7.jpg",
-    active: false,
-  },
-  {
-    name: "Ayush Dhyan",
-    message: "Hi",
-    time: "36s",
-    image: "https://randomuser.me/api/portraits/men/3.jpg",
-    active: false,
-  },
-  {
-    name: "Ravi Agarwal",
-    message: "Hi",
-    time: "3w",
-    image: "https://randomuser.me/api/portraits/men/4.jpg",
-    active: false,
-  },
-  {
-    name: "Param N",
-    message: "Hi",
-    time: "12m",
-    image: "https://randomuser.me/api/portraits/men/5.jpg",
-    active: false,
-  },
-  {
-    name: "Surya Kala",
-    message: "Hi",
-    time: "1h",
-    image: "https://randomuser.me/api/portraits/men/6.jpg",
-    active: false,
-  },
-  {
-    name: "Devdas B",
-    message: "Hi",
-    time: "5m",
-    image: "https://randomuser.me/api/portraits/men/7.jpg",
-    active: false,
-  },
-  {
-    name: "Ayush Dhyan",
-    message: "Hi",
-    time: "36s",
-    image: "https://randomuser.me/api/portraits/men/3.jpg",
-    active: false,
-  },
-  {
-    name: "Ravi Agarwal",
-    message: "Hi",
-    time: "3w",
-    image: "https://randomuser.me/api/portraits/men/4.jpg",
-    active: false,
-  },
-  {
-    name: "Param N",
-    message: "Hi",
-    time: "12m",
-    image: "https://randomuser.me/api/portraits/men/5.jpg",
-    active: false,
-  },
-  {
-    name: "Surya Kala",
-    message: "Hi",
-    time: "1h",
-    image: "https://randomuser.me/api/portraits/men/6.jpg",
-    active: false,
-  },
-  {
-    name: "Devdas B",
-    message: "Hi",
-    time: "5m",
-    image: "https://randomuser.me/api/portraits/men/7.jpg",
-    active: false,
-  },
-];
-
 const Chatusers = () => {
   const [memberdata, setmemberdata] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -137,9 +15,8 @@ const Chatusers = () => {
   const getUser = async () => {
     try {
       const token = await gettoken();
-    
 
-      const response = await fetch(`${url}/api/members/`, {
+      const response = await fetch(`${url}/api/chat/recent-chats`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -148,15 +25,13 @@ const Chatusers = () => {
       });
 
       const data = await response.json();
-
+      console.log(data);
       if (response.ok) {
-   
-        setmemberdata(data);
+        setmemberdata(data.recentChats);
       } else {
         toast.error(data?.message || "failed.");
       }
     } catch (error) {
-      console.log(error);
       toast.error("An error occurred. Please try again.");
     }
   };
@@ -191,14 +66,18 @@ const Chatusers = () => {
       <ul className="divide-y divide-gray-200">
         {filteredMembers?.map((user, index) => (
           <Link
-            href={`/alumni/chat/${user._id}`}
-            key={user._id}
+            href={`/alumni/chat/${user.userId}`}
+            key={user?.userId}
             className={`flex items-center hover:bg-gray-200 cursor-pointer p-4 space-x-3 ${
               user.active ? "bg-gray-200" : "bg-white"
             }`}
           >
             <img
-              src="https://randomuser.me/api/portraits/men/1.jpg"
+              src={
+                user?.profilePicture
+                  ? `${url}/uploads/${user?.profilePicture?.split("\\").pop()}`
+                  : "/memberpage/member.png"
+              }
               alt={user.name}
               className="w-12 h-12 rounded-full object-cover"
             />

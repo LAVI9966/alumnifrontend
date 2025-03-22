@@ -6,29 +6,6 @@ import toast from "react-hot-toast";
 import gettoken from "@/app/function/gettoken";
 import EventCardSkeleton from "../../../components/homepage/eventCardSkeleton.jsx";
 import Link from "next/link.js";
-// const EventCardSkeleton = () => {
-//   return (
-//     <div className="bg-white p-4 max-w-[380px] shadow-lg rounded-lg overflow-hidden animate-pulse">
-//       {/* Image Skeleton */}
-//       <div className="w-full h-48 bg-gray-300 rounded"></div>
-
-//       {/* Title Skeleton */}
-//       <div className="mt-4 h-6 bg-gray-300 w-3/4 rounded"></div>
-
-//       {/* Date & Icon Skeleton */}
-//       <div className="mt-2 flex items-center gap-2">
-//         <div className="w-5 h-5 bg-gray-300 rounded"></div>
-//         <div className="h-4 bg-gray-300 w-1/3 rounded"></div>
-//       </div>
-
-//       {/* Description Skeleton */}
-//       <div className="mt-2 h-4 bg-gray-300 w-5/6 rounded"></div>
-
-//       {/* Button Skeleton */}
-//       <div className="mt-4 h-8 bg-gray-300 w-24 rounded"></div>
-//     </div>
-//   );
-// };
 
 const EventCards = () => {
   const [allevents, setallEvents] = useState([]);
@@ -60,7 +37,6 @@ const EventCards = () => {
         setLoading(false);
       }
     } catch (error) {
-      console.log(error);
       toast.error("An error occurred. Please try again.");
       setLoading(false);
     }
@@ -79,7 +55,7 @@ const EventCards = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Add token in headers
         },
-        body: JSON.stringify({ eventIds: [eventid]}), // Ensure body is a string
+        body: JSON.stringify({ eventIds: [eventid] }), // Ensure body is a string
       });
 
       const data = await response.json();
@@ -97,14 +73,19 @@ const EventCards = () => {
 
   return (
     <div className="min-h-screen max-w-[1200px] w-full mx-auto pt-8 px-4 sm:p-8">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold mb-6">Upcoming Events</h2>
-        <Link
-          href="registeredevent"
-          className="px-4 py-2 flex justify-center items-center bg-custom-blue text-white rounded-lg shadow-md hover:bg-black transition"
-        >
-          Registered Event
-        </Link>
+      <div
+        className="flex flex-col mb-2
+      "
+      >
+        <h2 className="text-2xl font-bold mb-2">Upcoming Events</h2>
+        <div className="flex justify-end">
+          <Link
+            href="registeredevent"
+            className="px-4 py-2 flex justify-center items-center bg-custom-blue text-white rounded-lg shadow-md hover:bg-black transition"
+          >
+            Registered Event
+          </Link>
+        </div>
       </div>
 
       {/* Show loading first before anything else */}
@@ -129,7 +110,11 @@ const EventCards = () => {
               className="bg-white p-4 w-full md:max-w-[380px] shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
             >
               <img
-                src="/events/events.jfif"
+                src={
+                  event?.imageUrl
+                    ? `${url}/uploads/${event?.imageUrl?.split("\\").pop()}`
+                    : "/events/events.jfif"
+                }
                 alt={event?.title}
                 className="w-full h-48 object-cover"
               />

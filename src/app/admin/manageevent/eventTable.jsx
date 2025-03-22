@@ -159,6 +159,8 @@ export function EventDataTable() {
               title={event.title}
               description={event.description}
               date={event.date}
+              imageUrl={event.imageUrl}
+              AddEvent
             />
             <button
               onClick={() => handleDelete(event._id)}

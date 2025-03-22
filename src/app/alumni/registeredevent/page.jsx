@@ -27,7 +27,7 @@ const EventCards = () => {
       });
 
       const data = await response.json();
-      console.log(data);
+
       if (response.ok) {
         setLoading(false);
 
@@ -76,15 +76,21 @@ const EventCards = () => {
   };
   return (
     <div className="min-h-screen max-w-[1200px] w-full mx-auto pt-8 px-4 sm:p-8">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold mb-6">Registered Events</h2>
-        <Link
-          href="events"
-          className="px-4 py-2 flex justify-center items-center bg-custom-blue text-white rounded-lg shadow-md hover:bg-black transition"
-        >
-          All Events
-        </Link>
+      <div
+        className="flex flex-col mb-2
+      "
+      >
+        <h2 className="text-2xl font-bold mb-2">Registered Events</h2>
+        <div className="flex justify-end">
+          <Link
+            href="events"
+            className="px-4 py-2 flex justify-center items-center bg-custom-blue text-white rounded-lg shadow-md hover:bg-black transition"
+          >
+            All Events
+          </Link>
+        </div>
       </div>
+
       {/* Show loading first before anything else */}
       {loading ? (
         <div>
@@ -107,10 +113,17 @@ const EventCards = () => {
               className="bg-white p-4 w-full md:max-w-[380px] shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
             >
               <img
-                src="/events/events.jfif"
+                src={
+                  event?.event?.imageUrl
+                    ? `${url}/uploads/${event?.event?.imageUrl
+                        ?.split("\\")
+                        .pop()}`
+                    : "/events/events.jfif"
+                }
                 alt={event?.event.title}
                 className="w-full h-48 object-cover"
               />
+
               <div className="pt-2">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                   {event?.event.title}

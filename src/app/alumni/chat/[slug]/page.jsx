@@ -10,7 +10,6 @@ import { useParams } from "next/navigation";
 // const socket = io("ws://localhost:8000");
 const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL);
 
-
 const Chatmain = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -20,6 +19,7 @@ const Chatmain = () => {
   const url = process.env.NEXT_PUBLIC_URL;
   const { slug } = useParams();
   const messagesEndRef = useRef(null);
+  const [imgurl, setImgurl] = useState(null);
   useEffect(() => {
     getUser();
   }, []);
@@ -37,14 +37,23 @@ const Chatmain = () => {
       });
 
       const data = await response.json();
-      console.log(data);
+
       if (response.ok) {
         setMemberData(data);
+        console.log(data);
+        const person = data.find((val) => val._id === slug);
+        console.log(person);
+        if (person && person?.profilePicture) {
+          const imgsrc = person?.profilePicture
+            ? `${url}/uploads/${person?.profilePicture?.split("\\").pop()}`
+            : "";
+
+          setImgurl(imgsrc);
+        }
       } else {
         toast.error(data?.message || "failed.");
       }
     } catch (error) {
-      console.log(error);
       toast.error("An error occurred. Please try again.");
     }
   };
@@ -98,7 +107,7 @@ const Chatmain = () => {
         });
 
         const data = await response.json();
-        console.log(data);
+
         if (response.ok) {
           setMessages(data.data);
         } else {
@@ -114,12 +123,10 @@ const Chatmain = () => {
   }, [slug]);
   const getName = (id) => {
     const member = memberdata.find((val) => val._id === id);
+
     return member ? member.name : "User"; // Return name if found, else "Not Found"
   };
 
-  // console.log(id, memberdata);
-  // return;
-  // Send message
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -186,7 +193,8 @@ const Chatmain = () => {
                   <Avatar className="cursor-pointer">
                     <AvatarImage
                       className="w-10 h-10 rounded-full"
-                      src="https://github.com/shadcn.png"
+                      imgurl
+                      src={imgurl ? imgurl : "/memberpage/member.png"}
                       alt="avatar"
                     />
                   </Avatar>

@@ -4,10 +4,15 @@ import { Icon } from "@iconify/react";
 import toast from "react-hot-toast";
 import gettoken from "@/app/function/gettoken";
 import Link from "next/link";
-const UserCard = ({ name, id, batch, jobTitle, image, userid }) => (
+const UserCard = ({ name, id, url, batch, jobTitle, image, userid }) => (
   <div className="bg-white shadow-md rounded-xl p-2 flex items-start space-x-4">
     <img
-      src={image || "/memberpage/member.png"}
+      src={
+        image
+          ? `${url}/uploads/${image?.split("\\").pop()}`
+          : "/memberpage/member.png"
+      }
+      
       alt={name}
       className="w-16 h-16 rounded-full"
     />
@@ -74,7 +79,6 @@ const Allmembers = () => {
         toast.error(data?.message || "failed.");
       }
     } catch (error) {
-      console.log(error);
       toast.error("An error occurred. Please try again.");
     }
   };
@@ -142,8 +146,9 @@ const Allmembers = () => {
               name={val.name}
               // batch={val.batch}
               jobTitle={val.role}
-              // image={val.image}
+              image={val.profilePicture}
               userid={user?.id}
+              url={url}
             />
           ))}
         </div>

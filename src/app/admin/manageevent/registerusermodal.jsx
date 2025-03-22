@@ -63,7 +63,7 @@ const RegisteredUser = ({ eventId }) => {
       );
 
       const result = await response.json();
-      console.log(result);
+     
       if (response.ok) {
         const formattedData = result.registrations.map((registration) => ({
           id: registration._id,

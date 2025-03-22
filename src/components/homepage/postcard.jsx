@@ -1,7 +1,17 @@
 "use client";
+import gettoken from "@/app/function/gettoken";
 import { Icon } from "@iconify/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import Image from "next/image";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 export const timeAgo = (timestamp) => {
   if (!timestamp) return "Invalid date";
 
@@ -34,32 +44,82 @@ export const timeAgo = (timestamp) => {
 };
 
 import React from "react";
-const Postcard = ({ postData }) => {
+import toast from "react-hot-toast";
+const Postcard = ({ postData, getPosts, userid }) => {
   const [showComments, setShowComments] = React.useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
-
+  const handleDelete = async (id) => {
+    try {
+      const token = await gettoken();
+      const response = await fetch(`${url}/api/posts/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token in headers
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success(data?.message || "successfully deleted.");
+        getPosts();
+      } else {
+        toast.error(data?.message || "failed.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+    }
+  };
   return (
-    <div className="mb-4 p-4 bg-white shadow-md rounded-lg">
+    <div className="mb-4 p-4 relative bg-white shadow-md rounded-lg">
       {/* User Info */}
-      <div className="flex items-center mb-2">
-        <Avatar className=" cursor-pointer">
-          <AvatarImage
-            className="w-10 h-10 rounded-full"
-            src={`${url}/uploads/${postData?.user?.profilePicture
-              ?.split("\\")
-              .pop()}`}
-            alt="avtar"
-          />
-        </Avatar>
-
-        <div className="ml-3">
-          <p className="font-semibold text-sm">{postData.user.name}</p>
-          <p className="text-xs text-gray-500">
-            {timeAgo(postData?.createdAt)}
-          </p>
+      <div className="flex w-full justify-between items-center">
+        <div className="flex items-center mb-2">
+          <Avatar className=" cursor-pointer">
+            <AvatarImage
+              className="w-10 h-10 rounded-full"
+              src={`${url}/uploads/${postData?.user?.profilePicture
+                ?.split("\\")
+                .pop()}`}
+              alt="avtar"
+            />
+          </Avatar>
+          {}
+          <div className="ml-3">
+            <p className="font-semibold text-sm">{postData.user.name}</p>
+            <p className="text-xs text-gray-500">
+              {timeAgo(postData?.createdAt)}
+            </p>
+          </div>
         </div>
+        {userid === postData?.user?._id ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="focus:outline-none">
+              <Icon
+                icon="qlementine-icons:menu-dots-16"
+                width="28"
+                height="28"
+                className="cursor-pointer"
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-32 mr-10 sm:mr-16 bg-white shadow-lg rounded-lg">
+              <DropdownMenuItem
+                // onClick={onEdit}
+                className="cursor-pointer hover:bg-gray-100 px-4 py-2"
+              >
+                Edit Post
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleDelete(postData?._id)}
+                className="cursor-pointer hover:bg-gray-100 px-4 py-2 text-red-600"
+              >
+                Delete Post
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <div></div>
+        )}
       </div>
-
       {/* Post Content */}
       <p className="font-bold text-sm">{postData?.content}</p>
       {/* <p className="text-xs text-gray-600 mt-2">

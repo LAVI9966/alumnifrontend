@@ -8,6 +8,7 @@ const Chat = () => {
 
   const handleSendMessage = (e) => {
     e.preventDefault();
+    return;
     if (!input.trim()) return;
     setMessages([...messages, { text: input, sender: "You" }]);
     setInput("");
@@ -23,8 +24,8 @@ const Chat = () => {
         <div className="flex items-center justify-between py-3 px-4 bg-white border-b border-[#D9D9D9]">
           <div className="flex items-center space-x-2">
             <div className="text-black flex flex-col gap-2">
-              <p className="text-sm font-semibold">Pratyush Solanki</p>
-              <p className="text-xs text-gray-500">Last Active 5 hours ago</p>
+              <p className="text-sm font-semibold">Select a User To Chat</p>
+              <p className="text-xs text-gray-500">Online</p>
             </div>
           </div>
         </div>
