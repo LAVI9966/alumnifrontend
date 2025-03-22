@@ -24,7 +24,7 @@ import { Icon } from "@iconify/react";
 import AddEvent from "./addEventDialogue";
 import gettoken from "@/app/function/gettoken";
 import toast from "react-hot-toast";
-
+import RegisteredUser from "./registerusermodal";
 export function EventDataTable() {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -40,7 +40,6 @@ export function EventDataTable() {
   const getEvent = async () => {
     try {
       const token = await gettoken();
-     
 
       const response = await fetch(`${url}/api/events`, {
         method: "GET",
@@ -53,13 +52,11 @@ export function EventDataTable() {
       const data = await response.json();
 
       if (response.ok) {
-    
         setData(data);
       } else {
         toast.error(data?.message || "failed.");
       }
     } catch (error) {
-    
       toast.error(error || "An error occurred. Please try again.");
     }
   };
@@ -129,8 +126,22 @@ export function EventDataTable() {
       accessorKey: "description",
       header: "Description",
       cell: ({ row }) => (
-        <div className="capitalize max-w-[300px]">{row.getValue("description")}</div>
+        <div className="capitalize max-w-[300px]">
+          {row.getValue("description")}
+        </div>
       ),
+    },
+    {
+      accessorKey: "registeruser",
+      header: "Register User",
+      cell: ({ row }) => {
+        const val = row.original;
+        return (
+          <div>
+            <RegisteredUser eventId={val._id} />
+          </div>
+        );
+      },
     },
 
     {
@@ -259,7 +270,8 @@ export function EventDataTable() {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-        Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
         </div>
         <div className="space-x-2">
           <Button

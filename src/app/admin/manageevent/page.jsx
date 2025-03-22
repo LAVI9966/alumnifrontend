@@ -5,7 +5,7 @@ const page = () => {
   return (
     <div className="mx-6 ">
       <h2 className="text-custom-blue font-semibold text-2xl">
-        User Management
+      Event Management
       </h2>
       <div className="flex gap-3 w-full mt-4 ">
         <EventDataTable />

@@ -79,7 +79,7 @@ const EventCards = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Add token in headers
         },
-        body: JSON.stringify({ eventIds: eventid }), // Ensure body is a string
+        body: JSON.stringify({ eventIds: [eventid]}), // Ensure body is a string
       });
 
       const data = await response.json();

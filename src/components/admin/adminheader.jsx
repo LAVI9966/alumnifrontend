@@ -2,7 +2,8 @@ import { Icon } from "@iconify/react";
 
 const AdminHeader = () => {
   return (
-    <header className="bg-white p-4 h-12 py-3 flex justify-between shadow-md">
+    <div className={"bg-white p-4  py-4 flex justify-between shadow-md"}>
+      <p className="text-xl text-center w-full font-bold">Admin Dashboard</p>
       {/* Search Bar */}
 
       {/* <div className="p-2 bg-gray-100 flex items-center min-w-[352px] space-x-2 rounded-3xl mx-auto ">
@@ -19,7 +20,7 @@ const AdminHeader = () => {
           />
      
       </div> */}
-    </header>
+    </div>
   );
 };
 

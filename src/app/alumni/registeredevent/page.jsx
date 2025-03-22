@@ -42,7 +42,38 @@ const EventCards = () => {
       setLoading(false);
     }
   };
+  const handleDeRegister = async (eventid) => {
+    try {
+      const token = await gettoken();
+      if (!token) {
+        toast.error("Authentication failed. Please log in again.");
+        return;
+      }
 
+      const response = await fetch(
+        `${url}/api/events/my-registrations/${eventid}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Add token in headers
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(data?.message || "Unregistered successful!");
+        getEvent();
+      } else {
+        toast.error(data?.message || "Unegistration failed.");
+      }
+    } catch (error) {
+      console.error("Error registering event:", error);
+      toast.error("An error occurred. Please try again.");
+    }
+  };
   return (
     <div className="min-h-screen max-w-[1200px] w-full mx-auto pt-8 px-4 sm:p-8">
       <div className="flex justify-between items-center">
@@ -72,30 +103,35 @@ const EventCards = () => {
         <div className="grid w-full md:grid-cols-2 lg:grid-cols-3  gap-6 mb-10">
           {allevents.map((event) => (
             <div
-              key={event._id}
+              key={event?.event._id}
               className="bg-white p-4 w-full md:max-w-[380px] shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
             >
               <img
                 src="/events/events.jfif"
-                alt={event?.title}
+                alt={event?.event.title}
                 className="w-full h-48 object-cover"
               />
               <div className="pt-2">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  {event.title}
+                  {event?.event.title}
                 </h3>
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex flex-col items-start text-[#797979] gap-1 text-sm">
                     <div className="mr-4 flex items-center gap-1">
                       <Icon icon="oui:token-date" width="20" height="20" />{" "}
-                      {new Date(event.date).toISOString().split("T")[0]}
+                      {new Date(event.event.date).toISOString().split("T")[0]}
                     </div>
                   </div>
-                  <button className="border border-[#C7A006] text-sm rounded-lg w-24 p-1">
-                    Register
+                  <button
+                    onClick={() => handleDeRegister(event?._id)}
+                    className="border border-[#C7A006] text-sm rounded-lg w-24 p-1"
+                  >
+                    Unregister
                   </button>
                 </div>
-                <p className="text-[#797979] text-sm">{event.description}</p>
+                <p className="text-[#797979] text-sm">
+                  {event?.event?.description}
+                </p>
               </div>
             </div>
           ))}
