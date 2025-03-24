@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -11,11 +11,18 @@ import ForgotPassword from "../login/forgotpassmodal";
 
 const ResetPassword = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-  const url = process.env.NEXT_PUBLIC_URL;
 
+  const [token, setToken] = useState(null);
+  const router = useRouter();
+
+  const url = process.env.NEXT_PUBLIC_URL;
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+
+      setToken(params.get("token"));
+    }
+  }, []);
   const validationSchema = Yup.object().shape({
     newPassword: Yup.string()
       .min(6, "Password must be at least 6 characters")
@@ -23,7 +30,6 @@ const ResetPassword = () => {
   });
 
   const handleSubmit = async (values) => {
-   
     setIsSubmitting(true);
     try {
       const response = await fetch(`${url}/api/auth/reset-password`, {
