@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import {
@@ -15,22 +16,36 @@ import { Icon } from "@iconify/react";
 import gettoken from "@/app/function/gettoken";
 import toast from "react-hot-toast";
 
-const CreatePostDialogue = ({ getPosts }) => {
+const CreatePostDialogue = ({ getPosts, postData }) => {
   const [previewImage, setPreviewImage] = useState(null);
-  const [isOpen, setIsOpen] = useState(false); // State for modal visibility
+  const [isOpen, setIsOpen] = useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
+ 
+  useEffect(() => {
+    if (postData && postData.imageUrl) {
+      const src = `${url}/uploads/${postData?.imageUrl?.split("\\").pop()}`;
+      setPreviewImage(src);
+    }
+  }, [postData]);
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger
-        className="w-full bg-custom-blue text-white py-2 rounded-lg"
+        className={
+          postData
+            ? "cursor-pointer w-full text-start hover:bg-gray-100 px-4 py-2"
+            : "w-full bg-custom-blue text-white py-2 rounded-lg"
+        }
         onClick={() => setIsOpen(true)}
       >
-        Create Post
+        {postData ? "Edit Post" : "Create Post"}
       </AlertDialogTrigger>
       <AlertDialogContent className="p-0 max-w-2xl px-4 md:px-0 gap-0">
         <Formik
-          initialValues={{ content: "", imageUrl: null }}
+          initialValues={{
+            content: postData?.content || "",
+            imageUrl: null,
+          }}
           validationSchema={Yup.object({
             content: Yup.string().required("Caption is required"),
             imageUrl: Yup.mixed().required("Image is required"),
@@ -39,13 +54,17 @@ const CreatePostDialogue = ({ getPosts }) => {
             try {
               const formData = new FormData();
               formData.append("content", values.content);
-
               if (values.imageUrl) {
                 formData.append("image", values.imageUrl);
               }
 
-              const response = await fetch(`${url}/api/posts`, {
-                method: "POST",
+              const apiUrl = postData
+                ? `${url}/api/posts/${postData._id}`
+                : `${url}/api/posts`;
+              const method = postData ? "PUT" : "POST";
+
+              const response = await fetch(apiUrl, {
+                method,
                 headers: {
                   Authorization: `Bearer ${await gettoken()}`,
                 },
@@ -54,11 +73,15 @@ const CreatePostDialogue = ({ getPosts }) => {
 
               const data = await response.json();
               if (response.ok) {
-                toast.success("Post created successfully!");
+                toast.success(
+                  postData
+                    ? "Post updated successfully!"
+                    : "Post created successfully!"
+                );
                 resetForm();
                 setPreviewImage(null);
                 getPosts();
-                setIsOpen(false); // Close modal on success
+                setIsOpen(false);
               } else {
                 toast.error(data.message || "Something went wrong");
               }
@@ -82,7 +105,7 @@ const CreatePostDialogue = ({ getPosts }) => {
                       onChange={(event) => {
                         const file = event.currentTarget.files[0];
                         if (file) {
-                          setFieldValue("imageUrl", event.target.files[0]);
+                          setFieldValue("imageUrl", file);
                           setPreviewImage(URL.createObjectURL(file));
                         }
                       }}
@@ -139,7 +162,7 @@ const CreatePostDialogue = ({ getPosts }) => {
                   className="bg-custom-blue text-white py-2 px-10 rounded-lg"
                   disabled={isSubmitting}
                 >
-                  Upload
+                  {postData ? "Update" : "Upload"}
                 </button>
               </AlertDialogFooter>
             </Form>
@@ -151,6 +174,169 @@ const CreatePostDialogue = ({ getPosts }) => {
 };
 
 export default CreatePostDialogue;
+
+// import React, { useState } from "react";
+// import { Formik, Form, Field } from "formik";
+// import * as Yup from "yup";
+// import {
+//   AlertDialog,
+//   AlertDialogAction,
+//   AlertDialogCancel,
+//   AlertDialogContent,
+//   AlertDialogFooter,
+//   AlertDialogTitle,
+//   AlertDialogTrigger,
+// } from "@/components/ui/alert-dialog";
+// import { Icon } from "@iconify/react";
+// import gettoken from "@/app/function/gettoken";
+// import toast from "react-hot-toast";
+// import { DropdownMenuItem } from "../ui/dropdown-menu";
+
+// const CreatePostDialogue = ({ getPosts, postData }) => {
+//   const [previewImage, setPreviewImage] = useState(null);
+//   const [isOpen, setIsOpen] = useState(false); // State for modal visibility
+//   const url = process.env.NEXT_PUBLIC_URL;
+
+//   return (
+//     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+//       {postData ? (
+//         <AlertDialogTrigger
+//           className="cursor-pointer w-full text-start  hover:bg-gray-100 px-4 py-2"
+//           onClick={() => setIsOpen(true)}
+//         >
+//         Edit Post
+//         </AlertDialogTrigger>
+//       ) : (
+//         <AlertDialogTrigger
+//           className="w-full bg-custom-blue text-white py-2 rounded-lg"
+//           onClick={() => setIsOpen(true)}
+//         >
+//           Create Post
+//         </AlertDialogTrigger>
+//       )}
+//       <AlertDialogContent className="p-0 max-w-2xl px-4 md:px-0 gap-0">
+//         <Formik
+//           initialValues={{ content: "", imageUrl: null }}
+//           validationSchema={Yup.object({
+//             content: Yup.string().required("Caption is required"),
+//             imageUrl: Yup.mixed().required("Image is required"),
+//           })}
+//           onSubmit={async (values, { setSubmitting, resetForm }) => {
+//             try {
+//               const formData = new FormData();
+//               formData.append("content", values.content);
+
+//               if (values.imageUrl) {
+//                 formData.append("image", values.imageUrl);
+//               }
+
+//               const response = await fetch(`${url}/api/posts`, {
+//                 method: "POST",
+//                 headers: {
+//                   Authorization: `Bearer ${await gettoken()}`,
+//                 },
+//                 body: formData,
+//               });
+
+//               const data = await response.json();
+//               if (response.ok) {
+//                 toast.success("Post created successfully!");
+//                 resetForm();
+//                 setPreviewImage(null);
+//                 getPosts();
+//                 setIsOpen(false); // Close modal on success
+//               } else {
+//                 toast.error(data.message || "Something went wrong");
+//               }
+//             } catch (error) {
+//               console.error(error);
+//               toast.error("Network error, please try again later.");
+//             } finally {
+//               setSubmitting(false);
+//             }
+//           }}
+//         >
+//           {({ setFieldValue, values, isSubmitting }) => (
+//             <Form>
+//               <AlertDialogTitle>
+//                 <div className="p-2 border-b flex items-center justify-between">
+//                   <label className="cursor-pointer">
+//                     <input
+//                       type="file"
+//                       className="hidden"
+//                       accept="image/*"
+//                       onChange={(event) => {
+//                         const file = event.currentTarget.files[0];
+//                         if (file) {
+//                           setFieldValue("imageUrl", event.target.files[0]);
+//                           setPreviewImage(URL.createObjectURL(file));
+//                         }
+//                       }}
+//                     />
+//                     <Icon
+//                       icon="solar:gallery-broken"
+//                       width="20"
+//                       height="20"
+//                       className="text-gray-400"
+//                     />
+//                   </label>
+//                   <AlertDialogCancel
+//                     className="text-gray-400"
+//                     onClick={() => setIsOpen(false)}
+//                   >
+//                     <Icon icon="system-uicons:cross" width="30" height="30" />
+//                   </AlertDialogCancel>
+//                 </div>
+//                 <div>
+//                   <Field
+//                     as="textarea"
+//                     name="content"
+//                     placeholder="Say something..."
+//                     className="w-full outline-none p-2 text-sm text-gray-600"
+//                   />
+//                 </div>
+//               </AlertDialogTitle>
+//               <div className="bg-white overflow-hidden">
+//                 <div className="h-56 bg-gray-300 relative flex items-center justify-center">
+//                   {previewImage && (
+//                     <>
+//                       <Icon
+//                         onClick={() => {
+//                           setFieldValue("imageUrl", null);
+//                           setPreviewImage(null);
+//                         }}
+//                         className="cursor-pointer text-gray-800 absolute top-2 right-2 bg-white rounded-full p-2 shadow-sm border border-gray-300"
+//                         icon="material-symbols:delete-outline-rounded"
+//                         width="40"
+//                         height="40"
+//                       />
+//                       <img
+//                         src={previewImage}
+//                         alt="Preview"
+//                         className="max-h-full max-w-full object-cover"
+//                       />
+//                     </>
+//                   )}
+//                 </div>
+//               </div>
+//               <AlertDialogFooter className="p-2">
+//                 <button
+//                   type="submit"
+//                   className="bg-custom-blue text-white py-2 px-10 rounded-lg"
+//                   disabled={isSubmitting}
+//                 >
+//                   Upload
+//                 </button>
+//               </AlertDialogFooter>
+//             </Form>
+//           )}
+//         </Formik>
+//       </AlertDialogContent>
+//     </AlertDialog>
+//   );
+// };
+
+// export default CreatePostDialogue;
 
 // import React from "react";
 // import {

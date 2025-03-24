@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import useVerifyToken from "@/hook/useVerifyToken";
+import ForgotPassword from "./forgotpassmodal.jsx"
 export default function SignupPage() {
   const [passwordVisible, setPasswordVisible] = React.useState(false);
   const togglePasswordVisibility = () => {
@@ -19,6 +20,24 @@ export default function SignupPage() {
   const url = process.env.NEXT_PUBLIC_URL;
 
   useVerifyToken();
+  const forgotPassword = async (email) => {
+ 
+    try {
+      const response = await fetch(`${url}/api/auth/forgot-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+  
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      toast.success(data?.message || "Password reset email sent. Check your inbox.");
+    } catch (error) {
+      console.error("Forgot Password Error:", error.message);
+      alert(error.message);
+    }
+  };
+  
   return (
     <div className="min-h-screen bg-[#ffffff] flex">
       <div className="w-full mb-10">
@@ -57,6 +76,9 @@ export default function SignupPage() {
                 .required("Password is required"),
             })}
             onSubmit={async (values, { setSubmitting }) => {
+              console.log(values);
+              console.log(typeof values.password);
+             
               try {
                 const response = await fetch(`${url}/api/auth/login`, {
                   method: "POST",
@@ -124,16 +146,9 @@ export default function SignupPage() {
               <div className="flex justify-center">
                 <Image src={captcha} alt="captcha" />
               </div> */}
-                {/* 
-                <div className="mt-4 text-center text-[#000000]">
-                  <p className="text-sm">
-                    Forgot Password?{" "}
-                    <Link href="#" className="font-semibold underline">
-                      Click here
-                    </Link>
-                  </p>
-                </div> */}
-
+                
+               
+                <ForgotPassword />
                 <div className="w-full flex justify-center">
                   <button
                     type="submit"

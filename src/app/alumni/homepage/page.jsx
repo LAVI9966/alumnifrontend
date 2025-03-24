@@ -6,17 +6,13 @@ import Eventcard from "@/components/homepage/eventcard";
 import EventCardSkeleton from "@/components/homepage/eventCardSkeleton";
 import Postcard from "@/components/homepage/postcard";
 import Upcommingevent from "@/components/homepage/upcommingevent";
-import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-// import EventCardSkeleton from "../../../components/homepage/eventCardSkeleton.jsx";
 const page = () => {
   const [allposts, setAllposts] = useState([]);
   const [isloading, setIsloading] = useState(false);
-    const [user, setUser] = React.useState(null);
-  const router = useRouter();
+  const [user, setUser] = React.useState(null);
   const url = process.env.NEXT_PUBLIC_URL;
   React.useEffect(() => {
     if (typeof window !== "undefined") {

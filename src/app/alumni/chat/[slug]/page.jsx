@@ -19,7 +19,7 @@ const Chatmain = () => {
   const url = process.env.NEXT_PUBLIC_URL;
   const { slug } = useParams();
   const messagesEndRef = useRef(null);
-  const [imgurl, setImgurl] = useState(null);
+  const [imgurl, setImgurl] = useState("");
   useEffect(() => {
     getUser();
   }, []);

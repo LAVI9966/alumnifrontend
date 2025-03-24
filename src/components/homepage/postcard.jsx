@@ -45,6 +45,7 @@ export const timeAgo = (timestamp) => {
 
 import React from "react";
 import toast from "react-hot-toast";
+import CreatePostDialogue from "./createpostdialogue";
 const Postcard = ({ postData, getPosts, userid }) => {
   const [showComments, setShowComments] = React.useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
@@ -77,9 +78,13 @@ const Postcard = ({ postData, getPosts, userid }) => {
           <Avatar className=" cursor-pointer">
             <AvatarImage
               className="w-10 h-10 rounded-full"
-              src={`${url}/uploads/${postData?.user?.profilePicture
-                ?.split("\\")
-                .pop()}`}
+              src={
+                postData?.user?.profilePicture
+                  ? `${url}/uploads/${postData?.user?.profilePicture
+                      ?.split("\\")
+                      .pop()}`
+                  : "/memberpage/member.png"
+              }
               alt="avtar"
             />
           </Avatar>
@@ -101,16 +106,17 @@ const Postcard = ({ postData, getPosts, userid }) => {
                 className="cursor-pointer"
               />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-32 mr-10 sm:mr-16 bg-white shadow-lg rounded-lg">
-              <DropdownMenuItem
+            <DropdownMenuContent className="w-36 mr-10 sm:mr-16 bg-white shadow-lg rounded-lg">
+              {/* <DropdownMenuItem
                 // onClick={onEdit}
                 className="cursor-pointer hover:bg-gray-100 px-4 py-2"
               >
                 Edit Post
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
+              <CreatePostDialogue getPosts={getPosts} postData={postData} />
               <DropdownMenuItem
                 onClick={() => handleDelete(postData?._id)}
-                className="cursor-pointer hover:bg-gray-100 px-4 py-2 text-red-600"
+                className="cursor-pointer w-full mx-auto hover:bg-gray-100 px-4 py-2 text-red-600"
               >
                 Delete Post
               </DropdownMenuItem>

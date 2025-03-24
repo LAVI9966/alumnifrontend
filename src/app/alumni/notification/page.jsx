@@ -36,10 +36,12 @@ const page = () => {
         <div className="flex flex-col gap-3 ">
           {alumniUpdates.map((val, index) => {
             return (
-              <div>
+              <div key={index}>
                 <div className="flex justify-between py-2">
                   <div>
-                    <p className="text-[#131A45] font-semibold max-w-md">{val.text}</p>
+                    <p className="text-[#131A45] font-semibold max-w-md">
+                      {val.text}
+                    </p>
                     <p className="text-[#717171] text-xs">{val.date}</p>
                   </div>
                   <Icon icon="basil:cross-solid" width="24" height="24" />
