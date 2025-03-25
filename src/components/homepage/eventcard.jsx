@@ -1,13 +1,17 @@
 import Image from "next/image";
 import React from "react";
 
-const Eventcard = ({ date, title, description }) => {
+const Eventcard = ({ date, title, description, src, url }) => {
   return (
     <div className="flex w-[317px] lg:w-full  bg-white shadow-md rounded-lg overflow-hidden p-3">
       <Image
         width={300}
         height={300}
-        src="/homepage/eventimg.png"
+        src={
+          src
+            ? `${url}/uploads/${src?.split("\\").pop()}`
+            : "/events/events.jfif"
+        }
         alt="Event"
         className="w-[152px] h-[109px] rounded-md object-cover"
       />
@@ -21,7 +25,6 @@ const Eventcard = ({ date, title, description }) => {
             {" "}
             {new Date(date).toISOString().split("T")[0]}
           </p>
-          {/* <p className="text-sm text-gray-700">Dummy Location</p> */}
         </div>
       </div>
     </div>

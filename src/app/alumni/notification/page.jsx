@@ -1,10 +1,4 @@
 import React from "react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Icon } from "@iconify/react";
 const alumniUpdates = [
   {
@@ -16,7 +10,7 @@ const alumniUpdates = [
     date: "February 26, 2023",
   },
   {
-    text: "New message received! Someone has sent you a message. Check your inbox now.",
+    text: "New message received! Gaurav has sent you a message. Check your inbox now.",
     date: "April 25, 2022",
   },
   {
@@ -24,7 +18,7 @@ const alumniUpdates = [
     date: "March 6, 2022",
   },
   {
-    text: "Update your profile! Keep your details up-to-date to stay connected with your alumni network.",
+    text: "Update your profile Gaurav! Keep your details up-to-date to stay connected with your alumni network.",
     date: "March 1, 2022",
   },
 ];

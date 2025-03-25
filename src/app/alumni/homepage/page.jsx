@@ -74,12 +74,7 @@ const page = () => {
             targetlink="/alumni/events"
             buttonname="View Events"
           />
-          {/* <Alumnihomepagecard
-            title="Career Opportunities"
-            desc="Discover job postings and mentorship programs shared by alumni."
-            targetlink="#"
-            buttonname="Find Opportunities"
-          /> */}
+         
         </div>
       </div>
 

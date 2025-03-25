@@ -164,7 +164,7 @@ const Chatmain = () => {
       <div className="w-full lg:w-[25%] hidden md:block">
         <Chatusers />
       </div>
-      <div className="max-w-[900px] w-full lg:w-[75%] mx-auto bg-white shadow-lg rounded-lg h-[600px] flex flex-col ml-4">
+      <div className="max-w-[900px] w-full lg:w-[75%] mx-auto bg-white shadow-lg rounded-lg h-[600px] flex flex-col md:ml-4">
         {/* Header */}
         <div className="flex items-center justify-between py-3 px-4 bg-white border-b border-[#D9D9D9]">
           <div className="flex items-center space-x-2">
@@ -193,7 +193,7 @@ const Chatmain = () => {
                   <Avatar className="cursor-pointer">
                     <AvatarImage
                       className="w-10 h-10 rounded-full"
-                      imgurl
+                    
                       src={imgurl ? imgurl : "/memberpage/member.png"}
                       alt="avatar"
                     />

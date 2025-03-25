@@ -12,7 +12,6 @@ const UserCard = ({ name, id, url, batch, jobTitle, image, userid }) => (
           ? `${url}/uploads/${image?.split("\\").pop()}`
           : "/memberpage/member.png"
       }
-      
       alt={name}
       className="w-16 h-16 rounded-full"
     />
@@ -97,7 +96,7 @@ const Allmembers = () => {
         <div className="flex items-center gap-2 mb-6">
           <input
             type="text"
-            placeholder="Search by name, batch year"
+            placeholder="Search by name"
             className="flex-1 px-4 py-2 border rounded-md focus:outline-none w-[60%]"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}

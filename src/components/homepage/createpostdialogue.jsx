@@ -20,7 +20,7 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
   const [previewImage, setPreviewImage] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
- 
+
   useEffect(() => {
     if (postData && postData.imageUrl) {
       const src = `${url}/uploads/${postData?.imageUrl?.split("\\").pop()}`;
@@ -33,7 +33,7 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
       <AlertDialogTrigger
         className={
           postData
-            ? "cursor-pointer w-full text-start hover:bg-gray-100 px-4 py-2"
+            ? "cursor-pointer text-sm w-full text-start hover:bg-gray-100 px-4 py-2"
             : "w-full bg-custom-blue text-white py-2 rounded-lg"
         }
         onClick={() => setIsOpen(true)}
@@ -59,7 +59,7 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
               }
 
               const apiUrl = postData
-                ? `${url}/api/posts/${postData._id}`
+                ? `${url}/api/posts/${postData?._id}`
                 : `${url}/api/posts`;
               const method = postData ? "PUT" : "POST";
 
@@ -118,10 +118,10 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
                     />
                   </label>
                   <AlertDialogCancel
-                    className="text-gray-400"
+                    className="text-black"
                     onClick={() => setIsOpen(false)}
                   >
-                    <Icon icon="system-uicons:cross" width="30" height="30" />
+                    <Icon icon="system-uicons:cross" width="40" height="40" />
                   </AlertDialogCancel>
                 </div>
                 <div>

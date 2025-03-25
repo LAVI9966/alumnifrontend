@@ -46,6 +46,7 @@ export const timeAgo = (timestamp) => {
 import React from "react";
 import toast from "react-hot-toast";
 import CreatePostDialogue from "./createpostdialogue";
+import Link from "next/link";
 const Postcard = ({ postData, getPosts, userid }) => {
   const [showComments, setShowComments] = React.useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
@@ -75,20 +76,38 @@ const Postcard = ({ postData, getPosts, userid }) => {
       {/* User Info */}
       <div className="flex w-full justify-between items-center">
         <div className="flex items-center mb-2">
-          <Avatar className=" cursor-pointer">
-            <AvatarImage
-              className="w-10 h-10 rounded-full"
-              src={
-                postData?.user?.profilePicture
-                  ? `${url}/uploads/${postData?.user?.profilePicture
-                      ?.split("\\")
-                      .pop()}`
-                  : "/memberpage/member.png"
-              }
-              alt="avtar"
-            />
-          </Avatar>
-          {}
+          {userid === postData?.user?._id ? (
+            <Avatar className=" cursor-pointer">
+              <AvatarImage
+                className="w-10 h-10 rounded-full"
+                src={
+                  postData?.user?.profilePicture
+                    ? `${url}/uploads/${postData?.user?.profilePicture
+                        ?.split("\\")
+                        .pop()}`
+                    : "/memberpage/member.png"
+                }
+                alt="avtar"
+              />
+            </Avatar>
+          ) : (
+            <Link href={`chat/${postData?.user?._id}`}>
+              <Avatar className=" cursor-pointer">
+                <AvatarImage
+                  className="w-10 h-10 rounded-full"
+                  src={
+                    postData?.user?.profilePicture
+                      ? `${url}/uploads/${postData?.user?.profilePicture
+                          ?.split("\\")
+                          .pop()}`
+                      : "/memberpage/member.png"
+                  }
+                  alt="avtar"
+                />
+              </Avatar>{" "}
+            </Link>
+          )}
+
           <div className="ml-3">
             <p className="font-semibold text-sm">{postData.user.name}</p>
             <p className="text-xs text-gray-500">
@@ -107,12 +126,6 @@ const Postcard = ({ postData, getPosts, userid }) => {
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-36 mr-10 sm:mr-16 bg-white shadow-lg rounded-lg">
-              {/* <DropdownMenuItem
-                // onClick={onEdit}
-                className="cursor-pointer hover:bg-gray-100 px-4 py-2"
-              >
-                Edit Post
-              </DropdownMenuItem> */}
               <CreatePostDialogue getPosts={getPosts} postData={postData} />
               <DropdownMenuItem
                 onClick={() => handleDelete(postData?._id)}

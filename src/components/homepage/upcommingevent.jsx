@@ -52,6 +52,8 @@ const Upcommingevent = () => {
                 date={val.date}
                 title={val.title}
                 description={val.description}
+                src={val?.imageUrl}
+                url={url}
               />{" "}
             </div>
           ))}

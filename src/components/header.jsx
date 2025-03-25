@@ -58,11 +58,13 @@ const Header = () => {
         >
           <Icon icon="iconoir:message" width="24" height="24" />
         </Link>
-      
-        <Link
-          href="/alumni/notification" className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg">
+
+        {/* <Link
+          href="/alumni/notification"
+          className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg"
+        >
           <Icon icon="line-md:bell" width="24" height="24" />
-        </Link>
+        </Link> */}
         <Link
           href="/alumni/profile"
           className="border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg"
@@ -89,11 +91,17 @@ const Header = () => {
               Chat
             </Link>
           </li>
+
           <li>
+            <Link href="/alumni/members" className="hover:text-gray-300">
+              members
+            </Link>
+          </li>
+          {/* <li>
             <Link href="/alumni/notification" className="hover:text-gray-300">
               Notification
             </Link>
-          </li>
+          </li> */}
 
           <li>
             <Link href="/alumni/about" className="hover:text-gray-300">
