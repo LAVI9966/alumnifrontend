@@ -39,14 +39,6 @@ export const NotificationProvider = ({ children }) => {
         }
     };
 
-    // Initial fetch
-    useEffect(() => {
-        fetchNotificationCount();
-
-        // Set up a refresh interval (optional)
-        const intervalId = setInterval(fetchNotificationCount, 60000); // Refresh every minute
-        return () => clearInterval(intervalId);
-    }, []);
 
     // Function to decrease notification count
     const decrementNotificationCount = () => {

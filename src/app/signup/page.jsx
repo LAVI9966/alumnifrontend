@@ -104,7 +104,7 @@ export default function SignupPage() {
                       type="text"
                       name="collegeNo"
                       placeholder="College No. eg. 1407PS0262"
-                      className="custom-input w-full"
+                      className="custom-input text-black w-full"
                     />
                     <ErrorMessage
                       name="collegeNo"
@@ -117,7 +117,7 @@ export default function SignupPage() {
                       type="text"
                       name="name"
                       placeholder="Full Name"
-                      className="custom-input w-full"
+                      className="custom-input text-black w-full"
                     />
                     <ErrorMessage
                       name="name"
@@ -133,7 +133,7 @@ export default function SignupPage() {
                       type="email"
                       name="email"
                       placeholder="john@example.com"
-                      className="custom-input w-full"
+                      className="custom-input text-black w-full"
                     />
                     <ErrorMessage
                       name="email"
@@ -146,7 +146,7 @@ export default function SignupPage() {
                       type="tel"
                       name="mobileNumber"
                       placeholder="9876541235"
-                      className="custom-input w-full"
+                      className="custom-input text-black w-full"
                     />
                     <ErrorMessage
                       name="mobileNumber"
@@ -161,7 +161,7 @@ export default function SignupPage() {
                     type={passwordVisible ? "text" : "password"}
                     name="password"
                     placeholder="*************"
-                    className="custom-input w-full"
+                    className="custom-input text-black w-full"
                   />
                   <button
                     type="button"

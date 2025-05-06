@@ -20,7 +20,7 @@ const UserCard = ({ name, id, url, batch, jobTitle, image, userid }) => {
         className="w-16 h-16 rounded-full"
       />
       <div className="flex-1">
-        <h2 className="font-semibold text-gray-800">{name}</h2>
+        <h2 className="font-semibold">{name}</h2>
         <p className="text-sm text-[#797979]">{batch}</p>
         <p className="text-sm text-[#797979]">{jobTitle}</p>
       </div>
@@ -109,7 +109,7 @@ const Allmembers = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <button
-              className="bg-custom-blue text-white px-6 py-2 rounded-md w-[30%] sm:w-60"
+              className={`${isDark ? 'bg-[#2A3057]' : 'bg-custom-blue text-white'} px-6 py-2 rounded-md w-[30%] sm:w-60`}
               onClick={handleSearch}
             >
               Search

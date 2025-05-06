@@ -21,14 +21,14 @@ export default function SignupPage() {
 
   useVerifyToken();
   const forgotPassword = async (email) => {
- 
+
     try {
       const response = await fetch(`${url}/api/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-  
+
       const data = await response.json();
       if (!response.ok) throw new Error(data.message);
       toast.success(data?.message || "Password reset email sent. Check your inbox.");
@@ -37,7 +37,7 @@ export default function SignupPage() {
       alert(error.message);
     }
   };
-  
+
   return (
     <div className="min-h-screen bg-[#ffffff] flex">
       <div className="w-full mb-10">
@@ -78,7 +78,7 @@ export default function SignupPage() {
             onSubmit={async (values, { setSubmitting }) => {
               console.log(values);
               console.log(typeof values.password);
-             
+
               try {
                 const response = await fetch(`${url}/api/auth/login`, {
                   method: "POST",
@@ -110,7 +110,7 @@ export default function SignupPage() {
                   type="email"
                   name="email"
                   placeholder="john@example.com"
-                  className="custom-input w-full"
+                  className="custom-input text-black w-full"
                 />
                 <ErrorMessage
                   name="email"
@@ -123,7 +123,7 @@ export default function SignupPage() {
                     type={passwordVisible ? "text" : "password"}
                     name="password"
                     placeholder="*************"
-                    className="custom-input w-full"
+                    className="custom-input text-black w-full"
                   />
                   <button
                     type="button"
@@ -146,8 +146,8 @@ export default function SignupPage() {
               <div className="flex justify-center">
                 <Image src={captcha} alt="captcha" />
               </div> */}
-                
-               
+
+
                 <ForgotPassword />
                 <div className="w-full flex justify-center">
                   <button

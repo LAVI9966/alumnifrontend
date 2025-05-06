@@ -6,46 +6,30 @@ const ThemeContext = createContext();
 
 // Create a provider component
 export const ThemeProvider = ({ children }) => {
-    // Check if the user has a stored preference
     const [theme, setTheme] = useState('light'); // Default to light
 
-    // Initialize theme from localStorage on component mount
+    // On mount, check for stored theme
+    // On mount, check for stored theme
     useEffect(() => {
         const storedTheme = localStorage.getItem('color-theme');
 
         if (storedTheme) {
             setTheme(storedTheme);
         } else {
-            // Check system preference if no stored preference
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                setTheme('dark');
-            }
+            setTheme('light'); // Force light on first load if nothing is stored
         }
-
-        // Add theme class to document root
-        updateThemeClass('light', theme);
     }, []);
 
-    // Update theme class when theme changes
+    // Apply theme to document and localStorage
     useEffect(() => {
-        if (theme) {
-            // Update localStorage
-            localStorage.setItem('color-theme', theme);
-
-            // Update theme class
-            updateThemeClass(theme === 'dark' ? 'light' : 'dark', theme);
-        }
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(theme);
+        localStorage.setItem('color-theme', theme);
     }, [theme]);
-
-    // Helper to update the document classes
-    const updateThemeClass = (removeClass, addClass) => {
-        document.documentElement.classList.remove(removeClass);
-        document.documentElement.classList.add(addClass);
-    };
 
     // Toggle theme function
     const toggleTheme = () => {
-        setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+        setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
     };
 
     return (
@@ -58,7 +42,7 @@ export const ThemeProvider = ({ children }) => {
 // Custom hook to use the theme context
 export const useTheme = () => {
     const context = useContext(ThemeContext);
-    if (context === undefined) {
+    if (!context) {
         throw new Error('useTheme must be used within a ThemeProvider');
     }
     return context;
