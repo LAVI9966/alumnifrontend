@@ -1,9 +1,11 @@
 import Image from "next/image";
 import React from "react";
-
+import { useTheme } from "@/context/ThemeProvider";
 const Eventcard = ({ date, title, description, src, url }) => {
+  const { theme, toggleTheme } = useTheme(); // Use the theme context
+  const isDark = theme === 'dark';
   return (
-    <div className="flex w-[317px] lg:w-full  bg-white shadow-md rounded-lg overflow-hidden p-3">
+    <div className={`flex w-[317px] lg:w-full  ${isDark ? 'bg-[#2A3057] ' : 'bg-white'} shadow-md rounded-lg overflow-hidden p-3`}>
       <Image
         width={300}
         height={300}

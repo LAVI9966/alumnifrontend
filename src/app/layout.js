@@ -2,6 +2,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Head from "next/head";
 import { Toaster } from 'react-hot-toast';
+import { NotificationProvider } from "./alumni/notification/NotificationContext";
+import 'react-image-gallery/styles/css/image-gallery.css';
+import { ThemeProvider } from "@/context/ThemeProvider";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -34,8 +37,14 @@ export default function RootLayout({ children }) {
       <body cz-shortcut-listen="true"
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-        <Toaster />
+        <ThemeProvider>
+
+          <NotificationProvider>
+
+            {children}
+            <Toaster />
+          </NotificationProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

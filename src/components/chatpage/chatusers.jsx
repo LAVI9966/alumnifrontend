@@ -3,11 +3,13 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import React, { useMemo } from "react";
 import toast from "react-hot-toast";
-
+import { useTheme } from "@/context/ThemeProvider";
 const Chatusers = () => {
   const [memberdata, setmemberdata] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState("");
   const url = process.env.NEXT_PUBLIC_URL;
+  const { theme, toggleTheme } = useTheme(); // Use the theme context
+  const isDark = theme === 'dark';
   React.useEffect(() => {
     getUser();
   }, []);
@@ -43,52 +45,53 @@ const Chatusers = () => {
   }, [searchTerm, memberdata]);
 
   return (
-    <div className=" w-full bg-white  shadow-md overflow-scroll max-h-[600px] scrollbar-hide ">
-      {/* Search Bar */}
-      <div className="p-2">
-        <div className="p-2 bg-gray-100 flex items-center space-x-2 rounded-xl">
-          <Icon
-            className="text-gray-500"
-            icon="mynaui:search"
-            width="24"
-            height="24"
-          />
-          <input
-            type="text"
-            placeholder="Search"
-            className="bg-gray-100 w-full outline-none"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </div>
-      {/* Chat List */}
-      <ul className="divide-y divide-gray-200">
-        {filteredMembers?.map((user, index) => (
-          <Link
-            href={`/alumni/chat/${user.userId}`}
-            key={user?.userId}
-            className={`flex items-center hover:bg-gray-200 cursor-pointer p-4 space-x-3 ${
-              user.active ? "bg-gray-200" : "bg-white"
-            }`}
-          >
-            <img
-              src={
-                user?.profilePicture
-                  ? `${url}/uploads/${user?.profilePicture?.split("\\").pop()}`
-                  : "/memberpage/member.png"
-              }
-              alt={user.name}
-              className="w-12 h-12 rounded-full object-cover"
+    <div className={`max-h-[600px] ${isDark ? 'bg-[#2A3057]' : 'bg-white'} `}>
+      <div className={`w-full shadow-md overflow-scroll max-h-[600px] scrollbar-hide `}>
+        {/* Search Bar */}
+        <div className="p-2">
+          <div className="p-2  flex items-center space-x-2 rounded-xl">
+            <Icon
+              className="text-gray-500"
+              icon="mynaui:search"
+              width="24"
+              height="24"
             />
-            <div className="flex-1">
-              <p className="font-semibold text-gray-800">{user.name}</p>
-              <p className="text-gray-500 text-sm">{user.message}</p>
-            </div>
-            <span className="text-gray-400 text-sm">{user.time}</span>
-          </Link>
-        ))}
-      </ul>
+            <input
+              type="text"
+              placeholder="Search"
+              className={`${isDark ? 'bg-[#2A3057]' : 'bg-white'}  w-full`}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+        {/* Chat List */}
+        <ul className="divide-y divide-gray-200">
+          {filteredMembers?.map((user, index) => (
+            <Link
+              href={`/alumni/chat/${user.userId}`}
+              key={user?.userId}
+              className={`flex items-center hover:bg-gray-200 cursor-pointer p-4 space-x-3 ${user.active ? "bg-gray-200" : "bg-white"
+                }`}
+            >
+              <img
+                src={
+                  user?.profilePicture
+                    ? `${url}/uploads/${user?.profilePicture?.split("\\").pop()}`
+                    : "/memberpage/member.png"
+                }
+                alt={user.name}
+                className="w-12 h-12 rounded-full object-cover"
+              />
+              <div className="flex-1">
+                <p className="font-semibold text-gray-800">{user.name}</p>
+                <p className="text-gray-500 text-sm">{user.message}</p>
+              </div>
+              <span className="text-gray-400 text-sm">{user.time}</span>
+            </Link>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

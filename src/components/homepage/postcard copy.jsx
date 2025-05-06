@@ -53,6 +53,7 @@ export const timeAgo = (timestamp) => {
 
 // Update this part in your Postcard.jsx file
 
+// Updated Comment Component with clearer styling for Postcard.jsx
 const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments }) => {
   const [showReplies, setShowReplies] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -65,7 +66,7 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
   const [localReplies, setLocalReplies] = useState(comment.replies || []);
   const [isDeleting, setIsDeleting] = useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
-  const { theme, toggleTheme } = useTheme(); // Use the theme context
+  const { theme } = useTheme(); // Use the theme context
   const isDark = theme === 'dark';
 
   // Update localReplies when comment.replies changes
@@ -140,14 +141,13 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
   };
 
   return (
-    <div className={`flex gap-2 mb-4 ${isDark ? 'bg-[#2A3057]' : 'bg-white'} rounded-lg p-1 `}>
-
+    <div className={`flex gap-2 mb-9 ${isDark ? 'bg-[#2A3057]' : 'bg-white'} rounded-lg p-3 border-l-4 ${isDark ? 'border-blue-400' : 'border-blue-500'}`}>
       <div className="flex-1 min-w-0">
-        <div className="rounded-lg  relative group  ">
+        <div className="rounded-lg relative group">
           <div className="flex items-center gap-3">
-            {/* Avatar */}
+            {/* Avatar with improved styling */}
             <img
-              className="w-8 h-8 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
               src={
                 comment.user?.profilePicture
                   ? `${url}/uploads/${comment.user?.profilePicture?.split("\\").pop()}`
@@ -156,61 +156,61 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
               alt="avatar"
             />
 
-            {/* Username */}
-            <p className="text-[18px] whitespace-nowrap">{comment.user?.name || "User"}</p>
-
-            {/* Timestamp */}
-            <p className="text-[16px] text-gray-500">{timeAgo(comment.createdAt)}</p>
+            <div>
+              {/* Username and timestamp stacked for cleaner look */}
+              <p className="text-[18px] font-medium">{comment.user?.name || "User"}</p>
+              <p className="text-[13px] text-gray-500">{timeAgo(comment.createdAt)}</p>
+            </div>
           </div>
 
-          <p className="text-[16px] mt-2 break-words">{comment.text}</p>
+          {/* Comment text with better spacing and readability */}
+          <p className="text-[16px] mt-3 mb-2 break-words pl-12">{comment.text}</p>
 
           {/* Comment Actions */}
           {(userId === comment.user?._id) && !isDeleting && (
             <button
               onClick={() => handleDeleteComment(comment._id)}
-              className="hidden group-hover:block absolute top-2 right-2 text-gray-400 hover:text-red-500"
+              className="hidden group-hover:block absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors"
               aria-label="Delete comment"
             >
-              <Icon icon="mdi:delete-outline" width="16" height="16" />
+              <Icon icon="mdi:delete-outline" width="18" height="18" />
             </button>
           )}
 
           {/* Deleting indicator */}
           {isDeleting && (
             <div className="absolute top-2 right-2 text-gray-400">
-              <Icon icon="mdi:loading" className="animate-spin" width="16" height="16" />
+              <Icon icon="mdi:loading" className="animate-spin" width="18" height="18" />
             </div>
           )}
         </div>
 
-        {/* Comment interaction buttons */}
-        <div className="flex items-center gap-4 mt-2  text-[16px] text-gray-500">
+        {/* Comment interaction buttons with more visual distinction */}
+        <div className="flex items-center gap-6 mt-1 pl-12 text-[15px] text-gray-500">
           <button
             onClick={handleLikeComment}
-            className={`${isLiked ? "text-blue-600" : "text-gray-500"} `}
+            className={`flex items-center hover:underline ${isLiked ? "text-blue-600" : "text-gray-500"} transition-colors`}
             disabled={isDeleting}
           >
+            <Icon icon={isLiked ? "mdi:heart" : "mdi:heart-outline"} width="18" height="18" className="mr-1" />
             {likesCount > 0 ? `${likesCount} ` : ""}Like
           </button>
           <button
             onClick={() => setIsReplying(!isReplying)}
-            className="text-gray-500  "
+            className="flex items-center hover:underline text-gray-500 transition-colors"
             disabled={isDeleting}
           >
-            <span className="flex items-center flex-row gap-2">
-              <LuReply />
-              Reply
-            </span>
+            <LuReply className="mr-1" size={18} />
+            Reply
           </button>
         </div>
 
-        {/* Reply Form */}
+        {/* Reply Form with improved styling */}
         {isReplying && !isDeleting && (
-          <form onSubmit={handleAddReply} className="mt-3 ml-2 flex items-center justify-center gap-2">
-            <div className="w-6 h-6 mb-5 flex-shrink-0">
+          <form onSubmit={handleAddReply} className="mt-3 ml-12 flex gap-2">
+            <div className="w-8 h-8 flex-shrink-0">
               <img
-                className="w-6 h-6  rounded-full"
+                className="w-8 h-8 rounded-full border border-gray-200"
                 src="/memberpage/member.png"
                 alt="avatar"
               />
@@ -221,31 +221,32 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
                 placeholder="Write a reply..."
-                className={`w-full px-3 py-2 mb-5 text-sm border rounded-lg ${isDark ? 'bg-[#2A3057]' : 'bg-white'} focus:outline-none focus:ring-1 focus:ring-blue-500`}
+                className={`w-full px-4 py-2 text-sm border rounded-lg ${isDark ? 'bg-[#323867] border-gray-700' : 'bg-gray-50 border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                 autoFocus
               />
               <button
                 type="submit"
                 disabled={!replyText.trim()}
-                className="absolute right-3 top-1/3 transform -translate-y-1/2 text-blue-500 disabled:text-gray-300"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-500 disabled:text-gray-300"
               >
-                <Icon icon="mdi:send" width="16" height="16" />
+                <Icon icon="mdi:send" width="18" height="18" />
               </button>
             </div>
           </form>
         )}
 
-        {/* Replies Section - Use our improved component */}
+        {/* Replies Section - Using our improved component with better toggle button */}
         {localReplies.length > 0 && !isDeleting && (
-          <div className="mt-3">
+          <div className="mt-3 ml-12">
             <button
               onClick={handleToggleReplies}
-              className="text-[16px] text-blue-500 font-medium mb-2 flex items-center hover:underline"
+              className={`text-[15px] ${isDark ? 'text-blue-400' : 'text-blue-600'} font-medium mb-2 flex items-center hover:underline`}
             >
               <Icon
                 icon={showReplies ? "mdi:chevron-down" : "mdi:chevron-right"}
-                width="16"
-                height="16"
+                width="20"
+                height="20"
                 className="mr-1"
               />
               {showReplies ? "Hide" : "View"} {localReplies.length} {localReplies.length === 1 ? "reply" : "replies"}
@@ -266,12 +267,13 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
                   />
                 ))}
 
-                {/* Show more replies button */}
+                {/* Show more replies button with improved styling */}
                 {localReplies.length > visibleReplies && (
                   <button
                     onClick={handleShowMoreReplies}
-                    className="text-xs text-blue-500 font-medium mt-2 ml-2 hover:underline"
+                    className={`text-sm ${isDark ? 'text-blue-400' : 'text-blue-500'} font-medium mt-2 hover:underline flex items-center`}
                   >
+                    <Icon icon="mdi:plus" width="16" height="16" className="mr-1" />
                     Show {localReplies.length - visibleReplies} more {localReplies.length - visibleReplies === 1 ? "reply" : "replies"}
                   </button>
                 )}
@@ -283,7 +285,6 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
     </div>
   );
 };
-
 // Reply Component with Fixed Key Props
 const Reply = ({ reply, postId, commentId, userId, onDelete, refreshComments }) => {
   const [isLiked, setIsLiked] = useState(
@@ -1023,7 +1024,7 @@ const Postcard = ({ postData, getPosts, userid }) => {
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               placeholder="Write a comment..."
-              className={`w-full px-3 py-2 border rounded-lg ${isDark ? 'bg-[#2A3057]' : 'bg-white'} focus:outline-none focus:ring-1 focus:ring-[#131A45]`}
+              className={`w-full px-3 py-2 border mt-3 rounded-lg ${isDark ? 'bg-[#2A3057]' : 'bg-white'} focus:outline-none focus:ring-1 focus:ring-[#131A45]`}
             />
             <button
               type="submit"

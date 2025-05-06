@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import gettoken from "@/app/function/gettoken";
-
+import { useTheme } from "@/context/ThemeProvider";
 const ProfilePage = () => {
   const [initialValues, setinitialValues] = useState({
     collegeNo: "",
@@ -114,7 +114,7 @@ const ProfilePage = () => {
       toast.error("Please select an image first.");
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("profilePicture", uploadimage);
 
@@ -139,145 +139,148 @@ const ProfilePage = () => {
       console.error("Error uploading profile picture:", error);
     }
   };
-
+  const { theme, toggleTheme } = useTheme(); // Use the theme context
+  const isDark = theme === 'dark';
   return (
-    <div className="min-h-screen bg-gray-100 pt-2 px-4 sm:p-4">
-      <div className="w-full bg-white py-6 lg:p-8 rounded-lg mx-auto my-2 lg:my-8 max-w-[800px]">
-        <div>
-          {/* Profile Image Upload */}
-          <div className="relative m-auto w-40 h-40">
-            <label className="w-full h-full rounded-full border-2 border-[#C7A006] flex items-center justify-center cursor-pointer overflow-hidden">
-              {image ? (
-                <img
-                  src={image}
-                  alt="Profile"
-                  className="w-full h-full object-cover rounded-full"
+    <div className={`w-full min-h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-white text-[#131A45]'}`}>
+
+      <div className={`min-h-screen pt-2 px-4 sm:p-4`}>
+        <div className={`w-full ${isDark ? 'bg-[#2A3057]' : 'bg-white'} py-6 lg:p-8 rounded-lg mx-auto my-2 lg:my-8 max-w-[800px]`}>
+          <div>
+            {/* Profile Image Upload */}
+            <div className="relative m-auto w-40 h-40">
+              <label className={`w-full h-full rounded-full border-2 ${isDark ? 'border-[#C7A006]' : 'border-[#C7A006]'} flex items-center justify-center cursor-pointer overflow-hidden`}>
+                {image ? (
+                  <img
+                    src={image}
+                    alt="Profile"
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                ) : (
+                  <Icon icon="mynaui:user-solid" width="80%" height="80%" />
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
                 />
-              ) : (
-                <Icon icon="mynaui:user-solid" width="80%" height="80%" />
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageUpload}
-              />
-            </label>
-            <div className="absolute bottom-2 right-2 bg-[#C7A006] p-2 rounded-full cursor-pointer">
-              {image ? (
-                <Icon
-                  onClick={() => {
-                    setImage(null);
-                    setUploadimage(null);
-                  }}
-                  icon="material-symbols:delete-outline"
-                  width="24"
-                  height="24"
-                />
-              ) : (
-                <Icon icon="typcn:camera" width="24" height="24" />
-              )}
+              </label>
+              <div className="absolute bottom-2 right-2 bg-[#C7A006] p-2 rounded-full cursor-pointer">
+                {image ? (
+                  <Icon
+                    onClick={() => {
+                      setImage(null);
+                      setUploadimage(null);
+                    }}
+                    icon="material-symbols:delete-outline"
+                    width="24"
+                    height="24"
+                  />
+                ) : (
+                  <Icon icon="typcn:camera" width="24" height="24" />
+                )}
+              </div>
+            </div>
+            <div className="flex justify-center mt-3">
+              <button
+                onClick={handleSaveProfilepic}
+                className={`w-[70px] m-auto ${isDark ? 'bg-[#C7A006] text-[#131A45]' : 'bg-[#131A45] text-white'} py-2 rounded-xl font-semibold hover:bg-[#1a2154]`}
+              >
+                Save
+              </button>
             </div>
           </div>
-          <div className="flex justify-center mt-3">
-            {" "}
+
+          <Formik
+            enableReinitialize
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ isSubmitting }) => (
+              <Form className="mt-8 space-y-4 mx-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Field
+                      type="text"
+                      name="collegeNo"
+                      placeholder="College No. eg. 1407PS0262"
+                      className={`custom-input w-full ${isDark ? 'bg-[#232B4A] text-white' : ''}`}
+                      disabled
+                    />
+                    <ErrorMessage
+                      name="collegeNo"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Field
+                      type="text"
+                      name="name"
+                      placeholder="Full Name"
+                      className={`custom-input w-full ${isDark ? 'bg-[#232B4A] text-white' : ''}`}
+                    />
+                    <ErrorMessage
+                      name="name"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Field
+                      type="email"
+                      name="email"
+                      placeholder="john@example.com"
+                      className={`custom-input w-full ${isDark ? 'bg-[#232B4A] text-white' : ''}`}
+                      disabled
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Field
+                      type="tel"
+                      name="mobileNumber"
+                      placeholder="9876541235"
+                      className={`custom-input w-full ${isDark ? 'bg-[#232B4A] text-white' : ''}`}
+                    />
+                    <ErrorMessage
+                      name="mobileNumber"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+                </div>
+
+                <div className="w-full flex justify-center">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`w-[143px] ${isDark ? 'bg-[#C7A006] text-[#131A45]' : 'bg-[#131A45] text-white'} py-3 rounded-xl font-semibold hover:bg-[#1a2154]`}
+                  >
+                    {isSubmitting ? "Saving..." : "Save Changes"}
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+
+          <div className="w-full flex justify-center">
             <button
-              onClick={handleSaveProfilepic}
-              className="w-[70px] m-auto bg-[#131A45] text-white py-2 rounded-xl font-semibold hover:bg-[#1a2154]"
+              onClick={handleLogout}
+              className={`w-[143px] mt-3 border border-[#C7A006] ${isDark ? 'text-white' : 'text-[#131A45]'} py-2 rounded-xl font-semibold`}
             >
-              Save
+              Log out
             </button>
           </div>
-        </div>
-
-        <Formik
-          enableReinitialize
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ isSubmitting }) => (
-            <Form className="mt-8 space-y-4 mx-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Field
-                    type="text"
-                    name="collegeNo"
-                    placeholder="College No. eg. 1407PS0262"
-                    className="custom-input w-full"
-                    disabled
-                  />
-                  <ErrorMessage
-                    name="collegeNo"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-                <div>
-                  <Field
-                    type="text"
-                    name="name"
-                    placeholder="Full Name"
-                    className="custom-input w-full"
-                  />
-                  <ErrorMessage
-                    name="name"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <Field
-                    type="email"
-                    name="email"
-                    placeholder="john@example.com"
-                    className="custom-input w-full"
-                    disabled
-                  />
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-                <div>
-                  <Field
-                    type="tel"
-                    name="mobileNumber"
-                    placeholder="9876541235"
-                    className="custom-input w-full"
-                  />
-                  <ErrorMessage
-                    name="mobileNumber"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-              </div>
-
-              <div className="w-full flex justify-center">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-[143px] bg-[#131A45] text-white py-3 rounded-xl font-semibold hover:bg-[#1a2154]"
-                >
-                  {isSubmitting ? "Saving..." : "Save Changes"}
-                </button>
-              </div>
-            </Form>
-          )}
-        </Formik>
-
-        <div className="w-full flex justify-center">
-          <button
-            onClick={handleLogout}
-            className="w-[143px] mt-3 border border-[#C7A006] text-[#131A45] py-2 rounded-xl font-semibold"
-          >
-            Log out
-          </button>
         </div>
       </div>
     </div>

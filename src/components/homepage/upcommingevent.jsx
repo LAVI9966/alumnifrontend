@@ -4,7 +4,7 @@ import Eventcard from "./eventcard";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import gettoken from "@/app/function/gettoken";
-
+import { useTheme } from "@/context/ThemeProvider";
 const Upcommingevent = () => {
   const [event, setallEvents] = useState([]);
   const url = process.env.NEXT_PUBLIC_URL;
@@ -33,9 +33,12 @@ const Upcommingevent = () => {
       toast.error("An error occurred. Please try again.");
     }
   };
+  const { theme, toggleTheme } = useTheme(); // Use the theme context
+  const isDark = theme === 'dark';
+
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className={`flex justify-between items-center mb-4 ${isDark ? 'bg-[#131A45] ' : 'bg-white'}`}>
         <h2 className="font-bold text-lg">Upcoming Events</h2>
         <Link href="/alumni/events" className="text-md text-gray-500">
           See All
