@@ -206,7 +206,7 @@ const ProfilePage = () => {
                       type="text"
                       name="collegeNo"
                       placeholder="College No. eg. 1407PS0262"
-                      className={`custom-input w-full ${isDark ? 'bg-[#232B4A] text-white' : ''}`}
+                      className="custom-input w-full"
                       disabled
                     />
                     <ErrorMessage
@@ -220,7 +220,7 @@ const ProfilePage = () => {
                       type="text"
                       name="name"
                       placeholder="Full Name"
-                      className={`custom-input w-full ${isDark ? 'bg-[#232B4A] text-white' : ''}`}
+                      className="custom-input w-full"
                     />
                     <ErrorMessage
                       name="name"
@@ -236,7 +236,7 @@ const ProfilePage = () => {
                       type="email"
                       name="email"
                       placeholder="john@example.com"
-                      className={`custom-input w-full ${isDark ? 'bg-[#232B4A] text-white' : ''}`}
+                      className="custom-input w-full"
                       disabled
                     />
                     <ErrorMessage
@@ -250,7 +250,7 @@ const ProfilePage = () => {
                       type="tel"
                       name="mobileNumber"
                       placeholder="9876541235"
-                      className={`custom-input w-full ${isDark ? 'bg-[#232B4A] text-white' : ''}`}
+                      className="custom-input w-full"
                     />
                     <ErrorMessage
                       name="mobileNumber"
@@ -264,7 +264,7 @@ const ProfilePage = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-[143px] ${isDark ? 'bg-[#C7A006] text-[#131A45]' : 'bg-[#131A45] text-white'} py-3 rounded-xl font-semibold hover:bg-[#1a2154]`}
+                    className="w-[143px] bg-[#131A45] text-white py-3 rounded-xl font-semibold hover:bg-[#1a2154]"
                   >
                     {isSubmitting ? "Saving..." : "Save Changes"}
                   </button>
@@ -276,7 +276,7 @@ const ProfilePage = () => {
           <div className="w-full flex justify-center">
             <button
               onClick={handleLogout}
-              className={`w-[143px] mt-3 border border-[#C7A006] ${isDark ? 'text-white' : 'text-[#131A45]'} py-2 rounded-xl font-semibold`}
+              className="w-[143px] mt-3 border border-[#C7A006] text-[#131A45] py-2 rounded-xl font-semibold"
             >
               Log out
             </button>

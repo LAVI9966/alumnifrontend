@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -17,12 +18,13 @@ import { Icon } from "@iconify/react";
 import gettoken from "@/app/function/gettoken";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-
+import { useTheme } from "@/context/ThemeProvider";
 const AddEvent = ({ getEvent, id, title, description, date, imageUrl }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
-
+  const { theme, toggleTheme } = useTheme(); // Use the theme context
+  const isDark = theme === 'dark';
   const [previewImage, setPreviewImage] = useState(null);
   // Form validation schema
   const validationSchema = Yup.object().shape({
@@ -89,7 +91,7 @@ const AddEvent = ({ getEvent, id, title, description, date, imageUrl }) => {
         {id ? (
           <button className="underline">Edit</button>
         ) : (
-          <Button className="bg-custom-blue rounded-xl hover:bg-[#04061c]">
+          <Button className="bg-custom-blue text-white rounded-xl hover:bg-[#04061c]">
             <Icon icon="basil:plus-outline" width="24" height="24" />
             Add New Event
           </Button>
@@ -147,7 +149,7 @@ const AddEvent = ({ getEvent, id, title, description, date, imageUrl }) => {
                   type="text"
                   name="title"
                   placeholder="Event Title"
-                  className="custom-input w-full"
+                  className={`custom-input ${isDark ? 'bg-[#2A3057]' : 'bg-white'} w-full`}
                 />
                 <ErrorMessage
                   name="title"
@@ -160,7 +162,7 @@ const AddEvent = ({ getEvent, id, title, description, date, imageUrl }) => {
                   as="textarea"
                   name="description"
                   placeholder="Event Description"
-                  className="custom-input w-full"
+                  className={`custom-input ${isDark ? 'bg-[#2A3057]' : 'bg-white'} w-full`}
                 />
                 <ErrorMessage
                   name="description"
@@ -172,7 +174,7 @@ const AddEvent = ({ getEvent, id, title, description, date, imageUrl }) => {
                 <Field
                   type="date"
                   name="date"
-                  className="custom-input w-full"
+                  className={`custom-input ${isDark ? 'bg-[#2A3057]' : 'bg-white'} w-full`}
                 />
                 <ErrorMessage
                   name="date"
@@ -216,8 +218,8 @@ const AddEvent = ({ getEvent, id, title, description, date, imageUrl }) => {
                   {isSubmitting
                     ? "Saving..."
                     : id
-                    ? "Update Event"
-                    : "Add Event"}
+                      ? "Update Event"
+                      : "Add Event"}
                 </button>
               </div>
             </Form>

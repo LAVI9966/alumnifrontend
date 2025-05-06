@@ -49,8 +49,12 @@ const AdminSidebar = () => {
     router.push("/login");
   };
 
+  // Theme logic for sidebar
+  const { useTheme } = require("@/context/ThemeProvider");
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   return (
-    <aside className="w-64 bg-[#FFFFFF] text-custom-blue p-4  space-y-6 border-r-[1px] flex flex-col justify-between border-[#E5E5E5]">
+    <aside className={`w-64 p-4 space-y-6 border-r-[1px] flex flex-col justify-between ${isDark ? 'bg-[#232B4A] text-white border-[#232B4A]' : 'bg-[#FFFFFF] text-custom-blue border-[#E5E5E5]'}`}>
       <nav>
         <Link href="/admin/homepage">
           <Image
@@ -58,7 +62,7 @@ const AdminSidebar = () => {
             height={100}
             src="/logoimage.png"
             alt="Rimcollian Logo"
-            className="h-[85px] ml-3 w-[85px]"
+            className={`h-[85px] ml-3 w-[85px] ${isDark ? 'bg-white rounded-full' : ''}`}
           />
         </Link>
         <ul className="space-y-2 mt-10">
@@ -66,7 +70,8 @@ const AdminSidebar = () => {
             <li key={index}>
               <Link
                 href={val.link}
-                className="flex items-center gap-2 p-1  rounded-3xl text-custom-blue  hover:text-gray-900 transition-all duration-300 ease-in-out"
+                className={`flex items-center gap-2 p-1 rounded-3xl transition-all duration-300 ease-in-out 
+                  ${isDark ? 'text-white hover:text-yellow-300' : 'text-custom-blue hover:text-[#131A45]'}`}
               >
                 {val.text}
               </Link>
@@ -74,31 +79,26 @@ const AdminSidebar = () => {
           ))}
         </ul>
       </nav>
-      <div className="bg-white shadow-md rounded-2xl p-4 w-full flex flex-col gap-4 ">
-        <div className="flex  items-center">
-          <Icon icon="lets-icons:user-cicrle-duotone" width="60" height="60" />
+      <div className={`${isDark ? 'bg-[#131A45] text-white' : 'bg-white text-[#131A45]'} shadow-md rounded-2xl p-4 w-full flex flex-col gap-4`}>
+        <div className="flex items-center">
+          <Icon icon="lets-icons:user-cicrle-duotone" width="60" height="60" className={isDark ? 'text-yellow-300' : 'text-[#131A45]'} />
           <div>
-            <h2 className=" font-bold text-gray-900 ">
-              {userData?.name || "Admin"}
-            </h2>
-            <p className="text-gray-500 text-sm">{userData?.role || "Admin"}</p>
+            <h2 className={`font-bold ${isDark ? 'text-white' : 'text-[#131A45]'}`}>{userData?.name || "Admin"}</h2>
+            <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>{userData?.role || "Admin"}</p>
           </div>
         </div>
-        <div className={"w-full flex justify-start"}>
-          {/* <button className="flex items-center text-sm text-gray-800 hover:text-gray-600">
-            <Icon icon="uil:setting" width="24" height="24" className="mr-2" />{" "}
-            Settings
-          </button> */}
+        <div className="w-full flex justify-start">
           <button
             onClick={handleLogout}
-            className="flex text-sm items-center ml-2 text-gray-800 hover:text-gray-600"
+            className={`flex text-sm items-center ml-2 font-semibold rounded-lg px-3 py-1 transition-colors duration-200 
+              ${isDark ? 'text-white hover:text-yellow-300 bg-[#232B4A] hover:bg-[#1a2154]' : 'text-[#131A45] hover:text-[#C7A006] bg-white hover:bg-gray-100'}`}
           >
             <Icon
               icon="material-symbols:logout-rounded"
               width="24"
               height="24"
               className="mr-2"
-            />{" "}
+            />
             Logout
           </button>
         </div>

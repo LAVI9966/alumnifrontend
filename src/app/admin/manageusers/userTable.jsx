@@ -24,14 +24,15 @@ import { Icon } from "@iconify/react";
 import AddUser from "./addUserDialogue";
 import gettoken from "@/app/function/gettoken";
 import toast from "react-hot-toast";
-
+import { useTheme } from "@/context/ThemeProvider";
 export function UserDataTable() {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState([]);
-
+  const { theme, toggleTheme } = useTheme(); // Use the theme context
+  const isDark = theme === 'dark';
   const url = process.env.NEXT_PUBLIC_URL;
   React.useEffect(() => {
     getUser();
@@ -50,14 +51,14 @@ export function UserDataTable() {
       });
 
       const data = await response.json();
-   
+
       if (response.ok) {
         setData(data);
       } else {
         toast.error(data?.message || "failed.");
       }
     } catch (error) {
-   
+
       toast.error("An error occurred. Please try again.");
     }
   };
@@ -85,7 +86,7 @@ export function UserDataTable() {
   };
 
   const handlestatus = async (val) => {
- 
+
     if (!val?._id || !val?.status) {
       toast.error("Invalid user ID or status.");
       return;
@@ -193,7 +194,7 @@ export function UserDataTable() {
       header: "Status",
       cell: ({ row }) => {
         const val = row?.original;
-       
+
         return (
           <>
             <label className="flex cursor-pointer select-none items-center">
@@ -205,16 +206,14 @@ export function UserDataTable() {
                   className="sr-only"
                 />
                 <div
-                  className={`block h-8 w-14 rounded-full transition ${
-                    val.status === "verified" ? "bg-green-500" : "bg-gray-300"
-                  }`}
+                  className={`block h-8 w-14 rounded-full transition ${val.status === "verified" ? "bg-green-500" : "bg-gray-300"
+                    }`}
                 ></div>
                 <div
-                  className={`dot absolute top-1 h-6 w-6 rounded-full bg-white transition ${
-                    val.status === "verified"
-                      ? "translate-x-6"
-                      : "translate-x-1"
-                  }`}
+                  className={`dot absolute top-1 h-6 w-6 rounded-full bg-white transition ${val.status === "verified"
+                    ? "translate-x-6"
+                    : "translate-x-1"
+                    }`}
                 ></div>
               </div>
             </label>
@@ -310,9 +309,9 @@ export function UserDataTable() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}

@@ -1,6 +1,8 @@
+'use client'
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useTheme } from "@/context/ThemeProvider";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,10 +28,11 @@ const AddUser = ({
   role,
   id,
 }) => {
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
-
+  const { theme, toggleTheme } = useTheme(); // Use the theme context
+  const isDark = theme === 'dark';
   const validationSchema = Yup.object().shape({
     collegeNo: Yup.string().required("College Number is required"),
     name: Yup.string().required("Name is required"),
@@ -79,12 +82,12 @@ const AddUser = ({
   };
 
   return (
-    <AlertDialog  open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <AlertDialogTrigger asChild>
         {id ? (
           <button className="underline">Edit</button>
         ) : (
-          <Button className="bg-custom-blue rounded-xl hover:bg-[#04061c]">
+          <Button className="bg-custom-blue text-white rounded-xl hover:bg-[#04061c]">
             <Icon icon="basil:plus-outline" width="24" height="24" />
             Add New User
           </Button>
@@ -117,7 +120,7 @@ const AddUser = ({
                   type="text"
                   name="collegeNo"
                   placeholder="College Number"
-                  className="custom-input w-full"
+                  className="custom-input w-full admin-input"
                 />
                 <ErrorMessage
                   name="collegeNo"
@@ -130,7 +133,7 @@ const AddUser = ({
                   type="text"
                   name="name"
                   placeholder="Full Name"
-                  className="custom-input w-full"
+                  className="custom-input w-full admin-input"
                 />
                 <ErrorMessage
                   name="name"
@@ -143,7 +146,7 @@ const AddUser = ({
                   type="email"
                   name="email"
                   placeholder="Email"
-                  className="custom-input w-full"
+                  className="custom-input w-full admin-input"
                 />
                 <ErrorMessage
                   name="email"
@@ -156,7 +159,7 @@ const AddUser = ({
                   type="text"
                   name="mobileNumber"
                   placeholder="Mobile Number"
-                  className="custom-input w-full"
+                  className="custom-input w-full admin-input"
                 />
                 <ErrorMessage
                   name="mobileNumber"
@@ -169,7 +172,7 @@ const AddUser = ({
                   type="password"
                   name="password"
                   placeholder="Password"
-                  className="custom-input w-full"
+                  className="custom-input w-full admin-input"
                 />
                 <ErrorMessage
                   name="password"
@@ -179,7 +182,7 @@ const AddUser = ({
               </div>
 
               <div>
-                <Field as="select" name="role" className="custom-input w-full">
+                <Field as="select" name="role" className="custom-input w-full admin-input">
                   <option value="user">User</option>
                   <option value="admin">Admin</option>
                 </Field>
@@ -192,20 +195,20 @@ const AddUser = ({
               <div></div>
 
               <div className="flex justify-end gap-4 mt-4">
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <button 
-                    type="submit"
-                    className="bg-[#131A45] text-white py-2 px-4 rounded-xl font-semibold hover:bg-[#1a2154]"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting
-                      ? "Saving..."
-                      : id
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <button
+                  type="submit"
+                  className="bg-[#131A45] text-white py-2 px-4 rounded-xl font-semibold hover:bg-[#1a2154]"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting
+                    ? "Saving..."
+                    : id
                       ? "Update User"
                       : "Add User"}
-                  </button>
-                </div>
-          
+                </button>
+              </div>
+
             </Form>
           )}
         </Formik>

@@ -51,17 +51,20 @@ const Header = () => {
 
       {/* Desktop Menu */}
       <nav className="space-x-4 hidden md:block">
-        <Link href="/alumni/about" className={`${isDark ? ' text-[#131A45]' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
+        <Link href="/alumni/about" className={`${isDark ? 'text-[#131A45]  hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
           About Us
         </Link>
-        <Link href="/alumni/events" className={`${isDark ? 'text-[#131A45]' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
+        <Link href="/alumni/events" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
           Event
         </Link>
-        <Link href="/alumni/members" className={`${isDark ? 'text-[#131A45]' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
+        <Link href="/alumni/members" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
           Member
         </Link>
-        <Link href="/alumni/contact" className={`${isDark ? 'text-[#131A45]' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
+        <Link href="/alumni/contact" className={`${isDark ? 'text-[#131A45]  hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
           Contact
+        </Link>
+        <Link href="/alumni/souvenir_shop" className={`${isDark ? 'text-[#131A45]  hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
+          Souvenir shop
         </Link>
       </nav>
 
@@ -146,6 +149,14 @@ const Header = () => {
               className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
             >
               Members
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/alumni/souvenir_shop"
+              className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
+            >
+              Souvenir shop
             </Link>
           </li>
           <li className="flex items-center justify-end">

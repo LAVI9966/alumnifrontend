@@ -1,23 +1,75 @@
+.admin-input {
+  background-color: #fff;
+  color: #131A45;
+  border: 1px solid #D1D5DB;
+}
+
+.admin-input:focus {
+  border-color: #C7A006;
+  box-shadow: 0 0 0 2px rgba(199, 160, 6, 0.2);
+}
+
+.dark .admin-input {
+  background-color: #232B4A;
+  color: #fff;
+  border: 1px solid #444a6d;
+}
+
+.dark .admin-input:focus {
+  border-color: #C7A006;
+  box-shadow: 0 0 0 2px rgba(199, 160, 6, 0.3);
+}
+
+.admin-input {
+  background-color: #fff;
+  color: #131A45;
+  border: 1px solid #D1D5DB;
+}
+
+.admin-input:focus {
+  border-color: #C7A006;
+  box-shadow: 0 0 0 2px rgba(199, 160, 6, 0.2);
+}
+
+.dark .admin-input {
+  background-color: #232B4A;
+  color: #fff;
+  border: 1px solid #444a6d;
+}
+
+.dark .admin-input:focus {
+  border-color: #C7A006;
+  box-shadow: 0 0 0 2px rgba(199, 160, 6, 0.3);
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: "Poppins", sans-serif; /* Use Poppins as the default font */
+  font-family: "Poppins", sans-serif;
+  /* Use Poppins as the default font */
 }
 
 
 .custom-input {
-  padding: 0.75rem 1rem; /* Equivalent to px-4 py-3 */
-  border-radius: 0.75rem; /* Equivalent to rounded-xl */
-  border: 1px solid #D1D5DB; /* Equivalent to border-gray-300 */
-  outline: none; /* Equivalent to focus:outline-none */
-  transition: border-color 0.2s, box-shadow 0.2s; /* Optional: for smooth transition */
+  padding: 0.75rem 1rem;
+  /* Equivalent to px-4 py-3 */
+  border-radius: 0.75rem;
+  /* Equivalent to rounded-xl */
+  border: 1px solid #D1D5DB;
+  /* Equivalent to border-gray-300 */
+  outline: none;
+  /* Equivalent to focus:outline-none */
+  transition: border-color 0.2s, box-shadow 0.2s;
+  /* Optional: for smooth transition */
 }
 
 .custom-input:focus {
-  border-color: transparent; /* Equivalent to focus:border-transparent */
-  box-shadow: 0 0 0 2px rgba(19, 26, 69, 0.5); /* Simulating the focus ring */
+  border-color: transparent;
+  /* Equivalent to focus:border-transparent */
+  box-shadow: 0 0 0 2px rgba(19, 26, 69, 0.5);
+  /* Simulating the focus ring */
 }
 
 @layer base {
@@ -48,6 +100,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -80,6 +133,7 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }

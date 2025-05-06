@@ -15,11 +15,13 @@ import {
 import { Icon } from "@iconify/react";
 import gettoken from "@/app/function/gettoken";
 import toast from "react-hot-toast";
-
+import { useTheme } from "@/context/ThemeProvider";
 const CreatePostDialogue = ({ getPosts, postData }) => {
   const [previewImage, setPreviewImage] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     if (postData && postData.imageUrl) {
@@ -33,14 +35,14 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
       <AlertDialogTrigger
         className={
           postData
-            ? "cursor-pointer text-sm w-full text-start hover:bg-gray-100 px-4 py-2"
-            : "w-full bg-custom-blue text-white py-2 rounded-lg"
+            ? `cursor-pointer text-sm w-full text-start hover:${isDark ? "bg-[#2A3057]" : "bg-gray-100"} px-4 py-2 ${isDark ? "bg-[#2A3057]  text-gray-200" : ""}`
+            : `w-full ${isDark ? 'bg-[#2A3057]' : 'bg-custom-blue'} text-white py-2 rounded-lg`
         }
         onClick={() => setIsOpen(true)}
       >
         {postData ? "Edit Post" : "Create Post"}
       </AlertDialogTrigger>
-      <AlertDialogContent className="p-0 max-w-2xl px-4 md:px-0 gap-0">
+      <AlertDialogContent className={`p-0 max-w-2xl px-4 md:px-0 gap-0 ${isDark ? "bg-[#2A3057] text-gray-100" : "bg-white text-gray-900"}`}>
         <Formik
           initialValues={{
             content: postData?.content || "",
@@ -96,7 +98,7 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
           {({ setFieldValue, values, isSubmitting }) => (
             <Form>
               <AlertDialogTitle>
-                <div className="p-2 border-b flex items-center justify-between">
+                <div className={`p-2 border-b flex items-center justify-between ${isDark ? "border-gray-700" : "border-gray-200"}`}>
                   <label className="cursor-pointer">
                     <input
                       type="file"
@@ -114,11 +116,11 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
                       icon="solar:gallery-broken"
                       width="20"
                       height="20"
-                      className="text-gray-400"
+                      className={isDark ? "text-gray-300" : "text-gray-400"}
                     />
                   </label>
                   <AlertDialogCancel
-                    className="text-black"
+                    className={isDark ? "text-gray-300" : "text-black"}
                     onClick={() => setIsOpen(false)}
                   >
                     <Icon icon="system-uicons:cross" width="40" height="40" />
@@ -129,12 +131,12 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
                     as="textarea"
                     name="content"
                     placeholder="Say something..."
-                    className="w-full outline-none p-2 text-sm text-gray-600"
+                    className={`w-full outline-none p-2 text-sm ${isDark ? "bg-gray-900 text-gray-100" : "text-gray-600"}`}
                   />
                 </div>
               </AlertDialogTitle>
-              <div className="bg-white overflow-hidden">
-                <div className="h-56 bg-gray-300 relative flex items-center justify-center">
+              <div className={isDark ? "bg-gray-900 overflow-hidden" : "bg-white overflow-hidden"}>
+                <div className={`h-56 ${isDark ? "bg-gray-800" : "bg-gray-300"} relative flex items-center justify-center`}>
                   {previewImage && (
                     <>
                       <Icon
@@ -142,7 +144,7 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
                           setFieldValue("imageUrl", null);
                           setPreviewImage(null);
                         }}
-                        className="cursor-pointer text-gray-800 absolute top-2 right-2 bg-white rounded-full p-2 shadow-sm border border-gray-300"
+                        className={`cursor-pointer ${isDark ? "text-gray-200 bg-gray-900 border-gray-700" : "text-gray-800 bg-white border-gray-300"} absolute top-2 right-2 rounded-full p-2 shadow-sm border`}
                         icon="material-symbols:delete-outline-rounded"
                         width="40"
                         height="40"
@@ -159,7 +161,7 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
               <AlertDialogFooter className="p-2">
                 <button
                   type="submit"
-                  className="bg-custom-blue text-white py-2 px-10 rounded-lg"
+                  className={`py-2 px-10 rounded-lg ${isDark ? 'bg-[#131A45]' : 'bg-custom-blue'}`}
                   disabled={isSubmitting}
                 >
                   {postData ? "Update" : "Upload"}

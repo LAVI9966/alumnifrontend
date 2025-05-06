@@ -12,29 +12,41 @@ const AlertDialogTrigger = AlertDialogPrimitive.Trigger
 
 const AlertDialogPortal = AlertDialogPrimitive.Portal
 
-const AlertDialogOverlay = React.forwardRef(({ className, ...props }, ref) => (
-  <AlertDialogPrimitive.Overlay
-    className={cn(
-      "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-      className
-    )}
-    {...props}
-    ref={ref} />
-))
-AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName
-
-const AlertDialogContent = React.forwardRef(({ className, ...props }, ref) => (
-  <AlertDialogPortal>
-    <AlertDialogOverlay />
-    <AlertDialogPrimitive.Content
-      ref={ref}
+import { useTheme } from "@/context/ThemeProvider";
+const AlertDialogOverlay = React.forwardRef(({ className, ...props }, ref) => {
+  // Use theme context for overlay color
+  const { theme } = useTheme ? useTheme() : { theme: "light" };
+  const isDark = theme === "dark";
+  return (
+    <AlertDialogPrimitive.Overlay
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+        `fixed inset-0 z-50 ${isDark ? 'bg-[#131A45]/80' : 'bg-black/60'} data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0`,
         className
       )}
-      {...props} />
-  </AlertDialogPortal>
-))
+      {...props}
+      ref={ref}
+    />
+  );
+});
+AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName
+
+const AlertDialogContent = React.forwardRef(({ className, ...props }, ref) => {
+  const { theme } = useTheme ? useTheme() : { theme: "light" };
+  const isDark = theme === "dark";
+  return (
+    <AlertDialogPortal>
+      <AlertDialogOverlay />
+      <AlertDialogPrimitive.Content
+        ref={ref}
+        className={cn(
+          `fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg ${isDark ? 'bg-[#232B4A] text-white border-[#232B4A]' : 'bg-white text-[#131A45] border-gray-200'}`,
+          className
+        )}
+        {...props}
+      />
+    </AlertDialogPortal>
+  );
+});
 AlertDialogContent.displayName = AlertDialogPrimitive.Content.displayName
 
 const AlertDialogHeader = ({
