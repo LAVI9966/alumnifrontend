@@ -16,6 +16,7 @@ const Header = () => {
   const { theme, toggleTheme } = useTheme(); // Use the theme context
   const isDark = theme === 'dark';
   const aboutDropdownRef = useRef(null);
+  const isAboutPage = pathname === "/alumni/about";
 
   const { notificationCount, fetchNotificationCount } = useNotifications();
 
@@ -34,6 +35,24 @@ const Header = () => {
     };
   }, [pathname]);
 
+  // Add effect to handle hash scrolling when the page loads
+  useEffect(() => {
+    // Check if there's a hash in the URL
+    if (window.location.hash && isAboutPage) {
+      // First scroll to top
+      window.scrollTo(0, 0);
+
+      // Then scroll to the section after a delay
+      setTimeout(() => {
+        const id = window.location.hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 800); // Longer delay to allow user to see the top of the page first
+    }
+  }, [isAboutPage]);
+
   useEffect(() => {
     fetchNotificationCount();
   }, [fetchNotificationCount]);
@@ -51,9 +70,51 @@ const Header = () => {
     };
   }, []);
 
+  // Override default anchor behavior to use smooth scrolling
+  useEffect(() => {
+    const handleAnchorClick = (e) => {
+      const target = e.target.closest('a');
+      if (!target) return;
+
+      // Check if it's an internal hash link
+      if (target.getAttribute('href')?.startsWith('#')) {
+        e.preventDefault();
+        const id = target.getAttribute('href').replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+    return () => {
+      document.removeEventListener('click', handleAnchorClick);
+    };
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("alumni");
     router.push("/login");
+  };
+
+  // Helper function to handle intelligent section navigation
+  const navigateToSection = (sectionId) => {
+    if (isAboutPage) {
+      // If already on about page, just scroll to the section
+      const id = sectionId.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+      setAboutDropdownOpen(false);
+      setMobileAboutDropdownOpen(false);
+      setMenuOpen(false);
+    } else {
+      // If on another page, navigate to about page first, and let the useEffect handle scrolling
+      // The hash will trigger the delayed scrolling after page load
+      router.push(`/alumni/about${sectionId}`);
+    }
   };
 
   return (
@@ -101,21 +162,36 @@ const Header = () => {
               onMouseLeave={() => setAboutDropdownOpen(false)}
             >
               <div className="py-1">
-                <Link href="#Objectives" className={`block px-4 py-2 ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}>
+                <button
+                  onClick={() => navigateToSection('#Objectives')}
+                  className={`block px-4 py-2 w-full text-left ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}
+                >
                   Roba Objectives
-                </Link>
-                <Link href="#history" className={`block px-4 py-2 ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}>
+                </button>
+                <button
+                  onClick={() => navigateToSection('#history')}
+                  className={`block px-4 py-2 w-full text-left ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}
+                >
                   Roba History
-                </Link>
-                <Link href="#presidentmessage" className={`block px-4 py-2 ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}>
+                </button>
+                <button
+                  onClick={() => navigateToSection('#presidentmessage')}
+                  className={`block px-4 py-2 w-full text-left ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}
+                >
                   President Messages
-                </Link>
-                <Link href="#managementcommittee" className={`block px-4 py-2 ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}>
+                </button>
+                <button
+                  onClick={() => navigateToSection('#managementcommittee')}
+                  className={`block px-4 py-2 w-full text-left ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}
+                >
                   Management Committee
-                </Link>
-                <Link href="#committeemenbers" className={`block px-4 py-2 ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}>
+                </button>
+                <button
+                  onClick={() => navigateToSection('#committeemenbers')}
+                  className={`block px-4 py-2 w-full text-left ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}
+                >
                   Committee Members
-                </Link>
+                </button>
               </div>
             </div>
           )}
@@ -273,56 +349,36 @@ const Header = () => {
             {/* Mobile About Dropdown Menu */}
             {mobileAboutDropdownOpen && (
               <div className="mt-2 flex flex-col items-end gap-2 pl-8 border-t border-gray-600 pt-2 w-full">
-                <Link
-                  href="#Objectives"
-                  onClick={() => {
-                    router.push("/alumni/about");
-                    setMenuOpen(false);
-                  }}
-                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2`}
+                <button
+                  onClick={() => navigateToSection('#Objectives')}
+                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2 text-right w-full`}
                 >
                   Roba Objectives
-                </Link>
-                <Link
-                  href="#history"
-                  onClick={() => {
-                    router.push("/alumni/about");
-                    setMenuOpen(false);
-                  }}
-                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2`}
+                </button>
+                <button
+                  onClick={() => navigateToSection('#history')}
+                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2 text-right w-full`}
                 >
                   Roba History
-                </Link>
-                <Link
-                  href="#presidentmessage"
-                  onClick={() => {
-                    router.push("/alumni/about");
-                    setMenuOpen(false);
-                  }}
-                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2`}
+                </button>
+                <button
+                  onClick={() => navigateToSection('#presidentmessage')}
+                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2 text-right w-full`}
                 >
                   President Messages
-                </Link>
-                <Link
-                  href="#managementcommittee"
-                  onClick={() => {
-                    router.push("/alumni/about");
-                    setMenuOpen(false);
-                  }}
-                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2`}
+                </button>
+                <button
+                  onClick={() => navigateToSection('#managementcommittee')}
+                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2 text-right w-full`}
                 >
                   Management Committee
-                </Link>
-                <Link
-                  href="#committeemenbers"
-                  onClick={() => {
-                    router.push("/alumni/about");
-                    setMenuOpen(false);
-                  }}
-                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2`}
+                </button>
+                <button
+                  onClick={() => navigateToSection('#committeemenbers')}
+                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2 text-right w-full`}
                 >
                   Committee Members
-                </Link>
+                </button>
               </div>
             )}
           </li>
