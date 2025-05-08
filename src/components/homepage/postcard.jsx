@@ -211,7 +211,11 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
             <div className="w-6 h-6 mb-5 flex-shrink-0">
               <img
                 className="w-6 h-6  rounded-full"
-                src="/memberpage/member.png"
+                src={
+                  comment.user?.profilePicture
+                    ? `${url}/uploads/${comment.user?.profilePicture?.split("\\").pop()}`
+                    : "/memberpage/member.png"
+                }
                 alt="avatar"
               />
             </div>
@@ -1034,9 +1038,6 @@ const Postcard = ({ postData, getPosts, userid }) => {
             </button>
           </div>
         </form>
-
-
-
       </div>
     </div>
   );

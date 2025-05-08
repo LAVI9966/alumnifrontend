@@ -13,9 +13,9 @@ const ComingSoon = () => {
             alignItems: "center",
 
         }}
-            className={`w-full ${isDark ? 'bg-[#232B4A] text-white' : 'bg-custom-blue text-white'}`}
+            className={`w-full ${isDark ? 'bg-[#131A45] text-white' : 'bg-white text-[#131A45]'}`}
         >
-            <h1 style={{ fontSize: "2.5rem", color: "#333" }}>Coming Soon</h1>
+            <h1 style={{ fontSize: "2.5rem" }}>Coming Soon</h1>
             <p style={{ color: "#666", marginTop: "1rem" }}>
                 Our Souvenir Shop page is under construction. Stay tuned!
             </p>

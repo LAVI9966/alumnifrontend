@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Logo from "./logo";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
@@ -9,20 +9,47 @@ import { useTheme } from "../context/ThemeProvider"; // Import the theme context
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
+  const [aboutDropdownOpen, setAboutDropdownOpen] = React.useState(false);
+  const [mobileAboutDropdownOpen, setMobileAboutDropdownOpen] = React.useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme(); // Use the theme context
   const isDark = theme === 'dark';
+  const aboutDropdownRef = useRef(null);
 
   const { notificationCount, fetchNotificationCount } = useNotifications();
 
   useEffect(() => {
-    setMenuOpen(false);
+    const handleRouteChange = () => {
+      setMenuOpen(false);
+      setAboutDropdownOpen(false);
+      setMobileAboutDropdownOpen(false);
+    };
+
+    // Close menus when pathname changes
+    handleRouteChange();
+
+    return () => {
+      // Cleanup
+    };
   }, [pathname]);
 
   useEffect(() => {
     fetchNotificationCount();
   }, [fetchNotificationCount]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (aboutDropdownRef.current && !aboutDropdownRef.current.contains(event.target)) {
+        setAboutDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("alumni");
@@ -51,19 +78,59 @@ const Header = () => {
 
       {/* Desktop Menu */}
       <nav className="space-x-4 hidden md:block">
-        <Link href="/alumni/about" className={`${isDark ? 'text-[#131A45]  hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
-          About Us
+        <Link href="/alumni/homepage" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
+          Home
         </Link>
+
+        {/* About Us with Dropdown */}
+        <div className="relative inline-block" ref={aboutDropdownRef}>
+          <div
+            className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200 cursor-pointer inline-flex items-center`}
+            onMouseEnter={() => setAboutDropdownOpen(true)}
+          >
+            <Link href="/alumni/about" className="inline-flex items-center">
+              About Us
+            </Link>
+            <Icon icon="mdi:chevron-down" className="ml-1" width="18" height="18" />
+          </div>
+
+          {/* About Dropdown Menu */}
+          {aboutDropdownOpen && (
+            <div
+              className={`absolute z-50 left-0 mt-2 w-48 rounded-md shadow-lg ${isDark ? 'bg-gray-100 text-[#131A45]' : 'bg-[#0F1536] text-white'} transition-colors duration-200`}
+              onMouseLeave={() => setAboutDropdownOpen(false)}
+            >
+              <div className="py-1">
+                <Link href="#Objectives" className={`block px-4 py-2 ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}>
+                  Roba Objectives
+                </Link>
+                <Link href="#history" className={`block px-4 py-2 ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}>
+                  Roba History
+                </Link>
+                <Link href="#presidentmessage" className={`block px-4 py-2 ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}>
+                  President Messages
+                </Link>
+                <Link href="#managementcommittee" className={`block px-4 py-2 ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}>
+                  Management Committee
+                </Link>
+                <Link href="#committeemenbers" className={`block px-4 py-2 ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}>
+                  Committee Members
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+
         <Link href="/alumni/events" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
           Event
         </Link>
         <Link href="/alumni/members" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
           Member
         </Link>
-        <Link href="/alumni/contact" className={`${isDark ? 'text-[#131A45]  hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
+        <Link href="/alumni/contact" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
           Contact
         </Link>
-        <Link href="/alumni/souvenir_shop" className={`${isDark ? 'text-[#131A45]  hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
+        <Link href="/alumni/souvenir_shop" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
           Souvenir shop
         </Link>
       </nav>
@@ -121,12 +188,20 @@ const Header = () => {
 
       {/* Mobile Dropdown Menu */}
       <nav
-        className={`absolute z-50 top-full left-0 w-full ${isDark ? 'bg-gray-900 text-white' : 'bg-custom-blue text-white'
+        className={`absolute z-50 top-full left-0 w-full ${isDark ? 'bg-[#131A45] text-white' : 'bg-custom-blue text-white'
           } p-4 transform origin-top ${menuOpen ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"
           } transition-all duration-300 ease-in-out md:hidden`}
         style={{ transformOrigin: "top" }}
       >
         <ul className="flex flex-col text-end gap-4">
+          <li>
+            <Link
+              href="/alumni/homepage"
+              className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
+            >
+              Home
+            </Link>
+          </li>
           <li>
             <Link
               href="/alumni/profile"
@@ -164,22 +239,94 @@ const Header = () => {
               href="/alumni/notification"
               className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 relative`}
             >
-              Notification
               {notificationCount > 0 && (
-                <span className="ml-2 bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
+                <span className="mr-2 bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
                   {notificationCount > 9 ? "9+" : notificationCount}
                 </span>
               )}
+              Notification
             </Link>
           </li>
-          <li>
-            <Link
-              href="/alumni/about"
-              className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
-            >
-              About Us
-            </Link>
+
+          {/* About Us with Dropdown in Mobile Menu */}
+          <li className="flex flex-col items-end">
+            <div className="flex items-center justify-end w-full">
+              <Link
+                href="/alumni/about"
+                className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
+              >
+                About Us
+              </Link>
+              <button
+                onClick={() => setMobileAboutDropdownOpen(!mobileAboutDropdownOpen)}
+                className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 ml-2`}
+                aria-label="Toggle about dropdown"
+              >
+                <Icon
+                  icon={mobileAboutDropdownOpen ? "mdi:chevron-up" : "mdi:chevron-down"}
+                  width="18"
+                  height="18"
+                />
+              </button>
+            </div>
+
+            {/* Mobile About Dropdown Menu */}
+            {mobileAboutDropdownOpen && (
+              <div className="mt-2 flex flex-col items-end gap-2 pl-8 border-t border-gray-600 pt-2 w-full">
+                <Link
+                  href="#Objectives"
+                  onClick={() => {
+                    router.push("/alumni/about");
+                    setMenuOpen(false);
+                  }}
+                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2`}
+                >
+                  Roba Objectives
+                </Link>
+                <Link
+                  href="#history"
+                  onClick={() => {
+                    router.push("/alumni/about");
+                    setMenuOpen(false);
+                  }}
+                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2`}
+                >
+                  Roba History
+                </Link>
+                <Link
+                  href="#presidentmessage"
+                  onClick={() => {
+                    router.push("/alumni/about");
+                    setMenuOpen(false);
+                  }}
+                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2`}
+                >
+                  President Messages
+                </Link>
+                <Link
+                  href="#managementcommittee"
+                  onClick={() => {
+                    router.push("/alumni/about");
+                    setMenuOpen(false);
+                  }}
+                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2`}
+                >
+                  Management Committee
+                </Link>
+                <Link
+                  href="#committeemenbers"
+                  onClick={() => {
+                    router.push("/alumni/about");
+                    setMenuOpen(false);
+                  }}
+                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2`}
+                >
+                  Committee Members
+                </Link>
+              </div>
+            )}
           </li>
+
           <li>
             <Link
               href="/alumni/events"
@@ -216,7 +363,7 @@ const Header = () => {
             <div
               onClick={handleLogout}
               className={`${isDark
-                ? 'bg-gray-700 text-white hover:bg-gray-600'
+                ? 'bg-[#2A3057] text-white hover:bg-gray-600'
                 : 'bg-[#FFFFFF] text-[#131A45] hover:bg-gray-200'
                 } flex items-center text-center text-sm font-bold py-3 px-10 w-[150px] rounded-lg transition-colors duration-200`}
             >

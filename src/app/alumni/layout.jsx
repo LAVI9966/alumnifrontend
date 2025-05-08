@@ -4,7 +4,7 @@ import Header from "@/components/header";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import gettoken from "../function/gettoken";
-
+import ScrollToTop from "@/components/ScrollToTop";
 const Layout = ({ children }) => {
   const router = useRouter();
   const url = process.env.NEXT_PUBLIC_URL;
@@ -28,15 +28,15 @@ const Layout = ({ children }) => {
         });
 
         const data = await response.json();
-       
+
         if (!response.ok) {
-        
+
           console.error("Invalid token:", data.message);
           localStorage.removeItem("alumni");
           router.push("/login");
-        } 
+        }
       } catch (error) {
-        
+
         console.error("Error checking token:", error);
         localStorage.removeItem("alumni");
         router.push("/login");
@@ -49,6 +49,7 @@ const Layout = ({ children }) => {
     <div className="min-h-screen   flex flex-col bg-gray-50">
       <Header />
       {children}
+      <ScrollToTop></ScrollToTop>
       <Footer />
     </div>
   );

@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import { NotificationProvider } from "./alumni/notification/NotificationContext";
 import 'react-image-gallery/styles/css/image-gallery.css';
 import { ThemeProvider } from "@/context/ThemeProvider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -42,6 +43,7 @@ export default function RootLayout({ children }) {
           <NotificationProvider>
 
             {children}
+
             <Toaster />
           </NotificationProvider>
         </ThemeProvider>

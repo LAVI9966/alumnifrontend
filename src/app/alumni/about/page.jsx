@@ -137,7 +137,7 @@ export default function Home() {
               />
             </div>
           </div>
-          <div className="flex flex-col items-center py-10  px-4">
+          <div className="flex flex-col items-center py-10  px-4" id="Objectives">
             {/* Heading Section */}
             <div className="relative text-center mb-10">
               <h2 className="text-3xl font-serif border-2 border-black px-6 py-2 inline-block">

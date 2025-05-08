@@ -4,7 +4,7 @@ const PresidentDesk = () => {
     const { theme, toggleTheme } = useTheme(); // Use the theme context
     const isDark = theme === 'dark';
     return (
-        <div>
+        <div id='presidentmessage'>
             <div className="text-center my-10 md:my-14">
                 <div className="relative inline-block px-4">
                     {/* Top line */}

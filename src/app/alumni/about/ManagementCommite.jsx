@@ -294,12 +294,12 @@ const ManagementCommitee = () => {
     );
 
     return (
-        <div className={`w-full ${isDark ? '' : 'bg-white'}`}>
+        <div id='managementcommittee' className={`w-full ${isDark ? '' : 'bg-white'}`}>
             {/* Section 1: Title + Members */}
             <div className="px-4 py-3">
                 <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
                     {/* Left Title */}
-                    <div className="md:w-[250px] text-center md:text-left shrink-0 mb-6 md:mb-0">
+                    <div className="md:w-[380px] text-center md:text-left shrink-0 mb-6 md:mb-0">
                         <div className="inline-block">
                             <div className="h-0.5 bg-[#C7A006] mb-2" />
                             <h2 className={`text-[36px] md:text-[40px] font-extrabold leading-tight ${isDark ? '' : 'bg-white'} tracking-tight whitespace-nowrap`}>
@@ -346,7 +346,7 @@ const ManagementCommitee = () => {
             <div className="w-full py-3 px-4">
                 <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between gap-10">
                     {/* Left: Button Section */}
-                    <div className="flex items-start md:items-center justify-center md:justify-start md:w-[250px] mb-6 md:mb-0">
+                    <div className="md:w-[380px] w-full text-center md:text-left shrink-0 mb-6 md:mb-0 flex flex-col items-center justify-center">
                         <button className="border font-serif border-[#C7A006]  px-5 py-3 text-sm font-semibold hover:bg-[#C7A006] hover:text-white transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#C7A006] rounded shadow">
                             CONNECT WITH US
                         </button>
