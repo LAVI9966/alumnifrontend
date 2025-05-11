@@ -142,7 +142,7 @@ const ProfilePage = () => {
   const { theme, toggleTheme } = useTheme(); // Use the theme context
   const isDark = theme === 'dark';
   return (
-    <div className={`w-full min-h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-white text-[#131A45]'}`}>
+    <div className={`w-full min-h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-cyan-400 text-[#131A45]'}`}>
 
       <div className={`min-h-screen pt-2 px-4 sm:p-4`}>
         <div className={`w-full ${isDark ? 'bg-[#2A3057]' : 'bg-white'} py-6 lg:p-8 rounded-lg mx-auto my-2 lg:my-8 max-w-[800px]`}>

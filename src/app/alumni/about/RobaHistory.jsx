@@ -7,7 +7,7 @@ const RobaHistory = () => {
         <div id='history'>
             <div className="flex items-center gap-4 w-full my-6">
                 <hr className="flex-grow border-t border-2 border-[#C7A006]" />
-                <span className={`${isDark ? '' : 'bg-white'}  font-bold text-5xl whitespace-nowrap text-center text-[2rem] sm:text-5xl`}>
+                <span className={`${isDark ? '' : 'bg-cyan-400'}  font-bold text-5xl whitespace-nowrap text-center text-[2rem] sm:text-5xl`}>
                     ROBA HISTORY
                 </span>
                 <hr className="flex-grow border-t border-2 border-[#C7A006]" />

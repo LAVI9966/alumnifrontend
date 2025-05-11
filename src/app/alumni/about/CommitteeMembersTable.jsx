@@ -193,7 +193,7 @@ const CommitteeMembersTable = () => {
     };
 
     return (
-        <div id='committeemenbers' className={`w-full ${isDark ? '' : 'bg-white'} max-w-6xl mx-auto p-4 font-serif`}>
+        <div id='committeemenbers' className={`w-full ${isDark ? '' : 'bg-cyan-400'} max-w-6xl mx-auto p-4 font-serif`}>
             <div className="mb-8 text-center">
                 <motion.h2
                     className="text-3xl font-bold inline-block relative"

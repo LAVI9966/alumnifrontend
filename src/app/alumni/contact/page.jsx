@@ -54,7 +54,7 @@ const ContactForm = () => {
   const { theme, toggleTheme } = useTheme(); // Use the theme context
   const isDark = theme === 'dark';
   return (
-    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-white'}`} >
+    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'}`} >
       <div className="min-h-screen flex justify-center items-center relative">
         <div
           className="absolute top-0 left-0 w-full h-[160px] md:h-[288px] bg-cover bg-center"

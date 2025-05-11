@@ -73,7 +73,7 @@ const EventCards = () => {
   const { theme, toggleTheme } = useTheme(); // Use the theme context
   const isDark = theme === 'dark';
   return (
-    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-white'}`} >
+    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'}`} >
       <div className="min-h-screen max-w-[1200px] w-full mx-auto pt-8 px-4 sm:p-8">
         <div
           className="flex flex-col mb-2
@@ -125,7 +125,7 @@ const EventCards = () => {
                     {event.title}
                   </h3>
                   <div className="flex justify-between items-start mb-2">
-                    <div className="flex flex-col items-start text-[#797979] gap-1 text-sm">
+                    <div className="flex flex-col items-start gap-1 text-sm">
                       <div className="mr-4 flex items-center gap-1">
                         <Icon icon="oui:token-date" width="20" height="20" />{" "}
                         {new Date(event.date).toISOString().split("T")[0]}
@@ -138,7 +138,7 @@ const EventCards = () => {
                       Register
                     </button>
                   </div>
-                  <p className="text-[#797979] text-sm">{event.description}</p>
+                  <p className=" text-sm">{event.description}</p>
                 </div>
               </div>
             ))}

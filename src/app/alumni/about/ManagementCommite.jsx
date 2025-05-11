@@ -294,7 +294,7 @@ const ManagementCommitee = () => {
     );
 
     return (
-        <div id='managementcommittee' className={`w-full ${isDark ? '' : 'bg-white'}`}>
+        <div id='managementcommittee' className={`w-full ${isDark ? '' : 'bg-cyan-400'}`}>
             {/* Section 1: Title + Members */}
             <div className="px-4 py-3">
                 <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
@@ -302,7 +302,7 @@ const ManagementCommitee = () => {
                     <div className="md:w-[380px] text-center md:text-left shrink-0 mb-6 md:mb-0">
                         <div className="inline-block">
                             <div className="h-0.5 bg-[#C7A006] mb-2" />
-                            <h2 className={`text-[36px] md:text-[40px] font-extrabold leading-tight ${isDark ? '' : 'bg-white'} tracking-tight whitespace-nowrap`}>
+                            <h2 className={`text-[36px] md:text-[40px] font-extrabold leading-tight ${isDark ? '' : 'bg-cyan-400'} tracking-tight whitespace-nowrap`}>
                                 MANAGEMENT <br /> COMMITTEE
                             </h2>
                             <div className="h-0.5 bg-[#C7A006] mt-2" />

@@ -54,7 +54,7 @@ const AdminSidebar = () => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   return (
-    <aside className={`w-64 p-4 space-y-6 border-r-[1px] flex flex-col justify-between ${isDark ? 'bg-[#232B4A] text-white border-[#232B4A]' : 'bg-[#FFFFFF] text-custom-blue border-[#E5E5E5]'}`}>
+    <aside className={`w-64 p-4 space-y-6 border-r-[1px] flex flex-col justify-between ${isDark ? 'bg-[#232B4A] text-white border-[#232B4A]' : 'bg-cyan-300 text-custom-blue border-[#E5E5E5]'}`}>
       <nav>
         <Link href="/admin/homepage">
           <Image
@@ -62,7 +62,7 @@ const AdminSidebar = () => {
             height={100}
             src="/logoimage.png"
             alt="Rimcollian Logo"
-            className={`h-[85px] ml-3 w-[85px] ${isDark ? 'bg-white rounded-full' : ''}`}
+            className={`h-[85px] ml-3 w-[85px] ${isDark ? 'bg-white rounded-full' : 'bg-cyan-400 rounded-full'}`}
           />
         </Link>
         <ul className="space-y-2 mt-10">

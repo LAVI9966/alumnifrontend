@@ -95,7 +95,7 @@ const Allmembers = () => {
   const { theme, toggleTheme } = useTheme(); // Use the theme context
   const isDark = theme === 'dark';
   return (
-    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-white'}`} >
+    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'}`} >
       <div className="min-h-screen  pt-8 px-4 sm:p-8">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold mb-6">All Alumni Member</h2>

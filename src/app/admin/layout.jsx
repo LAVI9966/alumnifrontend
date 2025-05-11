@@ -48,7 +48,7 @@ const Layout = ({ children }) => {
           },
         });
         const data = await response.json();
-        
+
         if (!response.ok) {
           console.error("Invalid token:", data.message);
           localStorage.removeItem("alumni");
@@ -58,7 +58,7 @@ const Layout = ({ children }) => {
             router.push("/login");
           }
           setLoading(false);
-        
+
         }
       } catch (error) {
         console.error("Error checking token:", error);
@@ -82,11 +82,11 @@ const Layout = ({ children }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   return (
-    <div className={`flex h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-white text-[#131A45]'}`}>
+    <div className={`flex h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-cyan-200 text-[#131A45]'}`}>
       <AdminSidebar />
       <div className="flex-1 min-h-screen overflow-y-scroll flex flex-col">
         <AdminHeader />
-        <main className={`p-6 flex-1 ${isDark ? 'bg-[#232B4A]' : 'bg-gray-100'}`}>{children}</main>
+        <main className={`p-6 flex-1 ${isDark ? 'bg-[#232B4A]' : 'bg-cyan-400'}`}>{children}</main>
       </div>
     </div>
   );

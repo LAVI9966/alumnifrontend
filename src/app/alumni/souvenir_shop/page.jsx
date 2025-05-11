@@ -14,7 +14,7 @@ const ComingSoon = () => {
             alignItems: "center",
 
         }}
-            className={`w-full ${isDark ? 'bg-[#131A45] text-white' : 'bg-white text-[#131A45]'}`}
+            className={`w-full bg-white text-[#131A45]`}
         >
             <h1 style={{ fontSize: "2.5rem" }}>Coming Soon</h1>
             <p style={{ color: "#666", marginTop: "1rem" }}>

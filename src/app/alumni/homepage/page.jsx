@@ -61,7 +61,7 @@ const page = () => {
   const { theme, toggleTheme } = useTheme(); // Use the theme context
   const isDark = theme === 'dark';
   return (
-    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-white'}`} >
+    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'}`} >
       <div className="min-h-screen max-w-[1200px] mx-auto w-full  pt-4 px-4 md:p-2 flex flex-col md:flex-row gap-0 md:gap-8 mt-2">
         {/* Upcoming Events Section */}
         <div className="w-full flex flex-col  gap-4 md:w-[31%]">

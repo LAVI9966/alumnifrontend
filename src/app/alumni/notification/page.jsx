@@ -86,7 +86,7 @@ const page = () => {
   const isDark = theme === 'dark';
 
   return (
-    <div className={`mb-4 p-4 relative ${isDark ? 'bg-[#131A45]' : 'bg-white'} shadow-md rounded-lg`}>
+    <div className={`mb-4 p-4 relative ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} shadow-md rounded-lg`}>
       <div className="min-h-screen  pt-8 px-4 sm:p-8">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-semibold mb-4">Notifications</h2>

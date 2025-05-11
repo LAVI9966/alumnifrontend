@@ -118,7 +118,7 @@ const Header = () => {
   };
 
   return (
-    <header className={`${isDark ? 'bg-white text-[#131A45]' : 'bg-custom-blue text-white'} p-4 flex justify-between items-center relative transition-colors duration-200`}>
+    <header className={`${isDark ? 'bg-cyan-400 text-[#131A45]' : 'bg-custom-blue text-white'} p-4 flex justify-between items-center relative transition-colors duration-200`}>
       {/* Logo */}
       <Link href="/alumni/homepage" className="w-16">
         <Logo textwhite={true} isfooter={true} />

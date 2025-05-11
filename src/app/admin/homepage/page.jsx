@@ -39,7 +39,7 @@ const page = () => {
   const isDark = theme === 'dark';
   return (
     <div className="mx-6 ">
-      <h2 className={`${isDark ? 'text-white' : 'text-[#131A45]'} font-semibold text-2xl`}>Overview</h2>
+      <h2 className={`${isDark ? 'text-white' : 'text-[#131A45]'}   font-semibold text-2xl`}>Overview</h2>
       <div className="flex gap-3 w-full mt-4 ">
         <Homepagecard
           title="Total Alumnis"
