@@ -15,7 +15,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Hony President',
             contact: '9711435012',
             email: 'adoshkumar@gmail.com',
-            image: '/api/placeholder/80/80'
+            image: '/Lt_Gen_Adosh_Kumar.avif'
         },
         {
             id: 2,
@@ -24,7 +24,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Member',
             contact: '9999843425',
             email: 'ballipawar@yahoo.com',
-            image: '/api/placeholder/80/80'
+            image: '/Lt_Gen_BS_Pawar.avif'
         },
         {
             id: 3,
@@ -33,7 +33,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Member',
             contact: '8130011401',
             email: 'sksinghaft1806@gmail.com',
-            image: '/api/placeholder/80/80'
+            image: dummy
         },
         {
             id: 4,
@@ -42,7 +42,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Hony Editor',
             contact: '9969205651',
             email: 'najjoseph@yahoo.com',
-            image: '/api/placeholder/80/80'
+            image: dummy
         },
         {
             id: 5,
@@ -51,7 +51,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Member',
             contact: '9654652898',
             email: 'suyash1967@yahoo.com',
-            image: '/api/placeholder/80/80'
+            image: dummy
         },
         {
             id: 6,
@@ -60,7 +60,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Member',
             contact: '9491198803',
             email: 'srini18pra@yahoo.co.in',
-            image: '/api/placeholder/80/80'
+            image: dummy
         },
         {
             id: 7,
@@ -69,7 +69,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Member',
             contact: '9900169829',
             email: 'ntiwari.af@gmail.com',
-            image: '/api/placeholder/80/80'
+            image: '/AVMN_Tiwari.avif'
         },
         {
             id: 8,
@@ -78,7 +78,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Member',
             contact: '8985829534',
             email: 'preethyraghu@yahoo.com',
-            image: '/api/placeholder/80/80'
+            image: '/Cmde_Raghunath_K_Nair.avif'
         },
         {
             id: 9,
@@ -87,7 +87,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Hony Treasurer',
             contact: '9650690100',
             email: 'rimcojags3@gmail.com',
-            image: '/api/placeholder/80/80'
+            image: dummy
         },
         {
             id: 10,
@@ -96,7 +96,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Member',
             contact: '9899830967',
             email: 'rajvir.yadav1@gmail.com',
-            image: '/api/placeholder/80/80'
+            image: dummy
         },
         {
             id: 11,
@@ -105,7 +105,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Member',
             contact: '9871698917',
             email: 'yummymets@yahoo.com',
-            image: '/api/placeholder/80/80'
+            image: dummy
         },
         {
             id: 12,
@@ -114,7 +114,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Comdt, RIMC',
             contact: '',
             email: 'rimc-uk@nic.in',
-            image: '/api/placeholder/80/80'
+            image: dummy
         },
         {
             id: 13,
@@ -123,7 +123,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Hony Secy',
             contact: '8459571893',
             email: 'vivekups9@gmail.com',
-            image: '/api/placeholder/80/80'
+            image: dummy
         },
         {
             id: 14,
@@ -132,7 +132,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Member',
             contact: '9419984030',
             email: 'shailarya@gmail.com',
-            image: '/api/placeholder/80/80'
+            image: '/Col_Shailender_Arya.avif'
         },
         {
             id: 15,
@@ -141,7 +141,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Member',
             contact: '8527848279',
             email: 'manishsain123@gmail.com',
-            image: '/api/placeholder/80/80'
+            image: '/CAPT(IN)_MANISH_SAIN.avif'
         },
         {
             id: 16,
@@ -150,7 +150,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Member',
             contact: '9871250552',
             email: 'saurabh.redhu@gmail.com',
-            image: '/api/placeholder/80/80'
+            image: dummy
         },
         {
             id: 17,
@@ -159,7 +159,7 @@ const CommitteeMembersTable = () => {
             appointment: 'Member',
             contact: '9999100222',
             email: 'abhishekthapar@hotmail.com',
-            image: '/api/placeholder/80/80'
+            image: dummy
         }
     ];
 
@@ -227,6 +227,7 @@ const CommitteeMembersTable = () => {
                                     S.No <SortIcon field="id" />
                                 </button>
                             </th>
+                            <th className="px-4 py-3 text-center text-sm font-medium">Photo</th>
                             <th className="px-4 py-3 text-left text-sm font-medium">
                                 <button
                                     className="flex items-center focus:outline-none"
@@ -248,12 +249,11 @@ const CommitteeMembersTable = () => {
                                     className="flex items-center focus:outline-none"
                                     onClick={() => handleSort('appointment')}
                                 >
-                                    Appointment <SortIcon field="appointment" />
+                                    Designation <SortIcon field="appointment" />
                                 </button>
                             </th>
                             <th className="px-4 py-3 text-left text-sm font-medium">Contact</th>
                             <th className="px-4 py-3 text-left text-sm font-medium">Email</th>
-                            <th className="px-4 py-3 text-center text-sm font-medium">Photo</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -267,20 +267,20 @@ const CommitteeMembersTable = () => {
                                 whileHover={{ backgroundColor: "#f8f4e3" }}
                             >
                                 <td className="px-4 py-3 text-sm text-gray-900">{member.id}</td>
+                                <td className="px-4 py-2 text-sm flex justify-center">
+                                    <img
+                                        src={member.image}
+                                        // src={dummy}
+                                        alt={`${member.rank} ${member.name}`}
+                                        className="w-16 h-16 rounded-full object-cover border-2 border-[#C7A006]"
+                                    />
+                                </td>
                                 <td className="px-4 py-3 text-sm font-medium text-gray-900">{member.rank}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900">{member.name}</td>
                                 <td className="px-4 py-3 text-sm text-gray-900">{member.appointment}</td>
                                 <td className="px-4 py-3 text-sm text-gray-500">{member.contact}</td>
                                 <td className="px-4 py-3 text-sm text-blue-600 hover:underline">
                                     <a href={`mailto:${member.email}`}>{member.email}</a>
-                                </td>
-                                <td className="px-4 py-2 text-sm text-gray-500 flex justify-center">
-                                    <img
-                                        // src={member.image}
-                                        src={dummy}
-                                        alt={`${member.rank} ${member.name}`}
-                                        className="w-12 h-12 rounded-full object-cover border-2 border-[#C7A006]"
-                                    />
                                 </td>
                             </motion.tr>
                         ))}
@@ -314,11 +314,11 @@ const CommitteeMembersTable = () => {
                             <div className="grid grid-cols-1 gap-1">
                                 <p className="text-sm">
                                     <span className="font-medium text-gray-500">Contact: </span>
-                                    <span className="text-gray-900">{member.contact}</span>
+                                    <span className="text-gray-900 ml-6">{member.contact}</span>
                                 </p>
                                 <p className="text-sm">
                                     <span className="font-medium text-gray-500">Email: </span>
-                                    <a href={`mailto:${member.email}`} className="text-blue-600 hover:underline">{member.email}</a>
+                                    <a href={`mailto:${member.email}`} className="text-blue-600 hover:underline ml-9">{member.email}</a>
                                 </p>
                             </div>
                         </div>

@@ -18,6 +18,7 @@ const useVerifyToken = () => {
       }
       const { token } = await JSON.parse(storedData);
       if (!token) {
+        // router.push("/alumni"); 
         setIsChecking(false); // Stop checking if no token is found
         return;
       }
@@ -39,6 +40,7 @@ const useVerifyToken = () => {
       } catch (error) {
         console.error("Error checking token:", error);
         localStorage.removeItem("alumni");
+        router.push("/alumni"); // Redirect on error
       } finally {
         setIsChecking(false); // Mark check as complete
       }

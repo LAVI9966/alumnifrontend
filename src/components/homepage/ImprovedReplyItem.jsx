@@ -255,7 +255,11 @@ const ImprovedReplyItem = ({ reply, postId, userId, refreshComments, level = 0, 
                             <div className="w-6 h-6 mb-5 flex-shrink-0">
                                 <img
                                     className="w-6 h-6 rounded-full"
-                                    src="/memberpage/member.png"
+                                    src={
+                                        reply.user?.profilePicture
+                                            ? `${url}/uploads/${reply.user?.profilePicture?.split("\\").pop()}`
+                                            : "/memberpage/member.png"
+                                    }
                                     alt="avatar"
                                 />
                             </div>

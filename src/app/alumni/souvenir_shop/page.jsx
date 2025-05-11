@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
 import { useTheme } from '@/context/ThemeProvider';
+import SouvenirShop from './SouvenirShop'
 const ComingSoon = () => {
     const { theme, toggleTheme } = useTheme(); // Use the theme context
     const isDark = theme === 'dark';
@@ -26,7 +27,7 @@ const ComingSoon = () => {
 const page = () => {
     return (
         <div>
-            <ComingSoon></ComingSoon>
+            <SouvenirShop></SouvenirShop>
         </div>
     )
 }

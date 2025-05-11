@@ -347,9 +347,9 @@ const ManagementCommitee = () => {
                 <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between gap-10">
                     {/* Left: Button Section */}
                     <div className="md:w-[380px] w-full text-center md:text-left shrink-0 mb-6 md:mb-0 flex flex-col items-center justify-center">
-                        <button className="border font-serif border-[#C7A006]  px-5 py-3 text-sm font-semibold hover:bg-[#C7A006] hover:text-white transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#C7A006] rounded shadow">
+                        <a href='/alumni/contact' className="border font-serif border-[#C7A006]  px-5 py-3 text-sm font-semibold hover:bg-[#C7A006] hover:text-white transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#C7A006] rounded shadow">
                             CONNECT WITH US
-                        </button>
+                        </a>
                     </div>
 
                     {/* Right: Members Section - 3 per row on larger screens, responsive on smaller */}

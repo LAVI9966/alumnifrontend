@@ -3,14 +3,15 @@ import Logo from "@/components/logo";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import captcha from "../../../public/captcha.png";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import useVerifyToken from "@/hook/useVerifyToken";
-import ForgotPassword from "./forgotpassmodal.jsx"
+import ForgotPassword from "./forgotpassmodal.jsx";
+
 export default function SignupPage() {
   const [passwordVisible, setPasswordVisible] = React.useState(false);
   const togglePasswordVisibility = () => {
@@ -19,9 +20,17 @@ export default function SignupPage() {
   const router = useRouter();
   const url = process.env.NEXT_PUBLIC_URL;
 
-  useVerifyToken();
-  const forgotPassword = async (email) => {
+  // Check for session expiration on page load
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('sessionExpired') === 'true') {
+      toast.error('Your session has expired. Please log in again.');
+    }
+  }, []);
 
+  useVerifyToken();
+
+  const forgotPassword = async (email) => {
     try {
       const response = await fetch(`${url}/api/auth/forgot-password`, {
         method: "POST",
@@ -34,7 +43,7 @@ export default function SignupPage() {
       toast.success(data?.message || "Password reset email sent. Check your inbox.");
     } catch (error) {
       console.error("Forgot Password Error:", error.message);
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -86,25 +95,43 @@ export default function SignupPage() {
                   body: JSON.stringify(values),
                 });
                 const data = await response.json();
+
                 if (response.ok) {
-                  toast.success(data.message || "Login success");
+                  toast.success("Login successful! Redirecting to homepage...");
+
                   localStorage.setItem(
                     "alumni",
                     JSON.stringify({ token: data.token, user: data.user })
                   );
 
-                  router.push("/alumni/homepage");
+                  // Delay redirect to allow toast to be seen
+                  setTimeout(() => {
+                    router.push("/alumni/homepage");
+                  }, 1000);
                 } else {
-                  toast.error(data.message || "Login failed");
+                  // Handle different error cases with custom messages
+                  if (data.message === 'Invalid Credentials' && response.status === 400) {
+                    if (values.email && !values.password) {
+                      toast.error("Please enter your password");
+                    } else if (response.status === 400) {
+                      toast.error("Email or password is incorrect. Please try again.");
+                    }
+                  } else if (data.message.includes('not verified')) {
+                    toast.error("Your account is not verified. Please check your email for OTP verification.");
+                  } else if (data.message.includes('not found') || data.message.includes('register')) {
+                    toast.error("Email is not registered. Please register first.");
+                  } else {
+                    toast.error(data.message || "Login failed. Please try again.");
+                  }
                 }
               } catch (error) {
                 console.log(error);
-                toast.error("An error occurred. Please try again.");
+                toast.error("An error occurred connecting to the server. Please try again later.");
               }
               setSubmitting(false);
             }}
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting, values, errors, touched, isValid, dirty }) => (
               <Form className="mt-8 space-y-4 max-w-[400px] px-2 mx-auto">
                 <Field
                   type="email"
@@ -142,18 +169,29 @@ export default function SignupPage() {
                     className="text-red-500 text-sm"
                   />
                 </div>
-                {/* 
-              <div className="flex justify-center">
-                <Image src={captcha} alt="captcha" />
-              </div> */}
-
 
                 <ForgotPassword />
+
                 <div className="w-full flex justify-center">
                   <button
                     type="submit"
                     disabled={isSubmitting}
                     className="w-[143px] bg-[#131A45] text-white py-3 rounded-xl font-semibold hover:bg-[#1a2154]"
+                    onClick={(e) => {
+                      // Check for empty fields and show toast instead of relying on form validation
+                      if (!isValid || !dirty) {
+                        e.preventDefault();
+
+                        // Create appropriate message based on which fields are empty
+                        if (!values.email && !values.password) {
+                          toast.error("Please enter your email and password");
+                        } else if (!values.email) {
+                          toast.error("Please enter your email address");
+                        } else if (!values.password) {
+                          toast.error("Please enter your password");
+                        }
+                      }
+                    }}
                   >
                     {isSubmitting ? "Logging in..." : "Login"}
                   </button>
@@ -169,9 +207,6 @@ export default function SignupPage() {
                 Register Now
               </Link>
             </p>
-            {/* <button className="border mt-3 border-[#C7A006] rounded-lg w-36 p-1">
-              Need Help?
-            </button> */}
           </div>
         </div>
       </div>
