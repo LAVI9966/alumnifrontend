@@ -63,7 +63,7 @@ export default function SignupPage() {
 
       if (response.ok) {
         toast.success(data?.message || "OTP verified successfully!");
-        //  router.push("/login");
+        router.push("/login");
       } else {
         toast.error(data?.message || "OTP verification failed.");
       }
@@ -109,7 +109,7 @@ export default function SignupPage() {
                   ref={(el) => (inputRefs.current[index] = el)}
                   onChange={(e) => handleChange(e.target.value, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
-                  className="w-12 h-12 custom-input  text-xl"
+                  className="w-12 h-12 custom-input text-black text-xl"
                 />
               ))}
             </div>
@@ -135,7 +135,7 @@ export default function SignupPage() {
           <div className="mt-4 text-center text-[#000000]">
             <p className="text-sm">
               Back to Register?{" "}
-              <a href="/alumni/login" className="font-semibold underline">
+              <a href="/login" className="font-semibold underline">
                 Click Here
               </a>
             </p>

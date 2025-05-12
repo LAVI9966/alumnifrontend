@@ -160,11 +160,11 @@ export default function Home() {
           </div>
           <div className="grid  bg-white shadow-md rounded-lg border border-gray-200">
             {aboutDetails.map((card, idx) => (
-              <div key={idx} className={`px-6 py-2 ${isDark ? 'bg-[#2A3057]' : 'bg-cyan-400 '} `}>
-                <h2 className="text-[24px]  font-semibold text-custom-blue">
+              <div key={idx} className={`px-6 py-2 ${isDark ? 'bg-[#2A3057] text-white' : 'bg-cyan-400 '} `}>
+                <h2 className="text-[24px]  font-semibold ">
                   {card.title}
                 </h2>
-                <p className="text-white text-[16px] ">{card.description}</p>
+                <p className=" text-[16px] ">{card.description}</p>
               </div>
             ))}
           </div>
