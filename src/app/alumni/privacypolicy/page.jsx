@@ -56,12 +56,12 @@ const PrivacyPolicy = () => {
     ];
 
     return (
-        <div className={`w-full min-h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-cyan-50 text-gray-800'} py-10 px-4 md:px-8 lg:px-16`}>
+        <div className={`w-full min-h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-cyan-400'} py-10 px-4 md:px-8 lg:px-16`}>
             <div className="max-w-4xl mx-auto">
-                <h1 className={`text-3xl font-bold mb-8 ${isDark ? 'text-cyan-300' : 'text-cyan-700'}`}>Privacy Policy</h1>
+                <h1 className={`text-3xl text-center font-bold mb-8 ${isDark ? 'text-white' : 'text-black '}`}>Privacy Policy</h1>
 
                 {/* Navigation/Table of Contents */}
-                <div className={`mb-8 p-4 rounded-lg ${isDark ? 'bg-[#1A225A]' : 'bg-white'} shadow-md`}>
+                {/* <div className={`mb-8 p-4 rounded-lg ${isDark ? 'bg-[#1A225A]' : 'bg-white'} shadow-md`}>
                     <h2 className="text-xl font-semibold mb-4">Contents</h2>
                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         {sections.map(section => (
@@ -78,10 +78,10 @@ const PrivacyPolicy = () => {
                             </li>
                         ))}
                     </ul>
-                </div>
+                </div> */}
 
                 {/* Policy Sections */}
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                     {sections.map(section => (
                         <div
                             key={section.id}
@@ -106,12 +106,12 @@ const PrivacyPolicy = () => {
                             </div>
                         </div>
                     ))}
-                </div>
+                </div> */}
 
                 {/* Last Updated */}
-                <div className="mt-10 text-center text-sm opacity-80">
+                {/* <div className="mt-10 text-center text-sm opacity-80">
                     Last updated: May 15, 2025
-                </div>
+                </div> */}
             </div>
         </div>
     )

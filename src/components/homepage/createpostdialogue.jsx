@@ -16,19 +16,33 @@ import { Icon } from "@iconify/react";
 import gettoken from "@/app/function/gettoken";
 import toast from "react-hot-toast";
 import { useTheme } from "@/context/ThemeProvider";
+
 const CreatePostDialogue = ({ getPosts, postData }) => {
-  const [previewImage, setPreviewImage] = useState(null);
+  const [previewImages, setPreviewImages] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   useEffect(() => {
-    if (postData && postData.imageUrl) {
-      const src = `${url}/uploads/${postData?.imageUrl?.split("\\").pop()}`;
-      setPreviewImage(src);
+    if (postData) {
+      if (postData.imageUrl) {
+        // For backward compatibility with single image posts
+        const src = `${url}/uploads/${postData?.imageUrl?.split("\\").pop()}`;
+        setPreviewImages([src]);
+      } else if (postData.images && postData.images.length > 0) {
+        // For multiple images
+        const imagePreviews = postData.images.map(img =>
+          `${url}/uploads/${img.split("\\").pop()}`
+        );
+        setPreviewImages(imagePreviews);
+      }
     }
-  }, [postData]);
+  }, [postData, url]);
+
+  const removeImage = (index) => {
+    setPreviewImages(prev => prev.filter((_, i) => i !== index));
+  };
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
@@ -46,18 +60,22 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
         <Formik
           initialValues={{
             content: postData?.content || "",
-            imageUrl: null,
+            images: []
           }}
           validationSchema={Yup.object({
             content: Yup.string().required("Caption is required"),
-            imageUrl: Yup.mixed().required("Image is required"),
+            images: postData ? Yup.array() : Yup.array().min(1, "At least one image is required")
           })}
           onSubmit={async (values, { setSubmitting, resetForm }) => {
             try {
               const formData = new FormData();
               formData.append("content", values.content);
-              if (values.imageUrl) {
-                formData.append("image", values.imageUrl);
+
+              // Append all selected images
+              if (values.images && values.images.length > 0) {
+                for (let i = 0; i < values.images.length; i++) {
+                  formData.append("images", values.images[i]);
+                }
               }
 
               const apiUrl = postData
@@ -81,7 +99,7 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
                     : "Post created successfully!"
                 );
                 resetForm();
-                setPreviewImage(null);
+                setPreviewImages([]);
                 getPosts();
                 setIsOpen(false);
               } else {
@@ -104,11 +122,18 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
                       type="file"
                       className="hidden"
                       accept="image/*"
+                      multiple
                       onChange={(event) => {
-                        const file = event.currentTarget.files[0];
-                        if (file) {
-                          setFieldValue("imageUrl", file);
-                          setPreviewImage(URL.createObjectURL(file));
+                        const files = event.currentTarget.files;
+                        if (files && files.length > 0) {
+                          setFieldValue("images", [...values.images, ...files]);
+
+                          // Create preview URLs for each new file
+                          const newPreviewUrls = Array.from(files).map(file =>
+                            URL.createObjectURL(file)
+                          );
+
+                          setPreviewImages(prev => [...prev, ...newPreviewUrls]);
                         }
                       }}
                     />
@@ -136,27 +161,45 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
                 </div>
               </AlertDialogTitle>
               <div className={isDark ? "bg-gray-900 overflow-hidden" : "bg-white overflow-hidden"}>
-                <div className={`h-56 ${isDark ? "bg-gray-800" : "bg-gray-300"} relative flex items-center justify-center`}>
-                  {previewImage && (
-                    <>
+                {previewImages.length > 0 ? (
+                  <div className={`max-h-80 overflow-y-auto p-2 grid grid-cols-2 gap-2 ${isDark ? "bg-gray-800" : "bg-gray-200"}`}>
+                    {previewImages.map((src, index) => (
+                      <div key={index} className="relative h-40">
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className={`absolute top-2 right-2 z-10 p-1 rounded-full ${isDark ? "bg-gray-900" : "bg-white"}`}
+                        >
+                          <Icon
+                            icon="material-symbols:delete-outline-rounded"
+                            width="20"
+                            height="20"
+                            className="text-red-500"
+                          />
+                        </button>
+                        <img
+                          src={src}
+                          alt={`Preview ${index + 1}`}
+                          className="h-full w-full object-cover rounded"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className={`h-56 ${isDark ? "bg-gray-800" : "bg-gray-300"} flex items-center justify-center`}>
+                    <div className="text-center">
                       <Icon
-                        onClick={() => {
-                          setFieldValue("imageUrl", null);
-                          setPreviewImage(null);
-                        }}
-                        className={`cursor-pointer ${isDark ? "text-gray-200 bg-gray-900 border-gray-700" : "text-gray-800 bg-white border-gray-300"} absolute top-2 right-2 rounded-full p-2 shadow-sm border`}
-                        icon="material-symbols:delete-outline-rounded"
-                        width="40"
-                        height="40"
+                        icon="solar:gallery-broken"
+                        width="48"
+                        height="48"
+                        className={isDark ? "mx-auto text-gray-600" : "mx-auto text-gray-500"}
                       />
-                      <img
-                        src={previewImage}
-                        alt="Preview"
-                        className="max-h-full max-w-full object-cover"
-                      />
-                    </>
-                  )}
-                </div>
+                      <p className={`mt-2 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
+                        Click the gallery icon to add images
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
               <AlertDialogFooter className="p-2">
                 <button
@@ -176,7 +219,6 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
 };
 
 export default CreatePostDialogue;
-
 // import React, { useState } from "react";
 // import { Formik, Form, Field } from "formik";
 // import * as Yup from "yup";

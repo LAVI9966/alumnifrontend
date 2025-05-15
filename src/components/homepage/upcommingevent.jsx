@@ -50,7 +50,7 @@ const Upcommingevent = () => {
           style={{ whiteSpace: "nowrap" }}
         >
           {event.slice(0, 3).map((val) => (
-            <div key={val._id} className="lg:flex-none">
+            <div key={val._id} className="lg:flex-none w-full">
               <Eventcard
                 date={val.date}
                 title={val.title}

@@ -31,6 +31,15 @@ export function ContactDataTable() {
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState([]);
 
+  // Department display mapping
+  const departmentNames = {
+    customer_support: "Customer Support",
+    technical_team: "Technical Team",
+    sales: "Sales Department",
+    marketing: "Marketing",
+    management: "Management",
+  };
+
   const url = process.env.NEXT_PUBLIC_URL;
 
   React.useEffect(() => {
@@ -96,6 +105,14 @@ export function ContactDataTable() {
       cell: ({ row }) => <div>{row.getValue("email")}</div>,
     },
     {
+      accessorKey: "department",
+      header: "Department",
+      cell: ({ row }) => {
+        const deptKey = row.getValue("department");
+        return <div>{departmentNames[deptKey] || deptKey}</div>;
+      },
+    },
+    {
       accessorKey: "subject",
       header: "Subject",
       cell: ({ row }) => <div>{row.getValue("subject")}</div>,
@@ -103,7 +120,7 @@ export function ContactDataTable() {
     {
       accessorKey: "message",
       header: "Message",
-      cell: ({ row }) => <div className=" w-40">{row.getValue("message")}</div>,
+      cell: ({ row }) => <div className="w-40">{row.getValue("message")}</div>,
     },
     {
       accessorKey: "createdAt",
@@ -118,10 +135,10 @@ export function ContactDataTable() {
     data,
     columns,
     initialState: {
-        pagination: {
-          pageSize: 10, // Show only 10 rows per page
-        },
+      pagination: {
+        pageSize: 10, // Show only 10 rows per page
       },
+    },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -169,9 +186,9 @@ export function ContactDataTable() {
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -208,8 +225,8 @@ export function ContactDataTable() {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-      <div className="flex-1 text-sm text-muted-foreground">
-        Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+        <div className="flex-1 text-sm text-muted-foreground">
+          Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
         </div>
         <div className="space-x-2">
           <Button

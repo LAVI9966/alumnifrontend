@@ -19,6 +19,7 @@ import Link from "next/link";
 import ReplyItem from "./ReaplyItem";
 import ImprovedReplyItem from "./ImprovedReplyItem";
 import { useTheme } from "@/context/ThemeProvider";
+import ImageGallery from "./ImageGallery";
 
 export const timeAgo = (timestamp) => {
   if (!timestamp) return "Invalid date";
@@ -923,8 +924,9 @@ const Postcard = ({ postData, getPosts, userid }) => {
       {/* Post Content */}
       <p className="font-bold text-sm">{postData?.content}</p>
 
-      {/* Post Image */}
-      {postData?.imageUrl && (
+      {/* Post Images - Updated Section */}
+      {postData?.imageUrl ? (
+        // For backward compatibility with single image posts
         <div className="w-full h-auto bg-gray-200 mt-3">
           <Image
             priority
@@ -937,7 +939,10 @@ const Postcard = ({ postData, getPosts, userid }) => {
             className="max-h-[400px]"
           />
         </div>
-      )}
+      ) : postData?.images && postData.images.length > 0 ? (
+        // For multiple images
+        <ImageGallery images={postData.images} url={url} />
+      ) : null}
 
       {/* Updated Like, Comment, Share Section with "Liked by X members" text */}
       <div className="mt-4 flex items-center justify-between py-2">

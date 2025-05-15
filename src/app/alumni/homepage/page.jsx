@@ -111,7 +111,10 @@ const Page = () => {
         {/* Overlay Content */}
         <div className="absolute  inset-0 text-white flex flex-col justify-center items-center bg-[#131A45] bg-opacity-50 text-center p-4">
           <h1 className="text-2xl md:text-4xl font-bold">
-            Welcome to Rimcollian Alumni Portal
+
+
+            {/* Welcome to Rimcollian Alumni Portal */}
+            Welcome to ROBA portal
           </h1>
           <p className="mt-2">
             Explore your dashboard to stay connected with the alumni community.
