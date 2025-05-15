@@ -26,7 +26,7 @@ const Logo = ({ textwhite, isfooter }) => {
         className={`border-[#C7A006] border-[1px] w-[80%] ${isfooter ? "mt-1" : "mt-2"
           }`}
       />
-      <div className={`${isDark ? 'bg-white text-[#131A45]' : 'bg-custom-blue text-white'}`}>
+      <div className={`${isDark ? ' text-[#131A45]' : 'bg-custom-blue text-white'}`}>
 
         Alumni
 

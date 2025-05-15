@@ -18,7 +18,7 @@ const Footer = () => {
         <Link href="contact" className={`hover:underline mx-2 ${isDark ? 'text-[#131A45]' : 'text-white'}`}>
           Contact
         </Link>
-        <Link href="#" className={`hover:underline mx-2 ${isDark ? 'text-[#131A45]' : 'text-white'}`}>
+        <Link href="/alumni/privacypolicy" className={`hover:underline mx-2 ${isDark ? 'text-[#131A45]' : 'text-white'}`}>
           Privacy Policy
         </Link>
       </div>

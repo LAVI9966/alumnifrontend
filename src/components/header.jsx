@@ -113,7 +113,7 @@ const Header = () => {
     } else {
       // If on another page, navigate to about page first, and let the useEffect handle scrolling
       // The hash will trigger the delayed scrolling after page load
-      router.push(`/alumni/about${sectionId}`);
+      router.push(`/alumni/about/${sectionId}`);
     }
   };
 
@@ -162,36 +162,36 @@ const Header = () => {
               onMouseLeave={() => setAboutDropdownOpen(false)}
             >
               <div className="py-1">
-                <button
-                  onClick={() => navigateToSection('#Objectives')}
+                <Link
+                  href="/alumni/about"
                   className={`block px-4 py-2 w-full text-left ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}
                 >
                   Roba Objectives
-                </button>
-                <button
-                  onClick={() => navigateToSection('#history')}
+                </Link>
+                <Link
+                  href="/alumni/about/robahistory"
                   className={`block px-4 py-2 w-full text-left ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}
                 >
                   Roba History
-                </button>
-                <button
-                  onClick={() => navigateToSection('#presidentmessage')}
+                </Link>
+                <Link
+                  href="/alumni/about/presidentdesk"
                   className={`block px-4 py-2 w-full text-left ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}
                 >
                   President Messages
-                </button>
-                <button
-                  onClick={() => navigateToSection('#managementcommittee')}
+                </Link>
+                <Link
+                  href="/alumni/about/managementcommittee"
                   className={`block px-4 py-2 w-full text-left ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}
                 >
                   Management Committee
-                </button>
-                <button
-                  onClick={() => navigateToSection('#committeemenbers')}
+                </Link>
+                <Link
+                  href="/alumni/about/committeemembers"
                   className={`block px-4 py-2 w-full text-left ${isDark ? 'hover:bg-gray-200' : 'hover:bg-[#2A3057]'} transition-colors duration-200`}
                 >
                   Committee Members
-                </button>
+                </Link>
               </div>
             </div>
           )}

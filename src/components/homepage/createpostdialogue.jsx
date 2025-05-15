@@ -161,7 +161,7 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
               <AlertDialogFooter className="p-2">
                 <button
                   type="submit"
-                  className={`py-2 px-10 rounded-lg ${isDark ? 'bg-[#131A45]' : 'bg-custom-blue'}`}
+                  className={`py-2 px-10 text-white rounded-lg ${isDark ? 'bg-[#131A45]' : 'bg-custom-blue'}`}
                   disabled={isSubmitting}
                 >
                   {postData ? "Update" : "Upload"}

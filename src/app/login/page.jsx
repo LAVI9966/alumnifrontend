@@ -97,7 +97,7 @@ export default function SignupPage() {
                 const data = await response.json();
 
                 if (response.ok) {
-                  toast.success("Login successful! Redirecting to homepage...");
+                  toast.success("Login successful!");
 
                   localStorage.setItem(
                     "alumni",

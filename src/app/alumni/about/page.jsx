@@ -5,10 +5,10 @@ import React from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Footer from "@/components/footer";
-import RobaHistory from "./RobaHistory";
-import PresidentDesk from "./PresidentDesk";
-import ManagementCommite from "./ManagementCommite";
-import CommitteeMembersTable from "./CommitteeMembersTable";
+import RobaHistory from "./robahistory/RobaHistory";
+import PresidentDesk from "./presidentdesk/PresidentDesk";
+import ManagementCommite from "./managementcommittee/ManagementCommite";
+import CommitteeMembersTable from "./committeemembers/CommitteeMembersTable";
 import { useTheme } from "@/context/ThemeProvider";
 const aboutDetails = [
   {
@@ -170,10 +170,10 @@ export default function Home() {
           </div>
         </main>
 
-        <RobaHistory></RobaHistory>
-        <PresidentDesk></PresidentDesk>
-        <ManagementCommite></ManagementCommite>
-        <CommitteeMembersTable></CommitteeMembersTable>
+        {/* <RobaHistory></RobaHistory> */}
+        {/* <PresidentDesk></PresidentDesk> */}
+        {/* <ManagementCommite></ManagementCommite> */}
+        {/* <CommitteeMembersTable></CommitteeMembersTable> */}
         {/* Footer */}
       </div>
     </div>

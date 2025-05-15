@@ -83,7 +83,7 @@ const ContactForm = () => {
                   <Field
                     type="text"
                     name="name"
-                    className="w-full custom-input"
+                    className="w-full text-black custom-input"
                     placeholder="Enter your full name"
                   />
                   <ErrorMessage
@@ -97,7 +97,7 @@ const ContactForm = () => {
                   <Field
                     type="text"
                     name="subject"
-                    className="w-full custom-input"
+                    className="w-full text-black custom-input"
                     placeholder="Enter the subject"
                   />
                   <ErrorMessage
@@ -111,7 +111,7 @@ const ContactForm = () => {
                   <Field
                     type="email"
                     name="email"
-                    className="w-full custom-input"
+                    className="w-full text-black custom-input"
                     placeholder="Enter your email address"
                   />
                   <ErrorMessage
@@ -126,7 +126,7 @@ const ContactForm = () => {
                     as="textarea"
                     name="message"
                     rows="4"
-                    className="w-full custom-input"
+                    className="w-full text-black custom-input"
                     placeholder="Write your message here..."
                   />
                   <ErrorMessage

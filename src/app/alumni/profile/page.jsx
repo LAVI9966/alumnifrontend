@@ -220,7 +220,7 @@ const ProfilePage = () => {
                       type="text"
                       name="name"
                       placeholder="Full Name"
-                      className="custom-input w-full"
+                      className="custom-input text-black w-full"
                     />
                     <ErrorMessage
                       name="name"
@@ -236,7 +236,7 @@ const ProfilePage = () => {
                       type="email"
                       name="email"
                       placeholder="john@example.com"
-                      className="custom-input w-full"
+                      className="custom-input  w-full"
                       disabled
                     />
                     <ErrorMessage
@@ -250,7 +250,7 @@ const ProfilePage = () => {
                       type="tel"
                       name="mobileNumber"
                       placeholder="9876541235"
-                      className="custom-input w-full"
+                      className="custom-input text-black w-full"
                     />
                     <ErrorMessage
                       name="mobileNumber"
@@ -276,7 +276,7 @@ const ProfilePage = () => {
           <div className="w-full flex justify-center">
             <button
               onClick={handleLogout}
-              className="w-[143px] mt-3 border border-[#C7A006] text-[#131A45] py-2 rounded-xl font-semibold"
+              className={`w-[143px] mt-3 ${isDark ? 'text-white' : ''} border border-[#C7A006] text-[#131A45] py-2 rounded-xl font-semibold`}
             >
               Log out
             </button>
