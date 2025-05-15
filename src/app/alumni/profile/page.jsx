@@ -132,6 +132,8 @@ const ProfilePage = () => {
         }
 
         setinitialValues(userData);
+
+        // Use the exact same profile picture URL format as before
         const profilePicUrl = userData.profilePicture
           ? `${url}/uploads/${userData.profilePicture.split("\\").pop()}`
           : "/default-profile.png"; // Fallback image
@@ -251,7 +253,7 @@ const ProfilePage = () => {
       const formData = new FormData();
       formData.append("profilePicture", uploadimage);
 
-      toast.loading("Uploading profile picture...");
+      const loadingToast = toast.loading("Uploading profile picture...");
 
       const response = await fetch(
         `${url}/api/profile/upload-profile-picture`,
@@ -264,7 +266,7 @@ const ProfilePage = () => {
         }
       );
 
-      toast.dismiss();
+      toast.dismiss(loadingToast);
 
       if (response.ok) {
         toast.success("Profile picture uploaded successfully");
