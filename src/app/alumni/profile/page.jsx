@@ -133,12 +133,28 @@ const ProfilePage = () => {
 
         setinitialValues(userData);
 
-        // Use the exact same profile picture URL format as before
-        const profilePicUrl = userData.profilePicture
-          ? `${url}/uploads/${userData.profilePicture.split("\\").pop()}`
-          : "/default-profile.png"; // Fallback image
+        // Handle profile picture URL for both local and hosted environments
+        if (userData.profilePicture) {
+          // First, try to extract the filename regardless of path format
+          let filename;
+          if (userData.profilePicture.includes('\\')) {
+            // Windows-style path
+            filename = userData.profilePicture.split('\\').pop();
+          } else if (userData.profilePicture.includes('/')) {
+            // Unix-style path
+            filename = userData.profilePicture.split('/').pop();
+          } else {
+            // Already just a filename
+            filename = userData.profilePicture;
+          }
 
-        setImage(profilePicUrl);
+          console.log("Profile picture filename:", filename);
+          const profilePicUrl = `${url}/uploads/${filename}`;
+          console.log("Full profile picture URL:", profilePicUrl);
+          setImage(profilePicUrl);
+        } else {
+          setImage("/default-profile.png");
+        }
       } else {
         toast.error(data?.message || "Failed to fetch profile data.");
       }
@@ -269,9 +285,26 @@ const ProfilePage = () => {
       toast.dismiss(loadingToast);
 
       if (response.ok) {
+        const responseData = await response.json();
+        console.log("Upload response:", responseData);
         toast.success("Profile picture uploaded successfully");
-        // Refresh profile to get updated image path
-        getProfile();
+
+        // Instead of immediately calling getProfile, directly update the image URL
+        // This ensures we use the exact URL path returned from the server
+        if (responseData.filename) {
+          const profilePicUrl = `${url}/uploads/${responseData.filename}`;
+          console.log("Setting new profile pic URL:", profilePicUrl);
+          setImage(profilePicUrl);
+
+          // Update initialValues to include the new profile picture
+          setinitialValues(prev => ({
+            ...prev,
+            profilePicture: responseData.filename
+          }));
+        } else {
+          // Fallback to getting the full profile
+          getProfile();
+        }
       } else {
         const data = await response.json();
         toast.error(data?.message || "Failed to upload profile picture");
@@ -313,6 +346,11 @@ const ProfilePage = () => {
                     src={image}
                     alt="Profile"
                     className="w-full h-full object-cover rounded-full"
+                    onError={(e) => {
+                      console.error("Image failed to load:", e.target.src);
+                      // Fallback to default image on error
+                      e.target.src = "/default-profile.png";
+                    }}
                   />
                 ) : (
                   <Icon icon="mynaui:user-solid" width="80%" height="80%" />
