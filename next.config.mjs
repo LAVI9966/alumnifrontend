@@ -5,7 +5,10 @@ const nextConfig = {
             {
                 protocol: 'http',
                 hostname: 'localhost',
-
+            },
+            {
+                protocol: 'https',
+                hostname: 'alumnibckend.onrender.com',
             },
         ],
     },
