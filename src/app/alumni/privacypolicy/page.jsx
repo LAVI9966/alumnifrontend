@@ -69,8 +69,8 @@ const PrivacyPolicy = () => {
                                 <button
                                     onClick={() => handleSectionClick(section.id)}
                                     className={`text-left px-3 py-2 rounded-md w-full transition ${activeSection === section.id
-                                            ? (isDark ? 'bg-cyan-700 text-white' : 'bg-cyan-600 text-white')
-                                            : (isDark ? 'hover:bg-[#242B6E]' : 'hover:bg-cyan-100')
+                                        ? (isDark ? 'bg-cyan-700 text-white' : 'bg-cyan-600 text-white')
+                                        : (isDark ? 'hover:bg-[#242B6E]' : 'hover:bg-cyan-100')
                                         }`}
                                 >
                                     {section.title}

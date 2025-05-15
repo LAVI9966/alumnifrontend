@@ -150,7 +150,7 @@ const Header = () => {
             onMouseEnter={() => setAboutDropdownOpen(true)}
           >
             <Link href="/alumni/about" className="inline-flex items-center">
-              About Us
+              About ROBA
             </Link>
             <Icon icon="mdi:chevron-down" className="ml-1" width="18" height="18" />
           </div>
@@ -201,7 +201,7 @@ const Header = () => {
           Event
         </Link>
         <Link href="/alumni/members" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
-          Member
+          Members
         </Link>
         <Link href="/alumni/contact" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
           Contact
@@ -214,30 +214,40 @@ const Header = () => {
       {/* Icons */}
       <div className="gap-3 hidden md:flex items-center">
         {/* Theme Toggle Button */}
-        <button
-          onClick={toggleTheme}
-          className={`border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg transition-colors duration-200 ${isDark ? 'border-[#131A45] text-[#131A45]' : 'border-white text-white'
-            }`}
-          aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-        >
-          {isDark ? (
-            <Icon icon="ph:sun" width="24" height="24" />
-          ) : (
-            <Icon icon="ph:moon" width="24" height="24" />
-          )}
-        </button>
+        <div className="relative group">
+          <button
+            onClick={toggleTheme}
+            className={`border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg transition-colors duration-200 ${isDark ? 'border-[#131A45] text-[#131A45]' : 'border-white text-white'
+              }`}
+            aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+          >
+            {isDark ? (
+              <Icon icon="ph:sun" width="24" height="24" />
+            ) : (
+              <Icon icon="ph:moon" width="24" height="24" />
+            )}
+          </button>
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+            Toggle Theme
+          </div>
+        </div>
 
         {/* Chat Icon */}
-        <Link
-          href="/alumni/chat"
-          className={`border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg ${isDark ? 'border-[#131A45] text-[#131A45]' : 'border-white text-white'
-            } transition-colors duration-200`}
-        >
-          <Icon icon="iconoir:message" width="24" height="24" />
-        </Link>
+        <div className="relative group">
+          <Link
+            href="/alumni/chat"
+            className={`border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg ${isDark ? 'border-[#131A45] text-[#131A45]' : 'border-white text-white'
+              } transition-colors duration-200`}
+          >
+            <Icon icon="iconoir:message" width="24" height="24" />
+          </Link>
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+            Chat
+          </div>
+        </div>
 
         {/* Notification Icon */}
-        <div className="relative">
+        <div className="relative group">
           <Link
             href="/alumni/notification"
             className={`border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg ${isDark ? 'border-[#131A45] text-[#131A45]' : 'border-white text-white'
@@ -247,20 +257,29 @@ const Header = () => {
           </Link>
           {notificationCount > 0 && (
             <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-              {notificationCount > 9 ? "9+" : notificationCount}
+              {notificationCount > 9 ? '9+' : notificationCount}
             </div>
           )}
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+            Notifications
+          </div>
         </div>
 
         {/* Profile Icon */}
-        <Link
-          href="/alumni/profile"
-          className={`border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg ${isDark ? 'border-[#131A45] text-[#131A45]' : 'border-white text-white'
-            } transition-colors duration-200`}
-        >
-          <Icon icon="lucide:user" width="24" height="24" />
-        </Link>
+        <div className="relative group">
+          <Link
+            href="/alumni/profile"
+            className={`border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg ${isDark ? 'border-[#131A45] text-[#131A45]' : 'border-white text-white'
+              } transition-colors duration-200`}
+          >
+            <Icon icon="lucide:user" width="24" height="24" />
+          </Link>
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+            Profile
+          </div>
+        </div>
       </div>
+
 
       {/* Mobile Dropdown Menu */}
       <nav
@@ -331,7 +350,7 @@ const Header = () => {
                 href="/alumni/about"
                 className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
               >
-                About Us
+                About ROBA
               </Link>
               <button
                 onClick={() => setMobileAboutDropdownOpen(!mobileAboutDropdownOpen)}
