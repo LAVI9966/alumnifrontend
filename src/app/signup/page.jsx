@@ -159,17 +159,16 @@ export default function SignupPage() {
               collegeNo: "",
               name: "",
               email: "",
-              countryCode: "+91",
               mobileNumber: "",
               password: "",
             }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
               try {
+                // Include countryCode separately in the form data
                 const formData = {
                   ...values,
-                  mobileNumber: `${selectedCountryCode}${values.mobileNumber}`,
-                  countryCode: selectedCountryCode, // Store country code separately if needed by API
+                  countryCode: selectedCountryCode,
                 };
 
                 const response = await fetch(`${url}/api/auth/register`, {
