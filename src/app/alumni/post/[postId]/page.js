@@ -5,7 +5,7 @@ import gettoken from "@/app/function/gettoken";
 import Postcard from '@/components/homepage/postcard';
 import { useTheme } from '@/context/ThemeProvider';
 
-// Individual post page component - Fixed version to prevent redirect loops
+// Individual post page component with consistent bg-cyan-400 for light mode
 const PostPage = () => {
     const { postId } = useParams();
     const router = useRouter();
@@ -119,7 +119,7 @@ const PostPage = () => {
     // Display loading state
     if (isLoading) {
         return (
-            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-50'} py-8`}>
+            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} py-8`}>
                 <div className="max-w-2xl mx-auto px-4">
                     <div className="animate-pulse">
                         <div className={`h-12 rounded-t-lg ${isDark ? 'bg-[#2A3057]' : 'bg-gray-300'}`}></div>
@@ -133,7 +133,7 @@ const PostPage = () => {
     // Display error state with login option
     if (error) {
         return (
-            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-50'} py-8`}>
+            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} py-8`}>
                 <div className="max-w-2xl mx-auto px-4 text-center">
                     <div className={`p-6 rounded-lg ${isDark ? 'bg-[#2A3057] text-white' : 'bg-white text-gray-800'}`}>
                         <h1 className="text-xl font-bold mb-4">
@@ -154,7 +154,7 @@ const PostPage = () => {
                                 </button>
                             )}
                             <button
-                                onClick={() => router.push('/alumni')}
+                                onClick={() => router.push('/alumni/homepage')}
                                 className={`px-4 py-2 ${isDark ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-300 hover:bg-gray-400'} rounded-lg`}
                             >
                                 Return to Homepage
@@ -169,7 +169,7 @@ const PostPage = () => {
     // Display post not found state
     if (!post) {
         return (
-            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-50'} py-8`}>
+            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} py-8`}>
                 <div className="max-w-2xl mx-auto px-4 text-center">
                     <div className={`p-6 rounded-lg ${isDark ? 'bg-[#2A3057] text-white' : 'bg-white text-gray-800'}`}>
                         <h1 className="text-xl font-bold mb-4">
@@ -179,7 +179,7 @@ const PostPage = () => {
                             The post you are looking for does not exist or has been removed.
                         </p>
                         <button
-                            onClick={() => router.push('/alumni')}
+                            onClick={() => router.push('/alumni/homepage')}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                         >
                             Return to Homepage
@@ -191,7 +191,7 @@ const PostPage = () => {
     }
 
     return (
-        <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-50'} py-8`}>
+        <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} py-8`}>
             <div className="max-w-2xl mx-auto px-4">
                 {/* Header */}
                 <h1 className={`text-2xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-800'}`}>
@@ -211,7 +211,7 @@ const PostPage = () => {
                 <div className="mt-4 text-center">
                     <button
                         onClick={() => router.push('/alumni/homepage')}
-                        className={`px-4 py-2 ${isDark ? 'bg-[#3271FF] hover:bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'} text-white rounded-lg`}
+                        className={`px-4 py-2 ${isDark ? 'bg-[#2A3057]' : 'bg-custom-blue'} text-white rounded-lg`}
                     >
                         Return to Homepage
                     </button>

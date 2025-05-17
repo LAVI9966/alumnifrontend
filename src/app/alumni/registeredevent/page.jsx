@@ -135,11 +135,11 @@ const EventCards = () => {
                   />
 
                   <div className="pt-2">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    <h3 className="text-xl font-bold  mb-2">
                       {event.event.title || "Untitled Event"}
                     </h3>
                     <div className="flex justify-between items-start mb-2">
-                      <div className="flex flex-col items-start text-[#797979] gap-1 text-sm">
+                      <div className="flex flex-col items-start  gap-1 text-sm">
                         <div className="mr-4 flex items-center gap-1">
                           <Icon icon="oui:token-date" width="20" height="20" />{" "}
                           {event.event.date ? new Date(event.event.date).toISOString().split("T")[0] : "No date"}
@@ -152,7 +152,7 @@ const EventCards = () => {
                         Unregister
                       </button>
                     </div>
-                    <p className="text-[#797979] text-sm">
+                    <p className=" text-sm">
                       {event.event.description || "No description available"}
                     </p>
                   </div>
