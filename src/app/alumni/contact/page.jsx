@@ -94,7 +94,7 @@ const ContactForm = () => {
                   <Field
                     as="select"
                     name="department"
-                    className="w-full text-black custom-input"
+                    className={`w-full ${isDark ? 'border-[#3D437E] bg-[#2A3057] text-white placeholder-gray-400' : 'border-gray-300 bg-white text-[#131A45]'} custom-input`}
                   >
                     <option value="" disabled>Select a department to contact</option>
                     {departments.map((dept) => (
@@ -113,7 +113,7 @@ const ContactForm = () => {
                   <Field
                     type="text"
                     name="name"
-                    className="w-full text-black custom-input"
+                    className={`w-full ${isDark ? 'border-[#3D437E] bg-[#2A3057] text-white placeholder-gray-400' : 'border-gray-300 bg-white text-[#131A45]'} custom-input`}
                     placeholder="Enter your full name"
                   />
                   <ErrorMessage
@@ -127,7 +127,7 @@ const ContactForm = () => {
                   <Field
                     type="text"
                     name="subject"
-                    className="w-full text-black custom-input"
+                    className={`w-full ${isDark ? 'border-[#3D437E] bg-[#2A3057] text-white placeholder-gray-400' : 'border-gray-300 bg-white text-[#131A45]'} custom-input`}
                     placeholder="Enter the subject"
                   />
                   <ErrorMessage
@@ -141,7 +141,7 @@ const ContactForm = () => {
                   <Field
                     type="email"
                     name="email"
-                    className="w-full text-black custom-input"
+                    className={`w-full ${isDark ? 'border-[#3D437E] bg-[#2A3057] text-white placeholder-gray-400' : 'border-gray-300 bg-white text-[#131A45]'} custom-input`}
                     placeholder="Enter your email address"
                   />
                   <ErrorMessage
@@ -156,7 +156,7 @@ const ContactForm = () => {
                     as="textarea"
                     name="message"
                     rows="4"
-                    className="w-full text-black custom-input"
+                    className={`w-full ${isDark ? 'border-[#3D437E] bg-[#2A3057] text-white placeholder-gray-400' : 'border-gray-300 bg-white text-[#131A45]'} custom-input`}
                     placeholder="Write your message here..."
                   />
                   <ErrorMessage

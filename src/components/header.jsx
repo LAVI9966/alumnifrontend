@@ -283,57 +283,39 @@ const Header = () => {
 
       {/* Mobile Dropdown Menu */}
       <nav
-        className={`absolute z-50 top-full left-0 w-full ${isDark ? 'bg-[#131A45] text-white' : 'bg-custom-blue text-white'
+        className={`absolute z-[9999]  top-full left-0 w-full ${isDark ? 'bg-[#131A45] text-white' : 'bg-custom-blue text-white'
           } p-4 transform origin-top ${menuOpen ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"
           } transition-all duration-300 ease-in-out md:hidden`}
         style={{ transformOrigin: "top" }}
       >
-        <ul className="flex flex-col text-end gap-4">
+        <ul className="flex flex-col text-left gap-4">
           <li>
-            <Link
-              href="/alumni/homepage"
-              className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
-            >
+            <Link href="/alumni/homepage" className="hover:text-gray-300 transition-colors duration-200">
               Home
             </Link>
           </li>
           <li>
-            <Link
-              href="/alumni/profile"
-              className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
-            >
+            <Link href="/alumni/profile" className="hover:text-gray-300 transition-colors duration-200">
               Profile
             </Link>
           </li>
           <li>
-            <Link
-              href="/alumni/chat"
-              className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
-            >
+            <Link href="/alumni/chat" className="hover:text-gray-300 transition-colors duration-200">
               Chat
             </Link>
           </li>
           <li>
-            <Link
-              href="/alumni/members"
-              className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
-            >
+            <Link href="/alumni/members" className="hover:text-gray-300 transition-colors duration-200">
               Members
             </Link>
           </li>
           <li>
-            <Link
-              href="/alumni/souvenir_shop"
-              className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
-            >
-              Souvenir shop
+            <Link href="/alumni/souvenir_shop" className="hover:text-gray-300 transition-colors duration-200">
+              Souvenir Shop
             </Link>
           </li>
-          <li className="flex items-center justify-end">
-            <Link
-              href="/alumni/notification"
-              className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 relative`}
-            >
+          <li className="flex items-center justify-start">
+            <Link href="/alumni/notification" className="hover:text-gray-300 transition-colors duration-200 relative">
               {notificationCount > 0 && (
                 <span className="mr-2 bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
                   {notificationCount > 9 ? "9+" : notificationCount}
@@ -343,18 +325,15 @@ const Header = () => {
             </Link>
           </li>
 
-          {/* About Us with Dropdown in Mobile Menu */}
-          <li className="flex flex-col items-end">
-            <div className="flex items-center justify-end w-full">
-              <Link
-                href="/alumni/about"
-                className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
-              >
+          {/* About Us Dropdown */}
+          <li className="flex flex-col items-start">
+            <div className="flex items-center justify-start w-full">
+              <Link href="/alumni/about" className="hover:text-gray-300 transition-colors duration-200">
                 About ROBA
               </Link>
               <button
                 onClick={() => setMobileAboutDropdownOpen(!mobileAboutDropdownOpen)}
-                className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 ml-2`}
+                className="hover:text-gray-300 transition-colors duration-200 ml-2"
                 aria-label="Toggle about dropdown"
               >
                 <Icon
@@ -365,36 +344,35 @@ const Header = () => {
               </button>
             </div>
 
-            {/* Mobile About Dropdown Menu */}
             {mobileAboutDropdownOpen && (
-              <div className="mt-2 flex flex-col items-end gap-2 pl-8 border-t border-gray-600 pt-2 w-full">
+              <div className="mt-2 flex flex-col items-start gap-2 pl-8 border-t border-gray-600 pt-2 w-full">
                 <button
                   onClick={() => navigateToSection('#Objectives')}
-                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2 text-right w-full`}
+                  className="hover:text-gray-300 transition-colors duration-200 text-sm py-2 text-left w-full"
                 >
                   Roba Objectives
                 </button>
                 <button
                   onClick={() => navigateToSection('#history')}
-                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2 text-right w-full`}
+                  className="hover:text-gray-300 transition-colors duration-200 text-sm py-2 text-left w-full"
                 >
                   Roba History
                 </button>
                 <button
                   onClick={() => navigateToSection('#presidentmessage')}
-                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2 text-right w-full`}
+                  className="hover:text-gray-300 transition-colors duration-200 text-sm py-2 text-left w-full"
                 >
                   President Messages
                 </button>
                 <button
                   onClick={() => navigateToSection('#managementcommittee')}
-                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2 text-right w-full`}
+                  className="hover:text-gray-300 transition-colors duration-200 text-sm py-2 text-left w-full"
                 >
                   Management Committee
                 </button>
                 <button
                   onClick={() => navigateToSection('#committeemenbers')}
-                  className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200 text-sm py-2 text-right w-full`}
+                  className="hover:text-gray-300 transition-colors duration-200 text-sm py-2 text-left w-full"
                 >
                   Committee Members
                 </button>
@@ -403,26 +381,21 @@ const Header = () => {
           </li>
 
           <li>
-            <Link
-              href="/alumni/events"
-              className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
-            >
+            <Link href="/alumni/events" className="hover:text-gray-300 transition-colors duration-200">
               Event
             </Link>
           </li>
           <li>
-            <Link
-              href="/alumni/contact"
-              className={`${isDark ? 'hover:text-gray-300' : 'hover:text-gray-300'} transition-colors duration-200`}
-            >
+            <Link href="/alumni/contact" className="hover:text-gray-300 transition-colors duration-200">
               Contact
             </Link>
           </li>
-          {/* Theme Toggle Button in Mobile Menu */}
-          <li className="flex items-center justify-end">
+
+          {/* Theme toggle */}
+          <li className="flex items-center justify-start">
             <button
               onClick={toggleTheme}
-              className={`flex items-center ${isDark ? 'text-white hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}
+              className="flex items-center hover:text-gray-300 transition-colors duration-200"
               aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
             >
               {isDark ? "Light Mode " : "Dark Mode "}
@@ -434,7 +407,9 @@ const Header = () => {
               />
             </button>
           </li>
-          <li className="flex justify-end">
+
+          {/* Logout button */}
+          <li className="flex justify-start">
             <div
               onClick={handleLogout}
               className={`${isDark
@@ -453,6 +428,7 @@ const Header = () => {
           </li>
         </ul>
       </nav>
+
     </header>
   );
 };

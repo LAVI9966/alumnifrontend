@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import captcha from "../../../public/captcha.png";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -139,11 +139,7 @@ export default function SignupPage() {
                   placeholder="john@example.com"
                   className="custom-input text-black w-full"
                 />
-                <ErrorMessage
-                  name="email"
-                  component="p"
-                  className="text-red-500 text-sm"
-                />
+                {/* Removed ErrorMessage component for email */}
 
                 <div className="relative">
                   <Field
@@ -163,11 +159,7 @@ export default function SignupPage() {
                       <Icon icon="rivet-icons:eye-off" width="16" height="16" />
                     )}
                   </button>
-                  <ErrorMessage
-                    name="password"
-                    component="p"
-                    className="text-red-500 text-sm"
-                  />
+                  {/* Removed ErrorMessage component for password */}
                 </div>
 
                 <ForgotPassword />

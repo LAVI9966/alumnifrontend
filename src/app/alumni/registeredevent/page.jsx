@@ -90,7 +90,7 @@ const EventCards = () => {
           <div className="flex justify-end">
             <Link
               href="events"
-              className="px-4 py-2 flex justify-center items-center bg-custom-blue text-white rounded-lg shadow-md hover:bg-black transition"
+              className={`px-4 py-2 flex justify-center items-center  ${isDark ? 'bg-[#2A3057]' : 'bg-custom-blue'} text-white rounded-lg shadow-md transition`}
             >
               All Events
             </Link>

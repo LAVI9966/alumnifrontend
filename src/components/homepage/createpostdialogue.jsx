@@ -1,4 +1,4 @@
-// CreatePostDialogue.js - Fixed with image deletion support
+// CreatePostDialogue.js - Fixed version with proper image handling
 
 import React, { useState, useEffect, useCallback } from "react";
 import { Formik, Form, Field } from "formik";
@@ -42,7 +42,7 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
 
   // Set preview images and track existing images when post data changes
   useEffect(() => {
-    if (postData) {
+    if (postData && isOpen) {
       let images = [];
 
       if (postData.imageUrl) {
@@ -66,7 +66,7 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
 
       setPreviewImages(previews);
     }
-  }, [postData, url]);
+  }, [postData, url, isOpen]);
 
   // Enhanced removeImage function that handles both existing and new images
   const removeImage = (index, setFieldValue, values) => {
@@ -101,14 +101,49 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
   }, []);
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+    <AlertDialog open={isOpen} onOpenChange={(open) => {
+      // If closing the dialog, reset states
+      if (!open) {
+        setPreviewImages([]);
+        setExistingImages([]);
+        setImagesToKeep([]);
+      }
+      setIsOpen(open);
+    }}>
       <AlertDialogTrigger
         className={
           postData
             ? `cursor-pointer text-sm w-full text-start hover:${isDark ? "bg-[#2A3057]" : "bg-gray-100"} px-4 py-2 ${isDark ? "bg-[#2A3057] text-gray-200" : ""}`
             : `w-full ${isDark ? 'bg-[#2A3057]' : 'bg-custom-blue'} text-white py-2 rounded-lg`
         }
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          // Reset states when opening dialog
+          if (!postData) {
+            // For new post, clear everything
+            setPreviewImages([]);
+            setExistingImages([]);
+            setImagesToKeep([]);
+          } else {
+            // For edit post, load from postData
+            let images = [];
+            if (postData.imageUrl) {
+              images = [postData.imageUrl];
+            } else if (postData.images && postData.images.length > 0) {
+              images = [...postData.images];
+            }
+
+            setExistingImages(images);
+            setImagesToKeep(images);
+
+            const previews = images.map(imagePath => {
+              const fileName = getFileNameFromPath(imagePath);
+              return `${url}/uploads/${fileName}`;
+            });
+
+            setPreviewImages(previews);
+          }
+          setIsOpen(true);
+        }}
       >
         {postData ? "Edit Post" : "Create Post"}
       </AlertDialogTrigger>
@@ -213,50 +248,9 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
             <Form>
               <AlertDialogTitle>
                 <div className={`p-2 border-b flex items-center justify-between ${isDark ? "border-gray-700" : "border-gray-200"}`}>
-                  <label className="cursor-pointer">
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept="image/*"
-                      multiple
-                      onChange={(event) => {
-                        const files = event.currentTarget.files;
-                        if (files && files.length > 0) {
-                          // Calculate total images (existing + new)
-                          const totalImages = imagesToKeep.length + values.images.length + files.length;
-
-                          // Check if adding more images would exceed the limit
-                          if (totalImages > MAX_IMAGES) {
-                            toast.error(`You can only upload a maximum of ${MAX_IMAGES} images. Please select fewer images.`);
-                            return;
-                          }
-
-                          // Add to form values for new uploads
-                          setFieldValue("images", [...values.images, ...files]);
-
-                          // Create preview URLs for each new file
-                          const newPreviewUrls = Array.from(files).map(file =>
-                            URL.createObjectURL(file)
-                          );
-
-                          // Add to preview images
-                          setPreviewImages(prev => [...prev, ...newPreviewUrls]);
-                        }
-                      }}
-                    />
-                    <div className="flex items-center">
-                      <Icon
-                        icon="solar:gallery-broken"
-                        width="20"
-                        height="20"
-                        className={isDark ? "text-gray-300" : "text-gray-400"}
-                      />
-                      <span className="ml-2 text-xs">
-                        {/* Show total of kept existing images + new images */}
-                        {`${imagesToKeep.length + values.images.length}/${MAX_IMAGES}`}
-                      </span>
-                    </div>
-                  </label>
+                  <div className="text-lg font-semibold">
+                    {postData ? "Update Post" : "Create Post"}
+                  </div>
                   <AlertDialogCancel
                     className={isDark ? "text-gray-300" : "text-black"}
                     onClick={() => setIsOpen(false)}
@@ -278,39 +272,114 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
               </AlertDialogTitle>
               <div className={isDark ? "bg-gray-900 overflow-hidden" : "bg-white overflow-hidden"}>
                 {previewImages.length > 0 ? (
-                  <div className={`max-h-80 overflow-y-auto p-2 grid grid-cols-2 sm:grid-cols-3 gap-2 ${isDark ? "bg-gray-800" : "bg-gray-200"}`}>
-                    {previewImages.map((src, index) => (
-                      <div key={index} className="relative h-40">
-                        <button
-                          type="button"
-                          onClick={() => removeImage(index, setFieldValue, values)}
-                          className={`absolute top-2 right-2 z-10 p-1 rounded-full ${isDark ? "bg-gray-900" : "bg-white"}`}
-                        >
-                          <Icon
-                            icon="material-symbols:delete-outline-rounded"
-                            width="20"
-                            height="20"
-                            className="text-red-500"
+                  <div className="flex flex-col">
+                    <div className={`max-h-80 overflow-y-auto p-2 grid grid-cols-2 sm:grid-cols-3 gap-2 ${isDark ? "bg-gray-800" : "bg-gray-200"}`}>
+                      {previewImages.map((src, index) => (
+                        <div key={index} className="relative h-40">
+                          <button
+                            type="button"
+                            onClick={() => removeImage(index, setFieldValue, values)}
+                            className={`absolute top-2 right-2 z-10 p-1 rounded-full ${isDark ? "bg-gray-900" : "bg-white"}`}
+                          >
+                            <Icon
+                              icon="material-symbols:delete-outline-rounded"
+                              width="20"
+                              height="20"
+                              className="text-red-500"
+                            />
+                          </button>
+                          <img
+                            src={src}
+                            alt={`Preview ${index + 1}`}
+                            className="h-full w-full object-cover rounded"
+                            onError={(e) => {
+                              console.error(`Error loading image: ${src}`);
+                              e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%23ccc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'%3E%3C/circle%3E%3Cpolyline points='21 15 16 10 5 21'%3E%3C/polyline%3E%3C/svg%3E";
+                            }}
                           />
-                        </button>
-                        <img
-                          src={src}
-                          alt={`Preview ${index + 1}`}
-                          className="h-full w-full object-cover rounded"
-                          onError={(e) => {
-                            console.error(`Error loading image: ${src}`);
-                            e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%23ccc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'%3E%3C/circle%3E%3Cpolyline points='21 15 16 10 5 21'%3E%3C/polyline%3E%3C/svg%3E";
+                          <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-1 py-0.5 rounded">
+                            {index + 1}/{previewImages.length}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Clear styled button */}
+                    <div className="p-2 flex justify-center">
+                      <label className={`px-4 py-2 rounded-lg flex items-center justify-center gap-2 cursor-pointer ${isDark ? "bg-[#131A45] hover:bg-[#1D2456] text-white" : "bg-custom-blue hover:bg-blue-600 text-white"} transition-colors duration-200 shadow-sm`}>
+                        <input
+                          type="file"
+                          className="hidden"
+                          accept="image/*"
+                          multiple
+                          onChange={(event) => {
+                            const files = event.currentTarget.files;
+                            if (files && files.length > 0) {
+                              // Calculate total images (existing + new)
+                              const totalImages = imagesToKeep.length + values.images.length + files.length;
+
+                              // Check if adding more images would exceed the limit
+                              if (totalImages > MAX_IMAGES) {
+                                toast.error(`You can only upload a maximum of ${MAX_IMAGES} images. Please select fewer images.`);
+                                return;
+                              }
+
+                              // Add to form values for new uploads
+                              setFieldValue("images", [...values.images, ...files]);
+
+                              // Create preview URLs for each new file
+                              const newPreviewUrls = Array.from(files).map(file =>
+                                URL.createObjectURL(file)
+                              );
+
+                              // Add to preview images
+                              setPreviewImages(prev => [...prev, ...newPreviewUrls]);
+                            }
                           }}
                         />
-                        <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-1 py-0.5 rounded">
-                          {index + 1}/{previewImages.length}
-                        </div>
-                      </div>
-                    ))}
+                        <Icon
+                          icon="solar:gallery-add-bold"
+                          width="20"
+                          height="20"
+                        />
+                        <span className="text-sm font-medium">Add More Images</span>
+                      </label>
+                    </div>
                   </div>
                 ) : (
                   <div className={`h-56 ${isDark ? "bg-gray-800" : "bg-gray-300"} flex items-center justify-center`}>
-                    <div className="text-center">
+                    {/* Made the big gallery icon clickable */}
+                    <label className="text-center cursor-pointer">
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        multiple
+                        onChange={(event) => {
+                          const files = event.currentTarget.files;
+                          if (files && files.length > 0) {
+                            // Calculate total images (existing + new)
+                            const totalImages = imagesToKeep.length + values.images.length + files.length;
+
+                            // Check if adding more images would exceed the limit
+                            if (totalImages > MAX_IMAGES) {
+                              toast.error(`You can only upload a maximum of ${MAX_IMAGES} images. Please select fewer images.`);
+                              return;
+                            }
+
+                            // Add to form values for new uploads
+                            setFieldValue("images", [...values.images, ...files]);
+
+                            // Create preview URLs for each new file
+                            const newPreviewUrls = Array.from(files).map(file =>
+                              URL.createObjectURL(file)
+                            );
+
+                            // Add to preview images
+                            setPreviewImages(prev => [...prev, ...newPreviewUrls]);
+                          }
+                        }}
+                      />
                       <Icon
                         icon="solar:gallery-broken"
                         width="48"
@@ -318,9 +387,9 @@ const CreatePostDialogue = ({ getPosts, postData }) => {
                         className={isDark ? "mx-auto text-gray-600" : "mx-auto text-gray-500"}
                       />
                       <p className={`mt-2 ${isDark ? "text-gray-400" : "text-gray-600"}`}>
-                        Click the gallery icon to add images (up to {MAX_IMAGES})
+                        Click to add images
                       </p>
-                    </div>
+                    </label>
                   </div>
                 )}
               </div>
