@@ -30,12 +30,12 @@ export const timeAgo = (timestamp) => {
     return "Just now";
 };
 
-// Generate a unique post URL for sharing
+// Generate a unique post URL for sharing that includes the alumni path
 export const generatePostUrl = (postId) => {
     if (typeof window === 'undefined') {
-        return `/post/${postId}`;
+        return `/alumni/post/${postId}`;
     }
-    return `${window.location.origin}/post/${postId}`;
+    return `${window.location.origin}/alumni/post/${postId}`;
 };
 
 // Helper function to truncate text

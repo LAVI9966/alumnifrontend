@@ -133,7 +133,7 @@ const PostShareModal = ({ postData, isOpen, onClose, onShare }) => {
                     <div className={`flex items-center p-2 rounded-md mb-4 ${isDark ? 'bg-[#1F2447]' : 'bg-gray-100'}`}>
                         <input
                             type="text"
-                            value={`${typeof window !== 'undefined' ? window.location.origin : ''}/post/${postData._id}`}
+                            value={ShareService.getPostUrl(postData._id)}
                             className={`flex-1 bg-transparent outline-none text-sm p-1 mr-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
                             readOnly
                         />

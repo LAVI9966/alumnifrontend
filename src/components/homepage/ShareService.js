@@ -1,4 +1,4 @@
-// ShareService.js - Client-side service for sharing posts
+// ShareService.js - Client-side service for handling post sharing
 import gettoken from "@/app/function/gettoken";
 
 const url = process.env.NEXT_PUBLIC_URL;
@@ -51,7 +51,7 @@ class ShareService {
      */
     static shareToSocialMedia(postData, platform) {
         // Create the share URL based on the platform
-        const postUrl = `${window.location.origin}/post/${postData._id}`;
+        const postUrl = ShareService.getPostUrl(postData._id);
         const text = `Check out this post: ${postData.content.substring(0, 50)}${postData.content.length > 50 ? '...' : ''}`;
 
         let shareUrl;
@@ -79,17 +79,54 @@ class ShareService {
     }
 
     /**
+     * Get the correct URL for a post
+     * @param {string} postId - The ID of the post
+     * @returns {string} - The complete URL to the post
+     */
+    static getPostUrl(postId) {
+        if (typeof window === 'undefined') {
+            return `/alumni/post/${postId}`;
+        }
+
+        // URL for posts inside alumni folder
+        return `${window.location.origin}/alumni/post/${postId}`;
+    }
+
+    /**
      * Copy the post link to clipboard
      * @param {string} postId - The ID of the post
      * @returns {Promise<boolean>} - Whether the copy was successful
      */
     static async copyPostLink(postId) {
         try {
-            const postUrl = `${window.location.origin}/post/${postId}`;
+            const postUrl = ShareService.getPostUrl(postId);
             await navigator.clipboard.writeText(postUrl);
             return true;
         } catch (error) {
             console.error("Error copying to clipboard:", error);
+            return false;
+        }
+    }
+
+    /**
+     * Use the Web Share API if available (mobile devices)
+     * @param {Object} postData - The post data to share
+     * @returns {Promise<boolean>} - Whether the share was successful
+     */
+    static async nativeShare(postData) {
+        if (typeof navigator === 'undefined' || !navigator.share) {
+            return false;
+        }
+
+        try {
+            await navigator.share({
+                title: 'Check out this post',
+                text: postData.content.substring(0, 100),
+                url: ShareService.getPostUrl(postData._id)
+            });
+            return true;
+        } catch (error) {
+            console.error('Error using native share:', error);
             return false;
         }
     }
