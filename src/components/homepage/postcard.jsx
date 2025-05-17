@@ -20,37 +20,39 @@ import ReplyItem from "./ReaplyItem";
 import ImprovedReplyItem from "./ImprovedReplyItem";
 import { useTheme } from "@/context/ThemeProvider";
 import ImageGallery from "./ImageGallery";
+import ShareButton from "./ShareButton";
+import PostShareModal from "./PostShareModal";
+import { timeAgo } from "./utils";
+// export const timeAgo = (timestamp) => {
+//   if (!timestamp) return "Invalid date";
 
-export const timeAgo = (timestamp) => {
-  if (!timestamp) return "Invalid date";
+//   const now = new Date();
+//   const past = new Date(timestamp);
 
-  const now = new Date();
-  const past = new Date(timestamp);
+//   if (isNaN(past.getTime())) return "Invalid date"; // Handle invalid timestamps
 
-  if (isNaN(past.getTime())) return "Invalid date"; // Handle invalid timestamps
+//   const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
 
-  const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+//   if (diffInSeconds < 1) return "Just now"; // If less than 1 second difference
 
-  if (diffInSeconds < 1) return "Just now"; // If less than 1 second difference
+//   const intervals = {
+//     year: 31536000,
+//     month: 2592000,
+//     day: 86400,
+//     hour: 3600,
+//     minute: 60,
+//     second: 1,
+//   };
 
-  const intervals = {
-    year: 31536000,
-    month: 2592000,
-    day: 86400,
-    hour: 3600,
-    minute: 60,
-    second: 1,
-  };
+//   for (const [unit, seconds] of Object.entries(intervals)) {
+//     const count = Math.floor(diffInSeconds / seconds);
+//     if (count > 0) {
+//       return `${count} ${unit}${count !== 1 ? "s" : ""} ago`;
+//     }
+//   }
 
-  for (const [unit, seconds] of Object.entries(intervals)) {
-    const count = Math.floor(diffInSeconds / seconds);
-    if (count > 0) {
-      return `${count} ${unit}${count !== 1 ? "s" : ""} ago`;
-    }
-  }
-
-  return "Just now";
-};
+//   return "Just now";
+// };
 
 // Update this part in your Postcard.jsx file
 
@@ -66,7 +68,7 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
   const [localReplies, setLocalReplies] = useState(comment.replies || []);
   const [isDeleting, setIsDeleting] = useState(false);
   const url = process.env.NEXT_PUBLIC_URL;
-  const { theme, toggleTheme } = useTheme(); // Use the theme context
+  const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   // Update localReplies when comment.replies changes
@@ -142,9 +144,8 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
 
   return (
     <div className={`flex gap-2 mb-4 ${isDark ? 'bg-[#2A3057]' : 'bg-white'} rounded-lg p-1 `}>
-
       <div className="flex-1 min-w-0">
-        <div className="rounded-lg  relative group  ">
+        <div className="rounded-lg relative group">
           <div className="flex items-center gap-3">
             {/* Avatar */}
             <img
@@ -186,7 +187,7 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
         </div>
 
         {/* Comment interaction buttons */}
-        <div className="flex items-center gap-4 mt-2  text-[16px] text-gray-500">
+        <div className="flex items-center gap-4 mt-2 text-[16px] text-gray-500">
           <button
             onClick={handleLikeComment}
             className={`${isLiked ? "text-blue-600" : "text-gray-500"} `}
@@ -196,7 +197,7 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
           </button>
           <button
             onClick={() => setIsReplying(!isReplying)}
-            className="text-gray-500  "
+            className="text-gray-500"
             disabled={isDeleting}
           >
             <span className="flex items-center flex-row gap-2">
@@ -211,7 +212,7 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
           <form onSubmit={handleAddReply} className="mt-3 ml-2 flex items-center justify-center gap-2">
             <div className="w-6 h-6 mb-5 flex-shrink-0">
               <img
-                className="w-6 h-6  rounded-full"
+                className="w-6 h-6 rounded-full"
                 src={
                   comment.user?.profilePicture
                     ? `${url}/uploads/${comment.user?.profilePicture?.split("\\").pop()}`
@@ -240,7 +241,7 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
           </form>
         )}
 
-        {/* Replies Section - Use our improved component */}
+        {/* Replies Section */}
         {localReplies.length > 0 && !isDeleting && (
           <div className="mt-3">
             <button
@@ -258,7 +259,7 @@ const Comment = ({ comment, postId, userId, handleDeleteComment, refreshComments
 
             {showReplies && (
               <div className="space-y-1 mt-2">
-                {/* Show only the visible number of replies using the ImprovedReplyItem component */}
+                {/* Show only the visible number of replies */}
                 {localReplies.slice(0, visibleReplies).map((reply, index) => (
                   <ImprovedReplyItem
                     key={reply._id || `reply-${index}-${Date.now()}`}
@@ -644,15 +645,15 @@ const NestedReply = ({ nestedReply, postId, commentId, replyId, userId, onDelete
 const Postcard = ({ postData, getPosts, userid }) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
-  const [isLiked, setIsLiked] =
-    useState(
-      postData?.likes?.some((like) => like._id === userid)
-    );
+  const [isLiked, setIsLiked] = useState(
+    postData?.likes?.some((like) => like._id === userid)
+  );
   const [likesCount, setLikesCount] = useState(postData?.likes?.length || 0);
   const [comments, setComments] = useState(postData?.comments || []);
   const [visibleComments, setVisibleComments] = useState(3); // Show only first 3 comments initially
   const [sharesCount, setSharesCount] = useState(postData?.shares?.length || 0);
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const commentInputRef = useRef(null);
   const url = process.env.NEXT_PUBLIC_URL;
 
@@ -710,26 +711,13 @@ const Postcard = ({ postData, getPosts, userid }) => {
   };
 
   const handleShare = async () => {
-    try {
-      const token = await gettoken();
-      const response = await fetch(`${url}/api/posts/${postData._id}/share`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        // Update local state immediately
-        setSharesCount(data.shares);
-        toast.success("Post shared successfully!");
-      } else {
-        toast.error(data?.message || "Failed to share post.");
-      }
-    } catch (error) {
-      toast.error("An error occurred. Please try again.");
-    }
+    // Open the share modal instead of direct API call
+    setShowShareModal(true);
+  };
+
+  const handleShareComplete = (newSharesCount) => {
+    // Update the shares count after successful share
+    setSharesCount(newSharesCount);
   };
 
   const handleShowMoreComments = () => {
@@ -849,7 +837,7 @@ const Postcard = ({ postData, getPosts, userid }) => {
     }, 100);
   };
 
-  const { theme, toggleTheme } = useTheme(); // Use the theme context
+  const { theme } = useTheme(); // Use the theme context
   const isDark = theme === 'dark';
 
   return (
@@ -951,41 +939,47 @@ const Postcard = ({ postData, getPosts, userid }) => {
           {likesCount > 0 && (
             <span>Liked by {likesCount} {likesCount === 1 ? 'member' : 'members'}</span>
           )}
+          {sharesCount > 0 && (
+            <span className="ml-2">• Shared {sharesCount} {sharesCount === 1 ? 'time' : 'times'}</span>
+          )}
         </div>
 
-        {/* Right side - Icons only */}
+        {/* Right side - Icons with ShareButton for better sharing experience */}
         <div className="flex items-center gap-4">
-          <Icon
-            icon={isLiked ? "mdi:heart" : "mdi:heart-outline"}
-            width="24"
-            height="24"
-            className={`cursor-pointer ${isDark ? "text-white" : "text-[#131A45]"}`}
+          <button
             onClick={handleLike}
-          />
+            className="flex items-center justify-center"
+          >
+            <Icon
+              icon={isLiked ? "mdi:heart" : "mdi:heart-outline"}
+              width="24"
+              height="24"
+              className={`cursor-pointer ${isLiked ? "text-red-500" : isDark ? "text-white" : "text-[#131A45]"}`}
+            />
+          </button>
 
-          <Icon
-            icon="mdi:comment-outline"
-            width="24"
-            height="24"
-            className={`cursor-pointer ${isDark ? "text-white" : "text-[#131A45]"}`}
+          <button
             onClick={handleFocusComment}
-          />
+            className="flex items-center justify-center"
+          >
+            <Icon
+              icon="mdi:comment-outline"
+              width="24"
+              height="24"
+              className={`cursor-pointer ${isDark ? "text-white" : "text-[#131A45]"}`}
+            />
+          </button>
 
-          <Icon
-            icon="mdi:share-outline"
-            width="24"
-            height="24"
-            className={`cursor-pointer ${isDark ? "text-white" : "text-[#131A45]"}`}
-            onClick={handleShare}
+          {/* Replace the old share icon with our new ShareButton component */}
+          <ShareButton
+            postData={postData}
+            handleShareCallback={handleShareComplete}
           />
         </div>
-
       </div>
 
       {/* Comments Section */}
       <div className={`mt-4 ${showComments ? 'block' : 'hidden'}`}>
-
-
         {/* Comments List */}
         <div className="space-y-3">
           {comments.length > 0 ? (
@@ -1016,15 +1010,9 @@ const Postcard = ({ postData, getPosts, userid }) => {
             <p className="text-center text-gray-500 text-[14px] py-4">No comments yet. Be the first to comment!</p>
           )}
         </div>
+
         {/* Comment Form */}
         <form onSubmit={handleComment} className="mb-4 flex gap-2">
-          {/* <div className="w-8 h-8 flex-shrink-0">
-            <img
-              className="w-8 h-8 rounded-full object-cover"
-              src="/memberpage/member.png"
-              alt="avatar"
-            />
-          </div> */}
           <div className="flex-1 relative">
             <input
               ref={commentInputRef}
@@ -1044,9 +1032,19 @@ const Postcard = ({ postData, getPosts, userid }) => {
           </div>
         </form>
       </div>
+
+      {/* Share Modal */}
+      {showShareModal && (
+        <PostShareModal
+          postData={postData}
+          isOpen={showShareModal}
+          onClose={() => setShowShareModal(false)}
+          onShare={handleShareComplete}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default Postcard;
 
