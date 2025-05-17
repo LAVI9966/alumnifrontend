@@ -292,7 +292,7 @@ export function UserDataTable() {
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
             }
-            className=" w-full outline-none"
+            className=" w-full text-black outline-none"
           />
         </div>
 

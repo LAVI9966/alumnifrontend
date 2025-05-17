@@ -133,13 +133,13 @@ const EventShareButton = ({ eventData }) => {
                     <span>Copy Link</span>
                 </DropdownMenuItem>
 
-                <DropdownMenuItem
+                {/* <DropdownMenuItem
                     onClick={addToCalendar}
                     className="flex items-center gap-2 px-2 py-2 cursor-pointer hover:bg-blue-50 rounded-md"
                 >
                     <Icon icon="mdi:calendar" width="20" height="20" />
                     <span>Add to Calendar</span>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
             </DropdownMenuContent>
         </DropdownMenu>
     );

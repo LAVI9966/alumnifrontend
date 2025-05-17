@@ -388,7 +388,7 @@ const EventDetailPage = () => {
                                 </button>
                             )}
 
-                            <button
+                            {/* <button
                                 onClick={handleShareClick}
                                 className="px-4 py-2 border border-[#C7A006] rounded-lg hover:bg-[#C7A006] hover:text-white transition-colors"
                             >
@@ -396,7 +396,7 @@ const EventDetailPage = () => {
                                     <Icon icon="mdi:share" width="20" height="20" />
                                     <span>Share Event</span>
                                 </div>
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 </div>

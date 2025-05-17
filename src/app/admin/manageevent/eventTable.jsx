@@ -214,7 +214,7 @@ export function EventDataTable() {
             onChange={(event) =>
               table.getColumn("title")?.setFilterValue(event.target.value)
             }
-            className=" w-full outline-none"
+            className=" w-full text-black outline-none"
           />
         </div>
 
@@ -231,9 +231,9 @@ export function EventDataTable() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
