@@ -939,9 +939,9 @@ const Postcard = ({ postData, getPosts, userid }) => {
           {likesCount > 0 && (
             <span>Liked by {likesCount} {likesCount === 1 ? 'member' : 'members'}</span>
           )}
-          {sharesCount > 0 && (
+          {/* {sharesCount > 0 && (
             <span className="ml-2">• Shared {sharesCount} {sharesCount === 1 ? 'time' : 'times'}</span>
-          )}
+          )} */}
         </div>
 
         {/* Right side - Icons with ShareButton for better sharing experience */}
