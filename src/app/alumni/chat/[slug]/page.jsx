@@ -6,6 +6,7 @@ import Chatusers from "@/components/chatpage/chatusers";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
+import { useTheme } from "@/context/ThemeProvider";
 
 // const socket = io("ws://localhost:8000");
 const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL);
@@ -20,6 +21,9 @@ const Chatmain = () => {
   const { slug } = useParams();
   const messagesEndRef = useRef(null);
   const [imgurl, setImgurl] = useState("");
+  const { theme, toggleTheme } = useTheme(); // Use the theme context
+  const isDark = theme === 'dark';
+
   useEffect(() => {
     getUser();
   }, []);
@@ -160,84 +164,85 @@ const Chatmain = () => {
       .padStart(2, "0")} ${ampm}`;
   }
   return (
-    <div className="min-h-screen max-w-[1200px] w-full mx-auto flex gap-3 bg-white pt-8">
-      <div className="w-full lg:w-[25%] hidden md:block">
-        <Chatusers />
-      </div>
-      <div className="max-w-[900px] w-full lg:w-[75%] mx-auto bg-white shadow-lg rounded-lg h-[600px] flex flex-col md:ml-4">
-        {/* Header */}
-        <div className="flex items-center justify-between py-3 px-4 bg-white border-b border-[#D9D9D9]">
-          <div className="flex items-center space-x-2">
-            <div className="text-black flex flex-col gap-2">
-              <p className="font-semibold">
-                {receiverId && getName(receiverId)}
-              </p>
-              <p className="text-xs text-gray-500">
-                Room ID: {roomId?.slice(0, 4)}
-              </p>
+    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'}`}>
+      <div className={`min-h-screen max-w-[1200px] w-full mx-auto flex gap-3 ${isDark ? 'bg-[#2A3057]' : 'bg-cyan-300'} pt-8`}>
+        <div className="w-full px-4 lg:px-0 lg:w-[25%] hidden md:block">
+          <Chatusers />
+        </div>
+        <div className={`max-w-[900px] w-full lg:w-[75%] mx-auto ${isDark ? 'bg-[#2A3057]' : 'bg-cyan-300'} shadow-lg rounded-lg h-[600px] flex flex-col md:ml-4`}>
+          {/* Header */}
+          <div className={`flex items-center justify-between py-3 px-4 ${isDark ? 'bg-[#2A3057] text-white' : 'bg-cyan-300'} border-b border-[#D9D9D9]`}>
+            <div className="flex items-center space-x-2">
+              <div className={`${isDark ? 'text-white' : 'text-black'} flex flex-col gap-2`}>
+                <p className="font-semibold">
+                  {receiverId && getName(receiverId)}
+                </p>
+                <p className="text-xs text-gray-500">
+                  Room ID: {roomId?.slice(0, 4)}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-2 ">
-          {messages?.map((msg, index) => (
-            <div
-              key={index}
-              className={`flex ${
-                msg.senderId !== slug ? "justify-end" : "justify-start"
-              }`}
-            >
-              <div className="flex gap-2">
-                {msg.senderId === slug && (
-                  <Avatar className="cursor-pointer">
-                    <AvatarImage
-                      className="w-10 h-10 rounded-full"
-                    
-                      src={imgurl ? imgurl : "/memberpage/member.png"}
-                      alt="avatar"
-                    />
-                  </Avatar>
-                )}
-                <div>
-                  <div
-                    className={`p-2 rounded-lg max-w-xs break-words whitespace-normal ${
-                      msg.senderId !== slug
-                        ? "bg-[#3271FF] text-white"
-                        : "bg-[#D9D9D9] text-[#797979]"
-                    }`}
-                  >
-                    {msg.message}
-                  </div>
-                  <div className="text-[#797979] text-xs mt-2">
-                    {extractTime12Hour(msg?.timestamp)}
+          {/* Chat Messages */}
+          <div className={`flex-1 overflow-y-auto p-4 space-y-2 ${isDark ? 'bg-[#2A3057]' : 'bg-cyan-300'}`}>
+            {messages?.map((msg, index) => (
+              <div
+                key={index}
+                className={`flex ${msg.senderId !== slug ? "justify-end" : "justify-start"
+                  }`}
+              >
+                <div className="flex gap-2">
+                  {msg.senderId === slug && (
+                    <Avatar className="cursor-pointer">
+                      <AvatarImage
+                        className="w-10 h-10 rounded-full"
+                        src={imgurl ? imgurl : "/memberpage/member.png"}
+                        alt="avatar"
+                      />
+                    </Avatar>
+                  )}
+                  <div>
+                    <div
+                      className={`p-2 rounded-lg max-w-xs break-words whitespace-normal ${msg.senderId !== slug
+                          ? "bg-[#3271FF] text-white"
+                          : isDark
+                            ? "bg-[#3A4070] text-white"
+                            : "bg-[#D9D9D9] text-[#797979]"
+                        }`}
+                    >
+                      {msg.message}
+                    </div>
+                    <div className={`${isDark ? 'text-gray-300' : 'text-[#797979]'} text-xs mt-2`}>
+                      {extractTime12Hour(msg?.timestamp)}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
 
-        {/* Message Input */}
-        <form
-          onSubmit={handleSendMessage}
-          className="flex items-center border-t border-gray-300 p-3 bg-gray-100"
-        >
-          <input
-            type="text"
-            placeholder="Type a message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="flex-1 px-3 py-2 rounded-lg bg-white border border-gray-300 focus:outline-none"
-          />
-          <button
-            type="submit"
-            className="ml-2 text-center bg-custom-blue text-white px-3 lg:px-8 py-2 rounded-lg"
+          {/* Message Input */}
+          <form
+            onSubmit={handleSendMessage}
+            className={`flex items-center border-t border-gray-300 p-3 ${isDark ? 'bg-[#2A3057]' : 'bg-gray-100'}`}
           >
-            Send
-          </button>
-        </form>
+            <input
+              type="text"
+              placeholder="Type a message..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className={`flex-1 px-3 py-2 rounded-lg ${isDark ? 'bg-[#3A4070] text-white' : 'bg-white text-black'} border border-gray-300 focus:outline-none`}
+            />
+            <button
+              type="submit"
+              className="ml-2 text-center bg-custom-blue text-white px-3 lg:px-8 py-2 rounded-lg"
+            >
+              Send
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

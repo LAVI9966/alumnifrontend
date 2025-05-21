@@ -63,7 +63,7 @@ const RegisteredUser = ({ eventId }) => {
       );
 
       const result = await response.json();
-     
+
       if (response.ok) {
         const formattedData = result.registrations.map((registration) => ({
           id: registration._id,
@@ -175,10 +175,10 @@ const RegisteredUser = ({ eventId }) => {
                       {header.isPlaceholder
                         ? null
                         : typeof header.column.columnDef.header === "function"
-                        ? header.column.columnDef.header({
+                          ? header.column.columnDef.header({
                             column: header.column,
                           })
-                        : header.column.columnDef.header}
+                          : header.column.columnDef.header}
                     </TableHead>
                   ))}
                 </TableRow>

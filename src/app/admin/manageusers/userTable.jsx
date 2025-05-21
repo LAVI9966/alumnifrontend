@@ -85,8 +85,8 @@ export function UserDataTable() {
     }
   };
 
+  // 1. Fixed handlestatus function for UserDataTable.js
   const handlestatus = async (val) => {
-
     if (!val?._id || !val?.status) {
       toast.error("Invalid user ID or status.");
       return;
@@ -99,6 +99,10 @@ export function UserDataTable() {
         return;
       }
 
+      const newStatus = val.status === "pending" ? "verified" : "pending";
+
+      toast.loading("Updating status...", { id: "statusUpdate" });
+
       const response = await fetch(`${url}/api/members/${val._id}/verify`, {
         method: "PATCH",
         headers: {
@@ -106,25 +110,30 @@ export function UserDataTable() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          status: val.status === "pending" ? "verified" : "pending",
+          status: newStatus,
         }),
       });
 
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
+        // Handle case where response isn't valid JSON
+        console.error("Error parsing response:", e);
+      }
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData?.message || "Failed to change status.");
-      }
-
-      const data = await response.json();
-      if (val.status === "pending") {
-        toast.success(data?.message || "Successfully changed status.");
+        toast.error(data?.message || "Failed to change status.", { id: "statusUpdate" });
       } else {
-        toast.success("Successfully changed status.");
+        toast.success(
+          `Successfully changed status to ${newStatus}.`,
+          { id: "statusUpdate" }
+        );
+        getUser(); // Refresh user list
       }
-
-      getUser(); // Refresh user list
     } catch (error) {
-      toast.error(error.message || "An error occurred. Please try again.");
+      console.error("Toggle status error:", error);
+      toast.error("An error occurred. Please try again.", { id: "statusUpdate" });
     }
   };
 
