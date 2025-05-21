@@ -14,7 +14,8 @@ export const ThemeProvider = ({ children }) => {
         const storedTheme = localStorage.getItem('color-theme');
 
         if (storedTheme) {
-            setTheme(storedTheme);
+            // setTheme(storedTheme);
+            setTheme('light');
         } else {
             setTheme('light'); // Force light on first load if nothing is stored
         }
