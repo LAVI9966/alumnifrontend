@@ -7,8 +7,8 @@ const AdminHeader = () => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   return (
-    <div className={`${isDark ? 'bg-[#232B4A]' : 'bg-cyan-400'} p-4 py-4 flex justify-between items-center shadow-md`}>
-      <p className={`text-xl font-bold transition-colors duration-200 ${isDark ? 'text-white' : ' bg-cyan-400 text-[#131A45]'}`}>Admin Dashboard</p>
+    <div className={`${isDark ? 'bg-[#232B4A]' : 'bg-[#F2F2F2]'} p-4 py-4 flex justify-between items-center shadow-md`}>
+      <p className={`text-xl font-bold transition-colors duration-200 ${isDark ? 'text-white' : ' bg-[#F2F2F2] text-[#131A45]'}`}>Admin Dashboard</p>
       <div className="flex items-center gap-4">
         {/* Theme Toggle Button */}
         <AdminThemeToggle />

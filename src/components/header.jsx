@@ -139,7 +139,7 @@ const Header = () => {
   };
 
   return (
-    <header className={`${isDark ? 'bg-cyan-400 text-[#131A45]' : 'bg-custom-blue text-white'} p-4 flex justify-between items-center relative transition-colors duration-200`}>
+    <header className={`${isDark ? 'bg-[#F2F2F2] text-[#131A45]' : 'bg-custom-blue text-white'} p-4 flex justify-between items-center relative transition-colors duration-200`}>
       {/* Logo */}
       <Link href="/alumni/homepage" className="w-16">
         <Logo textwhite={true} isfooter={true} />
@@ -242,7 +242,7 @@ const Header = () => {
       {/* Icons */}
       <div className="gap-3 hidden md:flex items-center">
         {/* Theme Toggle Button */}
-        <div className="relative group">
+        {/* <div className="relative group">
           <button
             onClick={toggleTheme}
             className={`border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg transition-colors duration-200 ${isDark ? 'border-[#131A45] text-[#131A45]' : 'border-white text-white'
@@ -258,7 +258,7 @@ const Header = () => {
           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
             Toggle Theme
           </div>
-        </div>
+        </div> */}
 
         {/* Chat Icon */}
         <div className="relative group">
@@ -430,7 +430,7 @@ const Header = () => {
           </li>
 
           {/* Theme toggle */}
-          <li className="flex items-center justify-start">
+          {/* <li className="flex items-center justify-start">
             <button
               onClick={toggleTheme}
               className="flex items-center hover:text-gray-300 transition-colors duration-200"
@@ -444,7 +444,7 @@ const Header = () => {
                 height="20"
               />
             </button>
-          </li>
+          </li> */}
 
           {/* Logout button */}
           <li className="flex justify-start">

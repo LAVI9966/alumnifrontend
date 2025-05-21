@@ -50,7 +50,7 @@ export default function Home() {
   const { theme, toggleTheme } = useTheme(); // Use the theme context
   const isDark = theme === 'dark';
   return (
-    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'}`} >
+    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'}`} >
       <div className="min-h-screen flex flex-col ">
         {/* Hero Section */}
         <section className="relative h-[300px] md:h-[429px] overflow-hidden">
@@ -111,7 +111,7 @@ export default function Home() {
 
         {/* Content Section */}
         <main className="flex-1  p-4 container mx-auto ">
-          <div className={`flex  flex-col ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} md:flex-row items-center justify-center w-full py-10 sm:px-10`}>
+          <div className={`flex  flex-col ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'} md:flex-row items-center justify-center w-full py-10 sm:px-10`}>
             {/* Left Section */}
             <div className="bg-[#0c1543] text-white p-10 md:w-1/2">
               <h2 className="text-3xl font-serif text-center text-white mb-4">
@@ -151,7 +151,7 @@ export default function Home() {
               {objectives.map((objective, index) => (
                 <div
                   key={index}
-                  className={`border-2 border-yellow-500 p-4 text-center ${isDark ? 'bg-[#2A3057]' : 'bg-cyan-400'}  shadow-md`}
+                  className={`border-2 border-yellow-500 p-4 text-center ${isDark ? 'bg-[#2A3057]' : 'bg-[#F2F2F2]'}  shadow-md`}
                 >
                   {objective}
                 </div>
@@ -160,7 +160,7 @@ export default function Home() {
           </div>
           <div className="grid  bg-white shadow-md rounded-lg border border-gray-200">
             {aboutDetails.map((card, idx) => (
-              <div key={idx} className={`px-6 py-2 ${isDark ? 'bg-[#2A3057] text-white' : 'bg-cyan-400 '} `}>
+              <div key={idx} className={`px-6 py-2 ${isDark ? 'bg-[#2A3057] text-white' : 'bg-[#F2F2F2] '} `}>
                 <h2 className="text-[24px]  font-semibold ">
                   {card.title}
                 </h2>

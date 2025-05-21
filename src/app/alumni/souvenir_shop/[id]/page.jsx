@@ -118,7 +118,7 @@ const Page = () => {
 
     // Main product view - only render when product exists
     return (
-        <div className={`min-h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-cyan-400 text-[#131A45]'} transition-colors duration-200`}>
+        <div className={`min-h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-[#F2F2F2] text-[#131A45]'} transition-colors duration-200`}>
             {/*             
             <div className={`w-full py-4 border-b ${isDark ? 'bg-[#2A3057] border-[#3D437E]' : 'bg-white border-gray-200'}`}>
                 <div className="container mx-auto px-4 max-w-6xl">

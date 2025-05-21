@@ -5,7 +5,7 @@ import gettoken from "@/app/function/gettoken";
 import Postcard from '@/components/homepage/postcard';
 import { useTheme } from '@/context/ThemeProvider';
 
-// Individual post page component with consistent bg-cyan-400 for light mode
+// Individual post page component with consistent bg-[#F2F2F2] for light mode
 const PostPage = () => {
     const { postId } = useParams();
     const router = useRouter();
@@ -119,7 +119,7 @@ const PostPage = () => {
     // Display loading state
     if (isLoading) {
         return (
-            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} py-8`}>
+            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'} py-8`}>
                 <div className="max-w-2xl mx-auto px-4">
                     <div className="animate-pulse">
                         <div className={`h-12 rounded-t-lg ${isDark ? 'bg-[#2A3057]' : 'bg-gray-300'}`}></div>
@@ -133,7 +133,7 @@ const PostPage = () => {
     // Display error state with login option
     if (error) {
         return (
-            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} py-8`}>
+            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'} py-8`}>
                 <div className="max-w-2xl mx-auto px-4 text-center">
                     <div className={`p-6 rounded-lg ${isDark ? 'bg-[#2A3057] text-white' : 'bg-white text-gray-800'}`}>
                         <h1 className="text-xl font-bold mb-4">
@@ -169,7 +169,7 @@ const PostPage = () => {
     // Display post not found state
     if (!post) {
         return (
-            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} py-8`}>
+            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'} py-8`}>
                 <div className="max-w-2xl mx-auto px-4 text-center">
                     <div className={`p-6 rounded-lg ${isDark ? 'bg-[#2A3057] text-white' : 'bg-white text-gray-800'}`}>
                         <h1 className="text-xl font-bold mb-4">
@@ -191,7 +191,7 @@ const PostPage = () => {
     }
 
     return (
-        <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} py-8`}>
+        <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'} py-8`}>
             <div className="max-w-2xl mx-auto px-4">
                 {/* Header */}
                 <h1 className={`text-2xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-800'}`}>

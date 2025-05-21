@@ -11,7 +11,7 @@ const PresidentDesk = () => {
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#C7A006] -translate-y-3" />
 
                     {/* Text */}
-                    <h2 className={`${isDark ? '' : 'bg-cyan-400'} font-bold text-3xl sm:text-4xl md:text-5xl px-2 md:whitespace-nowrap`}>
+                    <h2 className={`${isDark ? '' : 'bg-[#F2F2F2]'} font-bold text-3xl sm:text-4xl md:text-5xl px-2 md:whitespace-nowrap`}>
                         FROM THE PRESIDENT'S DESK
                     </h2>
 

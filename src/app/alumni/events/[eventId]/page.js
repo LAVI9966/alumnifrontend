@@ -229,7 +229,7 @@ const EventDetailPage = () => {
     // Display loading state
     if (isLoading) {
         return (
-            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} py-8`}>
+            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'} py-8`}>
                 <div className="max-w-2xl mx-auto px-4">
                     <div className="animate-pulse">
                         <div className={`h-64 rounded-t-lg ${isDark ? 'bg-[#2A3057]' : 'bg-gray-300'}`}></div>
@@ -246,7 +246,7 @@ const EventDetailPage = () => {
     // Display error state with login option
     if (error) {
         return (
-            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} py-8`}>
+            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'} py-8`}>
                 <div className="max-w-2xl mx-auto px-4 text-center">
                     <div className={`p-6 rounded-lg ${isDark ? 'bg-[#2A3057] text-white' : 'bg-white text-gray-800'}`}>
                         <h1 className="text-xl font-bold mb-4">
@@ -282,7 +282,7 @@ const EventDetailPage = () => {
     // Display event not found state
     if (!event) {
         return (
-            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} py-8`}>
+            <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'} py-8`}>
                 <div className="max-w-2xl mx-auto px-4 text-center">
                     <div className={`p-6 rounded-lg ${isDark ? 'bg-[#2A3057] text-white' : 'bg-white text-gray-800'}`}>
                         <h1 className="text-xl font-bold mb-4">
@@ -314,7 +314,7 @@ const EventDetailPage = () => {
         : 'Date not specified';
 
     return (
-        <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'} py-8`}>
+        <div className={`min-h-screen ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'} py-8`}>
             <div className="max-w-4xl mx-auto px-4">
                 {/* Back Button */}
                 <button

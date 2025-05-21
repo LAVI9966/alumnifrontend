@@ -164,14 +164,14 @@ const Chatmain = () => {
       .padStart(2, "0")} ${ampm}`;
   }
   return (
-    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'}`}>
-      <div className={`min-h-screen max-w-[1200px] w-full mx-auto flex gap-3 ${isDark ? 'bg-[#2A3057]' : 'bg-cyan-300'} pt-8`}>
+    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'}`}>
+      <div className={`min-h-screen max-w-[1200px] w-full mx-auto flex gap-3 ${isDark ? 'bg-[#2A3057]' : 'bg-white'} pt-8`}>
         <div className="w-full px-4 lg:px-0 lg:w-[25%] hidden md:block">
           <Chatusers />
         </div>
-        <div className={`max-w-[900px] w-full lg:w-[75%] mx-auto ${isDark ? 'bg-[#2A3057]' : 'bg-cyan-300'} shadow-lg rounded-lg h-[600px] flex flex-col md:ml-4`}>
+        <div className={`max-w-[900px] w-full lg:w-[75%] mx-auto ${isDark ? 'bg-[#2A3057]' : 'bg-white'} shadow-lg rounded-lg h-[600px] flex flex-col md:ml-4`}>
           {/* Header */}
-          <div className={`flex items-center justify-between py-3 px-4 ${isDark ? 'bg-[#2A3057] text-white' : 'bg-cyan-300'} border-b border-[#D9D9D9]`}>
+          <div className={`flex items-center justify-between py-3 px-4 ${isDark ? 'bg-[#2A3057] text-white' : 'bg-white'} border-b border-[#D9D9D9]`}>
             <div className="flex items-center space-x-2">
               <div className={`${isDark ? 'text-white' : 'text-black'} flex flex-col gap-2`}>
                 <p className="font-semibold">
@@ -185,7 +185,7 @@ const Chatmain = () => {
           </div>
 
           {/* Chat Messages */}
-          <div className={`flex-1 overflow-y-auto p-4 space-y-2 ${isDark ? 'bg-[#2A3057]' : 'bg-cyan-300'}`}>
+          <div className={`flex-1 overflow-y-auto p-4 space-y-2 ${isDark ? 'bg-[#2A3057]' : 'bg-white'}`}>
             {messages?.map((msg, index) => (
               <div
                 key={index}
@@ -205,10 +205,10 @@ const Chatmain = () => {
                   <div>
                     <div
                       className={`p-2 rounded-lg max-w-xs break-words whitespace-normal ${msg.senderId !== slug
-                          ? "bg-[#3271FF] text-white"
-                          : isDark
-                            ? "bg-[#3A4070] text-white"
-                            : "bg-[#D9D9D9] text-[#797979]"
+                        ? "bg-[#3271FF] text-white"
+                        : isDark
+                          ? "bg-[#3A4070] text-white"
+                          : "bg-[#D9D9D9] text-[#797979]"
                         }`}
                     >
                       {msg.message}

@@ -82,11 +82,11 @@ const Layout = ({ children }) => {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   return (
-    <div className={`flex h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-cyan-200 text-[#131A45]'}`}>
+    <div className={`flex h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-white text-[#131A45]'}`}>
       <AdminSidebar />
       <div className="flex-1 min-h-screen overflow-y-scroll flex flex-col">
         <AdminHeader />
-        <main className={`p-6 flex-1 ${isDark ? 'bg-[#232B4A]' : 'bg-cyan-400'}`}>{children}</main>
+        <main className={`p-6 flex-1 ${isDark ? 'bg-[#232B4A]' : 'bg-[#F2F2F2]'}`}>{children}</main>
       </div>
     </div>
   );

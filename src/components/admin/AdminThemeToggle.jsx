@@ -10,7 +10,7 @@ const AdminThemeToggle = () => {
         <>
             <Link href="/alumni/homepage" className={`flex items-center px-3 py-2 rounded-md border border-gray-300 shadow-sm transition-colors duration-200 ${isDark ? 'bg-[#2A3057] text-white hover:bg-[#232B4A]' : 'bg-white text-[#131A45] hover:bg-gray-100'}`}
                 aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}>Go to User Side</Link>
-            <button
+            {/* <button
                 onClick={toggleTheme}
                 className={`flex items-center px-3 py-2 rounded-md border border-gray-300 shadow-sm transition-colors duration-200 ${isDark ? 'bg-[#2A3057] text-white hover:bg-[#232B4A]' : 'bg-white text-[#131A45] hover:bg-gray-100'}`}
                 aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
@@ -25,7 +25,7 @@ const AdminThemeToggle = () => {
                         <Icon icon="ph:moon" width="20" height="20" className="mr-2" /> Dark Mode
                     </>
                 )}
-            </button>
+            </button> */}
         </>
     );
 };

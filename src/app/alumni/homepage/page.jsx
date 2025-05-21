@@ -75,7 +75,7 @@ const Page = () => {
     autoplay: true,
   };
   return (
-    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'}`}>
+    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'}`}>
       {/* Hero Section */}
       <section className="relative w-full h-[300px] md:h-[429px] overflow-hidden">
         <Slider {...sliderSettings} className="slick-slider">

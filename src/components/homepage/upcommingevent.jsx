@@ -38,7 +38,7 @@ const Upcommingevent = () => {
 
   return (
     <div>
-      <div className={`flex justify-between items-center mb-4 ${isDark ? 'bg-[#131A45] ' : 'bg-cyan-400'}`}>
+      <div className={`flex justify-between items-center mb-4 ${isDark ? 'bg-[#131A45] ' : 'bg-[#F2F2F2]'}`}>
         <h2 className="font-bold text-lg">Upcoming Events</h2>
         <Link href="/alumni/events" className="text-md text-gray-500">
           See All

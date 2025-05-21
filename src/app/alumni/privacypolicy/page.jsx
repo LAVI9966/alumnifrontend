@@ -56,7 +56,7 @@ const PrivacyPolicy = () => {
     ];
 
     return (
-        <div className={`w-full min-h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-cyan-400'} py-10 px-4 md:px-8 lg:px-16`}>
+        <div className={`w-full min-h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-[#F2F2F2]'} py-10 px-4 md:px-8 lg:px-16`}>
             <div className="max-w-4xl mx-auto">
                 <h1 className={`text-3xl text-center font-bold mb-8 ${isDark ? 'text-white' : 'text-black '}`}>Privacy Policy</h1>
 

@@ -84,7 +84,7 @@ const SouvenirShop = () => {
   }, [showSortOptions]);
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-cyan-400 text-[#131A45]'} transition-colors duration-200`}>
+    <div className={`min-h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-[#F2F2F2] text-[#131A45]'} transition-colors duration-200`}>
       {/* Hero Section - Matching with Nav */}
       <div className={`w-full py-12 ${isDark ? 'bg-[#2A3057]' : 'bg-custom-blue'} transition-colors duration-200`}>
         <div className="container mx-auto px-4 max-w-6xl">

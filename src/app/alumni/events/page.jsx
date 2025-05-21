@@ -218,7 +218,7 @@ const EventCards = () => {
   const isDark = theme === 'dark';
 
   return (
-    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-cyan-400'}`} >
+    <div className={`w-full ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'}`} >
       <div className="min-h-screen max-w-[1200px] w-full mx-auto pt-8 px-4 sm:p-8">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-2">
           <h2 className="text-2xl font-bold">Upcoming Events</h2>
