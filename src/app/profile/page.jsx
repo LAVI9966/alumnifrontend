@@ -52,7 +52,7 @@ export default function ProfilePictureUpload() {
         {
           method: "POST",
           headers: {
-           
+
             Authorization: `Bearer ${token}`, // Add token in headers
           },
           body: formData,
@@ -78,39 +78,39 @@ export default function ProfilePictureUpload() {
       </p>
       {/* Profile Image Upload */}
       <div className="relative w-40 h-40">
-               <label className="w-full h-full rounded-full border-2 border-[#C7A006] flex items-center justify-center cursor-pointer overflow-hidden">
-                 {image ? (
-                   <img
-                     src={image}
-                     alt="Profile"
-                     className="w-full h-full object-cover rounded-full"
-                   />
-                 ) : (
-                   <Icon icon="mynaui:user-solid" width="80%" height="80%" />
-                 )}
-                 <input
-                   type="file"
-                   accept="image/*"
-                   className="hidden"
-                   onChange={handleImageUpload}
-                 />
-               </label>
-               <div className="absolute bottom-2 right-2 bg-[#C7A006] p-2 rounded-full cursor-pointer">
-                 {image ? (
-                   <Icon
-                     onClick={() => {
-                       setImage(null);
-                       setUploadimage(null);
-                     }}
-                     icon="material-symbols:delete-outline"
-                     width="24"
-                     height="24"
-                   />
-                 ) : (
-                   <Icon icon="typcn:camera" width="24" height="24" />
-                 )}
-               </div>
-             </div>
+        <label className="w-full h-full rounded-full border-2 border-[#C7A006] flex items-center justify-center cursor-pointer overflow-hidden">
+          {image ? (
+            <img
+              src={image}
+              alt="Profile"
+              className="w-full h-full object-cover rounded-full"
+            />
+          ) : (
+            <Icon icon="mynaui:user-solid" width="80%" height="80%" />
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageUpload}
+          />
+        </label>
+        <div className="absolute bottom-2 right-2 bg-[#C7A006] p-2 rounded-full cursor-pointer">
+          {image ? (
+            <Icon
+              onClick={() => {
+                setImage(null);
+                setUploadimage(null);
+              }}
+              icon="material-symbols:delete-outline"
+              width="24"
+              height="24"
+            />
+          ) : (
+            <Icon icon="typcn:camera" width="24" height="24" />
+          )}
+        </div>
+      </div>
       {/* Action Buttons */}
       <div className="mt-8 flex gap-4">
         <Link

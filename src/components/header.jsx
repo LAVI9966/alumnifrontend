@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Logo from "./logo";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
@@ -11,6 +11,7 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [aboutDropdownOpen, setAboutDropdownOpen] = React.useState(false);
   const [mobileAboutDropdownOpen, setMobileAboutDropdownOpen] = React.useState(false);
+  const [isAdmin, setIsAdmin] = useState(false); // State to track if user is admin
   const router = useRouter();
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme(); // Use the theme context
@@ -19,6 +20,26 @@ const Header = () => {
   const isAboutPage = pathname === "/alumni/about";
 
   const { notificationCount, fetchNotificationCount } = useNotifications();
+
+  useEffect(() => {
+    // Check user role when component mounts
+    const checkUserRole = () => {
+      try {
+        const userData = localStorage.getItem("alumni");
+        if (userData) {
+          const parsedData = JSON.parse(userData);
+          // Check if user is admin
+          if (parsedData.user && parsedData.user.role === "admin") {
+            setIsAdmin(true);
+          }
+        }
+      } catch (error) {
+        console.error("Error checking user role:", error);
+      }
+    };
+
+    checkUserRole();
+  }, []);
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -201,7 +222,7 @@ const Header = () => {
           Event
         </Link>
         <Link href="/alumni/members" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
-          Members
+          Mentorship
         </Link>
         <Link href="/alumni/contact" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
           Contact
@@ -209,6 +230,13 @@ const Header = () => {
         <Link href="/alumni/souvenir_shop" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
           Souvenir shop
         </Link>
+
+        {/* Show Admin link only if user is admin */}
+        {isAdmin && (
+          <Link href="/admin/homepage" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
+            Admin Dashboard
+          </Link>
+        )}
       </nav>
 
       {/* Icons */}
@@ -294,6 +322,16 @@ const Header = () => {
               Home
             </Link>
           </li>
+
+          {/* Admin link only for admins in mobile menu */}
+          {isAdmin && (
+            <li>
+              <Link href="/admin/homepage" className="hover:text-gray-300 transition-colors duration-200">
+                Admin Dashboard
+              </Link>
+            </li>
+          )}
+
           <li>
             <Link href="/alumni/profile" className="hover:text-gray-300 transition-colors duration-200">
               Profile
@@ -306,7 +344,7 @@ const Header = () => {
           </li>
           <li>
             <Link href="/alumni/members" className="hover:text-gray-300 transition-colors duration-200">
-              Members
+              Mentorship
             </Link>
           </li>
           <li>

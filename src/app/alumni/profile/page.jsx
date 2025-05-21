@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import gettoken from "@/app/function/gettoken";
 import { useTheme } from "@/context/ThemeProvider";
@@ -29,6 +29,9 @@ const ProfilePage = () => {
   const [uploadimage, setUploadimage] = useState(null);
   const router = useRouter();
   const url = process.env.NEXT_PUBLIC_URL;
+
+  // Create a ref for the file input
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     getProfile();
@@ -225,7 +228,7 @@ const ProfilePage = () => {
     }
   };
 
-  const handleImageUpload = (event) => {
+  const handleImageUpload = async (event) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
 
@@ -249,11 +252,27 @@ const ProfilePage = () => {
         setImage(reader.result);
       };
       reader.readAsDataURL(file);
+
+      // Automatically upload the image after selecting it
+      await handleSaveProfilePicWithFile(file);
     }
   };
 
-  const handleSaveProfilepic = async () => {
-    if (!uploadimage) {
+  // Function to handle camera icon click
+  const handleCameraIconClick = () => {
+    // If image exists, handle delete
+    if (image && image !== "/default-profile.png") {
+      setImage(null);
+      setUploadimage(null);
+    } else {
+      // Otherwise trigger file input click
+      fileInputRef.current.click();
+    }
+  };
+
+  // Modified version of handleSaveProfilepic that takes a file parameter
+  const handleSaveProfilePicWithFile = async (file) => {
+    if (!file) {
       toast.error("Please select an image first.");
       return;
     }
@@ -267,7 +286,7 @@ const ProfilePage = () => {
       }
 
       const formData = new FormData();
-      formData.append("profilePicture", uploadimage);
+      formData.append("profilePicture", file);
 
       const loadingToast = toast.loading("Uploading profile picture...");
 
@@ -316,6 +335,16 @@ const ProfilePage = () => {
     }
   };
 
+  // Original function kept for the Save button
+  const handleSaveProfilepic = async () => {
+    if (!uploadimage) {
+      toast.error("Please select an image first.");
+      return;
+    }
+
+    await handleSaveProfilePicWithFile(uploadimage);
+  };
+
   const { theme, toggleTheme } = useTheme(); // Use the theme context
   const isDark = theme === 'dark';
 
@@ -356,19 +385,19 @@ const ProfilePage = () => {
                   <Icon icon="mynaui:user-solid" width="80%" height="80%" />
                 )}
                 <input
+                  ref={fileInputRef}
                   type="file"
                   accept="image/jpeg,image/png,image/jpg"
                   className="hidden"
                   onChange={handleImageUpload}
                 />
               </label>
-              <div className="absolute bottom-2 right-2 bg-[#C7A006] p-2 rounded-full cursor-pointer hover:bg-yellow-600 transition-colors">
-                {image ? (
+              <div
+                className="absolute bottom-2 right-2 bg-[#C7A006] p-2 rounded-full cursor-pointer hover:bg-yellow-600 transition-colors"
+                onClick={handleCameraIconClick}
+              >
+                {image && image !== "/default-profile.png" ? (
                   <Icon
-                    onClick={() => {
-                      setImage(null);
-                      setUploadimage(null);
-                    }}
                     icon="material-symbols:delete-outline"
                     width="24"
                     height="24"
