@@ -100,7 +100,6 @@ export default function SignupPage() {
     setDropdownOpen(false);
   };
 
-  // Update the validation schema with better mobile number validation
   const validationSchema = Yup.object({
     collegeNo: Yup.string().required("College No. is required"),
     name: Yup.string().required("Full Name is required"),
@@ -112,16 +111,12 @@ export default function SignupPage() {
       .required("Mobile Number is required"),
     password: Yup.string()
       .min(8, "Password must be at least 8 characters")
-      .matches(
-        /(?=.*[a-z])(?=.*[A-Z])/,
-        "Password must contain at least one uppercase and one lowercase letter"
-      )
+      .matches(/(?=.*[a-z])(?=.*[A-Z])/, "Password must contain at least one uppercase and one lowercase letter")
       .matches(/(?=.*[0-9])/, "Password must contain at least one number")
-      .matches(
-        /(?=.*[!@#$%^&*])/,
-        "Password must contain at least one special character (!@#$%^&*)"
-      )
+      .matches(/(?=.*[!@#$%^&*])/, "Password must contain at least one special character (!@#$%^&*)")
       .required("Password is required"),
+    profession: Yup.string(), // Optional
+    location: Yup.string(),   // Optional
   });
 
   useVerifyToken();
@@ -161,6 +156,8 @@ export default function SignupPage() {
               email: "",
               mobileNumber: "",
               password: "",
+              profession: "", // Added to initial values
+              location: "",   // Added to initial values
             }}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
@@ -307,84 +304,113 @@ export default function SignupPage() {
                   </div>
                 </div>
 
+                {/* Password Field */}
                 <div className="relative">
-                  <div className="relative">
-                    <Field name="password">
-                      {({ field, form }) => (
-                        <div className="relative">
-                          <input
-                            type={passwordVisible ? "text" : "password"}
-                            {...field}
-                            placeholder="*************"
-                            className="custom-input text-black w-full"
-                            onFocus={() => setPasswordFocused(true)}
-                          />
-                          <button
-                            type="button"
-                            onClick={togglePasswordVisibility}
-                            className="absolute right-3 top-0 bottom-0 flex items-center justify-center text-gray-500"
-                            style={{ height: '40px' }}
-                          >
-                            {passwordVisible ? (
-                              <Icon icon="uiw:eye-o" width="16" height="16" />
-                            ) : (
-                              <Icon icon="rivet-icons:eye-off" width="16" height="16" />
-                            )}
-                          </button>
+                  <Field name="password">
+                    {({ field, form }) => (
+                      <div className="relative">
+                        <input
+                          type={passwordVisible ? "text" : "password"}
+                          {...field}
+                          placeholder="*************"
+                          className="custom-input text-black w-full"
+                          onFocus={() => setPasswordFocused(true)}
+                        />
+                        <button
+                          type="button"
+                          onClick={togglePasswordVisibility}
+                          className="absolute right-3 top-0 bottom-0 flex items-center justify-center text-gray-500"
+                          style={{ height: '40px' }}
+                        >
+                          {passwordVisible ? (
+                            <Icon icon="uiw:eye-o" width="16" height="16" />
+                          ) : (
+                            <Icon icon="rivet-icons:eye-off" width="16" height="16" />
+                          )}
+                        </button>
 
-                          <div className={`mt-2 text-xs bg-gray-50 p-3 rounded border border-gray-200 transition-all duration-300 ${passwordFocused ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0 overflow-hidden'}`}>
-                            <ul className="space-y-2">
-                              <li className={`flex items-center transition-colors duration-200 ${field.value && field.value.length >= 8 ? 'text-green-600 font-medium' : 'text-gray-600'}`}>
-                                <div className={`mr-2 flex items-center justify-center w-5 h-5 rounded-full ${field.value && field.value.length >= 8 ? 'bg-green-100' : 'bg-gray-100'}`}>
-                                  {field.value && field.value.length >= 8 ? (
-                                    <Icon icon="mdi:check" className="text-green-600" width="14" />
-                                  ) : (
-                                    <span className="w-2 h-2 rounded-full bg-gray-400"></span>
-                                  )}
-                                </div>
-                                At least 8 characters
-                              </li>
-                              <li className={`flex items-center transition-colors duration-200 ${field.value && /[A-Z]/.test(field.value) && /[a-z]/.test(field.value) ? 'text-green-600 font-medium' : 'text-gray-600'}`}>
-                                <div className={`mr-2 flex items-center justify-center w-5 h-5 rounded-full ${field.value && /[A-Z]/.test(field.value) && /[a-z]/.test(field.value) ? 'bg-green-100' : 'bg-gray-100'}`}>
-                                  {field.value && /[A-Z]/.test(field.value) && /[a-z]/.test(field.value) ? (
-                                    <Icon icon="mdi:check" className="text-green-600" width="14" />
-                                  ) : (
-                                    <span className="w-2 h-2 rounded-full bg-gray-400"></span>
-                                  )}
-                                </div>
-                                Uppercase and lowercase letters
-                              </li>
-                              <li className={`flex items-center transition-colors duration-200 ${field.value && /[0-9]/.test(field.value) ? 'text-green-600 font-medium' : 'text-gray-600'}`}>
-                                <div className={`mr-2 flex items-center justify-center w-5 h-5 rounded-full ${field.value && /[0-9]/.test(field.value) ? 'bg-green-100' : 'bg-gray-100'}`}>
-                                  {field.value && /[0-9]/.test(field.value) ? (
-                                    <Icon icon="mdi:check" className="text-green-600" width="14" />
-                                  ) : (
-                                    <span className="w-2 h-2 rounded-full bg-gray-400"></span>
-                                  )}
-                                </div>
-                                At least one number
-                              </li>
-                              <li className={`flex items-center transition-colors duration-200 ${field.value && /[!@#$%^&*]/.test(field.value) ? 'text-green-600 font-medium' : 'text-gray-600'}`}>
-                                <div className={`mr-2 flex items-center justify-center w-5 h-5 rounded-full ${field.value && /[!@#$%^&*]/.test(field.value) ? 'bg-green-100' : 'bg-gray-100'}`}>
-                                  {field.value && /[!@#$%^&*]/.test(field.value) ? (
-                                    <Icon icon="mdi:check" className="text-green-600" width="14" />
-                                  ) : (
-                                    <span className="w-2 h-2 rounded-full bg-gray-400"></span>
-                                  )}
-                                </div>
-                                At least one special character (!@#$%^&*)
-                              </li>
-                            </ul>
-                          </div>
+                        <div className={`mt-2 text-xs bg-gray-50 p-3 rounded border border-gray-200 transition-all duration-300 ${passwordFocused ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+                          <ul className="space-y-2">
+                            <li className={`flex items-center transition-colors duration-200 ${field.value && field.value.length >= 8 ? 'text-green-600 font-medium' : 'text-gray-600'}`}>
+                              <div className={`mr-2 flex items-center justify-center w-5 h-5 rounded-full ${field.value && field.value.length >= 8 ? 'bg-green-100' : 'bg-gray-100'}`}>
+                                {field.value && field.value.length >= 8 ? (
+                                  <Icon icon="mdi:check" className="text-green-600" width="14" />
+                                ) : (
+                                  <span className="w-2 h-2 rounded-full bg-gray-400"></span>
+                                )}
+                              </div>
+                              At least 8 characters
+                            </li>
+                            <li className={`flex items-center transition-colors duration-200 ${field.value && /[A-Z]/.test(field.value) && /[a-z]/.test(field.value) ? 'text-green-600 font-medium' : 'text-gray-600'}`}>
+                              <div className={`mr-2 flex items-center justify-center w-5 h-5 rounded-full ${field.value && /[A-Z]/.test(field.value) && /[a-z]/.test(field.value) ? 'bg-green-100' : 'bg-gray-100'}`}>
+                                {field.value && /[A-Z]/.test(field.value) && /[a-z]/.test(field.value) ? (
+                                  <Icon icon="mdi:check" className="text-green-600" width="14" />
+                                ) : (
+                                  <span className="w-2 h-2 rounded-full bg-gray-400"></span>
+                                )}
+                              </div>
+                              Uppercase and lowercase letters
+                            </li>
+                            <li className={`flex items-center transition-colors duration-200 ${field.value && /[0-9]/.test(field.value) ? 'text-green-600 font-medium' : 'text-gray-600'}`}>
+                              <div className={`mr-2 flex items-center justify-center w-5 h-5 rounded-full ${field.value && /[0-9]/.test(field.value) ? 'bg-green-100' : 'bg-gray-100'}`}>
+                                {field.value && /[0-9]/.test(field.value) ? (
+                                  <Icon icon="mdi:check" className="text-green-600" width="14" />
+                                ) : (
+                                  <span className="w-2 h-2 rounded-full bg-gray-400"></span>
+                                )}
+                              </div>
+                              At least one number
+                            </li>
+                            <li className={`flex items-center transition-colors duration-200 ${field.value && /[!@#$%^&*]/.test(field.value) ? 'text-green-600 font-medium' : 'text-gray-600'}`}>
+                              <div className={`mr-2 flex items-center justify-center w-5 h-5 rounded-full ${field.value && /[!@#$%^&*]/.test(field.value) ? 'bg-green-100' : 'bg-gray-100'}`}>
+                                {field.value && /[!@#$%^&*]/.test(field.value) ? (
+                                  <Icon icon="mdi:check" className="text-green-600" width="14" />
+                                ) : (
+                                  <span className="w-2 h-2 rounded-full bg-gray-400"></span>
+                                )}
+                              </div>
+                              At least one special character (!@#$%^&*)
+                            </li>
+                          </ul>
                         </div>
-                      )}
-                    </Field>
-                  </div>
+                      </div>
+                    )}
+                  </Field>
                   <ErrorMessage
                     name="password"
                     component="p"
                     className="text-red-500 text-sm"
                   />
+                </div>
+
+                {/* Profession and Location Fields - MOVED OUTSIDE password field */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col">
+                    <Field
+                      type="text"
+                      name="profession"
+                      placeholder="Profession (Optional)"
+                      className="custom-input text-black w-full"
+                    />
+                    <ErrorMessage
+                      name="profession"
+                      component="p"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <Field
+                      type="text"
+                      name="location"
+                      placeholder="Location (Optional)"
+                      className="custom-input text-black w-full"
+                    />
+                    <ErrorMessage
+                      name="location"
+                      component="p"
+                      className="text-red-500 text-sm"
+                    />
+                  </div>
                 </div>
 
                 <div className="w-full flex justify-center">

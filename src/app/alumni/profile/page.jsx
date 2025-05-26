@@ -16,6 +16,9 @@ const ProfilePage = () => {
     mobileNumber: "",
     name: "",
     profilePicture: "",
+    profession: "",
+    location: ""
+
   });
   // Add state variables for country code dropdown
   const [selectedCountryCode, setSelectedCountryCode] = useState("+91");
@@ -135,7 +138,7 @@ const ProfilePage = () => {
         }
 
         setinitialValues(userData);
-
+        console.log("profile ", userData)
         // Handle profile picture URL for both local and hosted environments
         if (userData.profilePicture) {
           // First, try to extract the filename regardless of path format
@@ -544,6 +547,35 @@ const ProfilePage = () => {
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Field
+                      type="text"
+                      name="profession"
+                      placeholder="Profession"
+                      className={`custom-input text-black w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#C7A006] focus:outline-none`}
+                    />
+                    <ErrorMessage
+                      name="profession"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Field
+                      type="text"
+                      name="location"
+                      placeholder="Location"
+                      className={`custom-input text-black w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#C7A006] focus:outline-none`}
+                    />
+                    <ErrorMessage
+                      name="location"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+                </div>
+
                 <div className="w-full flex justify-center mt-6">
                   <button
                     type="submit"
@@ -553,6 +585,8 @@ const ProfilePage = () => {
                     {isSubmitting ? "Saving..." : "Save Changes"}
                   </button>
                 </div>
+
+
               </Form>
             )}
           </Formik>
