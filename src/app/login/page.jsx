@@ -106,7 +106,7 @@ export default function SignupPage() {
 
                   // Delay redirect to allow toast to be seen
                   setTimeout(() => {
-                    router.push("/alumni/homepage");
+                    router.push("/verification");
                   }, 1000);
                 } else {
                   // Handle different error cases with custom messages

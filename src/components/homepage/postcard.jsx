@@ -687,9 +687,59 @@ const Postcard = ({ postData, getPosts, userid }) => {
     }
   };
 
+  // const handleLike = async () => {
+  //   console.log("Post liked: handleLike called", userid);
+  //   try {
+  //     const token = await gettoken();
+  //     const response = await fetch(`${url}/api/posts/${postData._id}/like`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     const data = await response.json();
+  //     if (response.ok) {
+  //       // Update local state immediately
+  //       setIsLiked(data.isLiked);
+  //       setLikesCount(data.likes);
+  //     } else {
+  //       toast.error(data?.message || "Failed to like post.");
+  //     }
+  //   } catch (error) {
+  //     toast.error("An error occurred. Please try again.");
+  //   }
+  // };
+
+
+
   const handleLike = async () => {
+    console.log("Post liked: handleLike called", userid);
     try {
       const token = await gettoken();
+
+      // First, fetch user profile to check verification status
+      const profileResponse = await fetch(`${url}/api/profile`, { // adjust URL to your profile route
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!profileResponse.ok) {
+        toast.error("Failed to fetch user profile.");
+        return;
+      }
+
+      const profileData = await profileResponse.json();
+
+      // Assuming the user object has a field `isVerified`
+      if (!profileData.user.isVerified) {
+        toast.error("You must verify your account before liking posts.");
+        return; // Do not proceed to like
+      }
+
+      // User is verified, proceed with like request
       const response = await fetch(`${url}/api/posts/${postData._id}/like`, {
         method: "POST",
         headers: {
@@ -697,7 +747,9 @@ const Postcard = ({ postData, getPosts, userid }) => {
           Authorization: `Bearer ${token}`,
         },
       });
+
       const data = await response.json();
+
       if (response.ok) {
         // Update local state immediately
         setIsLiked(data.isLiked);
@@ -709,6 +761,8 @@ const Postcard = ({ postData, getPosts, userid }) => {
       toast.error("An error occurred. Please try again.");
     }
   };
+
+
 
   const handleShare = async () => {
     // Open the share modal instead of direct API call
