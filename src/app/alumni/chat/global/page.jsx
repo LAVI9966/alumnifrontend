@@ -8,8 +8,8 @@ import toast from "react-hot-toast";
 import { useTheme } from "@/context/ThemeProvider";
 import { Icon } from "@iconify/react";
 
-const socket = io("ws://localhost:8000");
-// const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL);
+// Use environment variable for WebSocket URL
+const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL || "ws://localhost:8000");
 
 const GlobalChat = () => {
     const [messages, setMessages] = useState([]);

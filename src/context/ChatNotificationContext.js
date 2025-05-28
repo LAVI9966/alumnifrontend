@@ -3,8 +3,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 
-const socket = io("ws://localhost:8000");
-// const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL);
+// Use environment variable for WebSocket URL
+const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL || "ws://localhost:8000");
+
 const ChatNotificationContext = createContext();
 
 export const ChatNotificationProvider = ({ children }) => {
