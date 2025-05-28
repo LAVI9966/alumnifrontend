@@ -1,3 +1,5 @@
+'use client';
+
 import gettoken from "@/app/function/gettoken";
 import { usePathname, useRouter } from "next/navigation";
 
