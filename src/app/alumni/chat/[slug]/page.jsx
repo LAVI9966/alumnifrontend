@@ -8,8 +8,8 @@ import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
 
-// const socket = io("ws://localhost:8000");
-const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL);
+const socket = io("ws://localhost:8000");
+// const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL);
 
 const Chatmain = () => {
   const [messages, setMessages] = useState([]);
@@ -113,7 +113,8 @@ const Chatmain = () => {
         const data = await response.json();
 
         if (response.ok) {
-          setMessages(data.data);
+          // Sort by timestamp or createdAt descending (newest first)
+          setMessages(data.data.sort((a, b) => new Date(b.timestamp || b.createdAt) - new Date(a.timestamp || a.createdAt)));
         } else {
           toast.error(data.message || "Something went wrong");
         }

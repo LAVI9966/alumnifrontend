@@ -52,7 +52,7 @@ const Page = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setAllposts(data);
+        setAllposts(data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
         setIsloading(false);
       } else {
         toast.error(data?.message || "Failed to load posts.");

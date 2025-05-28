@@ -52,7 +52,8 @@ export function EventDataTable() {
       const data = await response.json();
 
       if (response.ok) {
-        setData(data);
+        // Sort by date descending (newest first)
+        setData(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
       } else {
         toast.error(data?.message || "failed.");
       }
@@ -172,6 +173,44 @@ export function EventDataTable() {
         );
       },
     },
+    {
+      id: "sendMail",
+      header: "Send Mail",
+      cell: ({ row }) => (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={async () => {
+            let loadingToast;
+            try {
+              const token = await gettoken();
+              loadingToast = toast.loading("Sending email...");
+              const response = await fetch(`${url}/api/events/${row.original._id}/send-email`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              const data = await response.json();
+              toast.dismiss(loadingToast);
+              if (response.ok) {
+                toast.success("Event email sent to all users!");
+              } else {
+                toast.error(data?.message || "Failed to send event email.");
+              }
+            } catch (e) {
+              toast.dismiss(loadingToast);
+              toast.error("Failed to send event email.");
+            }
+          }}
+        >
+          <Icon icon="mdi:email-send-outline" width="16" height="16" className="mr-1" />
+          Send Mail
+        </Button>
+      ),
+    },
+
   ];
   const table = useReactTable({
     data,

@@ -5,40 +5,88 @@ import toast from "react-hot-toast";
 import gettoken from "@/app/function/gettoken";
 import Link from "next/link";
 import { useTheme } from "@/context/ThemeProvider";
+import { useChatNotifications } from "@/context/ChatNotificationContext";
 
-const UserCard = ({ name, id, url, batch, jobTitle, image, userid }) => {
-  const { theme } = useTheme(); // Use the theme context
+const UserCard = ({ name, id, url, batch, jobTitle, image, userid, location, profession }) => {
+  const { theme } = useTheme();
   const isDark = theme === 'dark';
-  return <div className={`mb-4 p-4 relative ${isDark ? 'bg-[#2A3057]' : 'bg-white'} shadow-md rounded-lg`}>
-    <div className="flex items-start space-x-4">
-      <img
-        src={
-          image
-            ? `${url}/uploads/${image?.split("\\").pop()}`
-            : "/memberpage/member.png"
-        }
-        alt={name}
-        className="w-16 h-16 rounded-full"
-      />
-      <div className="flex-1">
-        <h2 className="font-semibold">{name}</h2>
-        <p className="text-sm text-[#797979]">{batch}</p>
-        <p className="text-sm text-[#797979]">{jobTitle}</p>
-      </div>
 
-      {userid === id ? (
-        ""
-      ) : (
-        <Link
-          href={`/alumni/chat/${id}`}
-          className="flex items-center gap-2 text-[#3271FF] font-medium hover:text-[#3570f9]"
-        >
-          <Icon icon="tabler:send" width="24" height="24" /> Message
-        </Link>
-      )}
+  return (
+    <div
+      className={`mb-4 p-5 rounded-lg transition-all duration-200 ${isDark ? 'bg-[#2A3057] text-white' : 'bg-white text-black'
+        } shadow hover:shadow-lg`}
+    >
+      <div className="flex items-start gap-4">
+        <img
+          src={
+            image
+              ? `${url}/uploads/${image?.split("\\").pop()}`
+              : "/memberpage/member.png"
+          }
+          alt={name}
+          className="w-16 h-16 rounded-full object-cover border border-gray-300"
+        />
+        <div className="flex-1 space-y-1">
+          <h2 className="font-semibold text-base"><span className="text-black">Name: </span> {name}</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-300"><span className="text-black">Profession:</span> {profession}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300"><span className="text-black">Location:</span> {location}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300">{batch}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300">{jobTitle}</p>
+        </div>
+
+        {userid !== id && (
+          <Link
+            href={`/alumni/chat/${id}`}
+            className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            <div className="flex items-center gap-1">
+              <Icon icon="tabler:send" width="18" height="18" />
+              Message
+            </div>
+          </Link>
+        )}
+      </div>
     </div>
-  </div>
-}
+  );
+};
+
+const GlobalChatCard = () => {
+  const { theme } = useTheme();
+  const { globalUnreadCount } = useChatNotifications();
+  const isDark = theme === 'dark';
+
+  return (
+    <div
+      className={`mb-4 p-5 rounded-lg transition-all duration-200 ${isDark ? 'bg-[#2A3057] text-white' : 'bg-white text-black'
+        } shadow hover:shadow-lg`}
+    >
+      <div className="flex items-start gap-4">
+        <div className="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center">
+          <Icon icon="mdi:account-group" width="32" height="32" className="text-white" />
+        </div>
+        <div className="flex-1 space-y-1">
+          <h2 className="font-semibold text-base">Global Chat</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-300">Connect with all alumni members</p>
+          <p className="text-sm text-gray-600 dark:text-gray-300">Share updates and announcements</p>
+        </div>
+        <Link
+          href="/alumni/chat/global"
+          className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+        >
+          <div className="flex items-center gap-1">
+            <Icon icon="tabler:send" width="18" height="18" />
+            Join Chat
+            {globalUnreadCount > 0 && (
+              <span className="ml-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {globalUnreadCount > 9 ? '9+' : globalUnreadCount}
+              </span>
+            )}
+          </div>
+        </Link>
+      </div>
+    </div>
+  );
+};
 
 const Allmembers = () => {
   const [activeTab, setActiveTab] = React.useState("faculties");
@@ -78,7 +126,9 @@ const Allmembers = () => {
       } else {
         // Filter based on search term
         const filtered = originalData.filter((member) =>
-          member.name.toLowerCase().includes(searchTerm.toLowerCase())
+          member?.name?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
+          member?.location?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
+          member?.profession?.toLowerCase()?.includes(searchTerm.toLowerCase())
         );
         setMemberData(filtered);
       }
@@ -123,7 +173,7 @@ const Allmembers = () => {
       setMemberData(filtered);
     }
   };
-
+  
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -162,6 +212,11 @@ const Allmembers = () => {
           {/* Results Count */}
           <p className="mb-4 mt-6 text-gray-700">{memberdata?.length} Results</p>
 
+          {/* Global Chat Card */}
+          <div className="mb-6">
+            <GlobalChatCard />
+          </div>
+
           {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {memberdata.map((val, index) => (
@@ -169,8 +224,10 @@ const Allmembers = () => {
                 key={index}
                 id={val._id}
                 name={val.name}
-                // batch={val.batch}
+                batch={val.batch}
+                location={val?.location}
                 jobTitle={val.role}
+                profession={val?.profession}
                 image={val.profilePicture}
                 userid={user?.id}
                 url={url}

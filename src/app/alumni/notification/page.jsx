@@ -8,79 +8,67 @@ import { useRouter } from "next/navigation";
 import { useNotifications } from "./NotificationContext";
 import { useTheme } from "@/context/ThemeProvider";
 const page = () => {
-  const [events, setEvents] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const url = process.env.NEXT_PUBLIC_URL;
   const router = useRouter();
   const { decrementNotificationCount } = useNotifications();
 
   useEffect(() => {
-    fetchUserEvents();
+    fetchNotifications();
   }, [url]);
 
-  const fetchUserEvents = async () => {
+  const fetchNotifications = async () => {
     try {
-      // Get auth token
       const token = await gettoken();
-
-      // Use the new user-events endpoint
-      const response = await fetch(`${url}/api/events/user-events`, {
+      const response = await fetch(`${url}/api/notifications`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-
       if (!response.ok) {
-        throw new Error('Failed to fetch events');
+        throw new Error('Failed to fetch notifications');
       }
-
       const data = await response.json();
-      console.log("API Response (User Events):", data);
-
-      // Sort events by date (newest first)
-      const sortedEvents = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-      setEvents(sortedEvents);
+      setNotifications(data);
     } catch (error) {
-      console.error("Error fetching events:", error);
-      toast.error("Failed to load events. Please try again later.");
+      console.error("Error fetching notifications:", error);
+      toast.error("Failed to load notifications. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDismissEvent = async (eventId) => {
+  const handleDismissNotification = async (notificationId) => {
     try {
       const token = await gettoken();
-
-      const response = await fetch(`${url}/api/events/user-events/${eventId}`, {
-        method: "DELETE",
+      const response = await fetch(`${url}/api/notifications/${notificationId}/read`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-
       if (!response.ok) {
-        throw new Error('Failed to dismiss event');
+        throw new Error('Failed to mark notification as read');
       }
-
-      // Remove the event from the local state
-      setEvents(prevEvents => prevEvents.filter(event => event._id !== eventId));
-      // Decrement the notification count in the header
+      setNotifications(prev => prev.filter(n => n._id !== notificationId));
       decrementNotificationCount();
-      toast.success("Event dismissed");
+      toast.success("Notification dismissed");
     } catch (error) {
-      console.error("Error dismissing event:", error);
-      toast.error("Failed to dismiss event. Please try again.");
+      console.error("Error dismissing notification:", error);
+      toast.error("Failed to dismiss notification. Please try again.");
     }
   };
 
-  const handleEventClick = (eventId) => {
-    // Redirect to event details page
-    router.push(`/alumni/events`);
+  const handleNotificationClick = (notification) => {
+    if (notification.type === 'event' && notification.event) {
+      router.push(`/alumni/events/${notification.event._id || notification.event}`);
+    } else if (notification.post) {
+      router.push(`/alumni/posts/${notification.post}`);
+    }
   };
   const { theme, toggleTheme } = useTheme(); // Use the theme context
   const isDark = theme === 'dark';
@@ -88,45 +76,43 @@ const page = () => {
   return (
     <div className={`mb-4 p-4 relative ${isDark ? 'bg-[#131A45]' : 'bg-[#F2F2F2]'} shadow-md rounded-lg`}>
       <div className="min-h-screen  pt-8 px-4 sm:p-8">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl bg-white p-6 rounded-lg shadow-xl mx-auto">
           <h2 className="text-3xl font-semibold mb-4">Notifications</h2>
           <div className="flex flex-col gap-3 ">
             {loading ? (
               <p>Loading events...</p>
-            ) : events.length === 0 ? (
+            ) : notifications.length === 0 ? (
               <p>No notifications at this time.</p>
             ) : (
-              events.map((event) => {
-                return (
-                  <div key={event._id}>
-                    <div className="flex justify-between py-2">
-                      <div
-                        className="cursor-pointer flex-grow"
-                        onClick={() => handleEventClick(event._id)}
-                      >
-                        <p className="  font-semibold max-w-md">
-                          {event.title}
-                        </p>
-                        <p className="text-[#717171] text-xs">
-                          {new Date(event.date).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                        </p>
-                      </div>
-                      <Icon
-                        icon="basil:cross-solid"
-                        width="24"
-                        height="24"
-                        className="cursor-pointer"
-                        onClick={() => handleDismissEvent(event._id)}
-                      />
+              notifications.map((notification) => (
+                <div key={notification._id}>
+                  <div className="flex justify-between py-2">
+                    <div
+                      className="cursor-pointer flex-grow"
+                      onClick={() => handleNotificationClick(notification)}
+                    >
+                      <p className="font-semibold max-w-md">
+                        {notification.type === 'event'
+                          ? notification.message || (notification.event?.title ? `Event: ${notification.event.title}` : 'Event notification')
+                          : `${notification.fromUser?.name || 'Someone'} ${notification.message}`}
+                      </p>
+                      <p className="text-[#717171] text-xs">
+                        {notification.type === 'event' && notification.event?.date
+                          ? `${notification.type} • ${new Date(notification.event.date).toLocaleString()}`
+                          : `${notification.type} • ${new Date(notification.createdAt).toLocaleString()}`}
+                      </p>
                     </div>
-                    <hr className="bg-gray-300 mt-1 h-[2px]" />
+                    <Icon
+                      icon="basil:cross-solid"
+                      width="24"
+                      height="24"
+                      className="cursor-pointer"
+                      onClick={() => handleDismissNotification(notification._id)}
+                    />
                   </div>
-                );
-              })
+                  <hr className="bg-gray-300 mt-1 h-[2px]" />
+                </div>
+              ))
             )}
           </div>
         </div>

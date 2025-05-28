@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import gettoken from "../function/gettoken";
 import ScrollToTop from "@/components/ScrollToTop";
+import { ChatNotificationProvider } from "@/context/ChatNotificationContext";
+import { NotificationProvider } from "./notification/NotificationContext";
 const Layout = ({ children }) => {
   const router = useRouter();
   const url = process.env.NEXT_PUBLIC_URL;
@@ -46,12 +48,16 @@ const Layout = ({ children }) => {
     verifyToken();
   }, [router]); // Include router in dependencies
   return (
-    <div className="min-h-screen   flex flex-col bg-gray-50">
-      <Header />
-      {children}
-      <ScrollToTop></ScrollToTop>
-      <Footer />
-    </div>
+    <ChatNotificationProvider>
+      <NotificationProvider>
+        <div className="min-h-screen   flex flex-col bg-gray-50">
+          <Header />
+          {children}
+          <ScrollToTop></ScrollToTop>
+          <Footer />
+        </div>
+      </NotificationProvider>
+    </ChatNotificationProvider>
   );
 };
 

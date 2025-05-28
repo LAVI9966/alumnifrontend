@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useNotifications } from "../app/alumni/notification/NotificationContext";
+import { useChatNotifications } from "../context/ChatNotificationContext";
 import { useTheme } from "../context/ThemeProvider"; // Import the theme context
 
 const Header = () => {
@@ -19,7 +20,8 @@ const Header = () => {
   const aboutDropdownRef = useRef(null);
   const isAboutPage = pathname === "/alumni/about";
 
-  const { notificationCount, fetchNotificationCount } = useNotifications();
+  const { notificationCount, setCount } = useNotifications();
+  const { totalUnreadCount } = useChatNotifications();
 
   useEffect(() => {
     // Check user role when component mounts
@@ -75,8 +77,26 @@ const Header = () => {
   }, [isAboutPage]);
 
   useEffect(() => {
-    fetchNotificationCount();
-  }, [fetchNotificationCount]);
+    // Fetch notification count from backend
+    const fetchCount = async () => {
+      try {
+        const url = process.env.NEXT_PUBLIC_URL;
+        const token = localStorage.getItem("alumni") ? JSON.parse(localStorage.getItem("alumni")).token : null;
+        if (!token) return;
+        const response = await fetch(`${url}/api/notifications`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const unread = data.filter(n => !n.isRead).length;
+          setCount(unread);
+        }
+      } catch (e) {
+        // ignore
+      }
+    };
+    fetchCount();
+  }, [setCount]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -260,14 +280,19 @@ const Header = () => {
           </div>
         </div> */}
 
-        {/* Chat Icon */}
+
+        {/* Chat Icon with Notification Badge */}
         <div className="relative group">
           <Link
             href="/alumni/chat"
-            className={`border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg ${isDark ? 'border-[#131A45] text-[#131A45]' : 'border-white text-white'
-              } transition-colors duration-200`}
+            className={`border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg ${isDark ? 'border-[#131A45] text-[#131A45]' : 'border-white text-white'} transition-colors duration-200`}
           >
             <Icon icon="iconoir:message" width="24" height="24" />
+            {totalUnreadCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
+              </span>
+            )}
           </Link>
           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
             Chat

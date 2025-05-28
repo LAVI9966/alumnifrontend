@@ -25,7 +25,8 @@ const Upcommingevent = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setallEvents(data);
+        // Sort by date descending (newest first)
+        setallEvents(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
       } else {
         toast.error(data?.message || "failed.");
       }

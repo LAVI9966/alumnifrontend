@@ -21,9 +21,18 @@ const EventCards = () => {
   const url = process.env.NEXT_PUBLIC_URL;
   const router = useRouter();
 
+  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     getEvent();
     getUserRegistrations();
+    // Check admin
+    const alumni = localStorage.getItem("alumni");
+    if (alumni) {
+      try {
+        const user = JSON.parse(alumni).user;
+        setIsAdmin(user && user.role === "admin");
+      } catch { }
+    }
   }, []);
 
   // Fetch all events
@@ -48,7 +57,8 @@ const EventCards = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setallEvents(data);
+        // Sort by date descending (newest first)
+        setallEvents(data.sort((a, b) => new Date(b.date) - new Date(a.date)));
       } else {
         toast.error(data?.message || "Failed to load events.");
       }
@@ -314,7 +324,7 @@ const EventCards = () => {
                     </p>
 
                     {/* Action Buttons */}
-                    <div className="flex justify-between items-center mt-3">
+                    <div className="flex justify-between items-center mt-3 gap-2">
                       {/* View Details Button */}
                       <button
                         onClick={() => handleViewDetails(event._id)}
@@ -352,11 +362,45 @@ const EventCards = () => {
                           ) : "Register"}
                         </button>
                       )}
+
+                      {/* Admin: Send Email Button */}
+                      {event.isAdmin && (
+                        <button
+                          onClick={async () => {
+                            let loadingToast;
+                            try {
+                              const token = await gettoken();
+                              loadingToast = toast.loading("Sending email...");
+                              const response = await fetch(`${url}/api/events/${event._id}/send-email`, {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                  Authorization: `Bearer ${token}`,
+                                },
+                              });
+                              const data = await response.json();
+                              toast.dismiss(loadingToast);
+                              if (response.ok) {
+                                toast.success("Event email sent to all users!");
+                              } else {
+                                toast.error(data?.message || "Failed to send event email.");
+                              }
+                            } catch (e) {
+                              toast.dismiss(loadingToast);
+                              toast.error("Failed to send event email.");
+                            }
+                          }}
+                          className="border border-blue-500 text-blue-500 text-sm rounded-lg px-3 py-1 hover:bg-blue-500 hover:text-white transition-colors"
+                        >
+                          <Icon icon="mdi:email-send-outline" width="16" height="16" className="mr-1" />
+                          Send Email
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
               );
-            })}
+            }).map(event => ({ ...event, isAdmin }))}
           </div>
         ) : (
           <div className={`text-center p-8 ${isDark ? 'bg-[#2A3057] text-white' : 'bg-white text-gray-800'} rounded-lg shadow-md`}>

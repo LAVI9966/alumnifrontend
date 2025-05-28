@@ -33,8 +33,8 @@ const EventCards = () => {
 
       if (response.ok) {
         setLoading(false);
-        // Filter out any null registrations before setting state
-        setallEvents(data?.registrations?.filter(reg => reg && reg.event) || []);
+        // Filter out any null registrations before setting state, then sort by registration date descending
+        setallEvents((data?.registrations?.filter(reg => reg && reg.event) || []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       } else {
         toast.error(data?.message || "failed.");
         setLoading(false);
