@@ -63,6 +63,7 @@ export default function SignupPage() {
 
       if (response.ok) {
         toast.success(data?.message || "OTP verified successfully!");
+        localStorage.removeItem("alumni");
         router.push("/verification");
       } else {
         toast.error(data?.message || "OTP verification failed.");
