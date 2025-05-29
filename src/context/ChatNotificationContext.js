@@ -2,6 +2,7 @@
 'use client';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import { useNotifications } from '../app/alumni/notification/NotificationContext';
 
 // Use environment variable for WebSocket URL
 const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL || "ws://localhost:8000");
@@ -50,7 +51,6 @@ export const ChatNotificationProvider = ({ children }) => {
     useEffect(() => {
         // Listen for new message notifications
         socket.on('newMessageNotification', (data) => {
-            // data: { fromUserId }
             console.log('New message notification received:', data);
             if (data && data.fromUserId) {
                 setUnreadObj(prev => ({
@@ -65,9 +65,37 @@ export const ChatNotificationProvider = ({ children }) => {
             setGlobalUnreadCount(prev => prev + 1);
         });
 
+        // Listen for post notifications
+        socket.on('newPostNotification', () => {
+            // Trigger a refresh of notifications
+            window.location.reload();
+        });
+
+        // Listen for comment notifications
+        socket.on('newCommentNotification', () => {
+            // Trigger a refresh of notifications
+            window.location.reload();
+        });
+
+        // Listen for share notifications
+        socket.on('newShareNotification', () => {
+            // Trigger a refresh of notifications
+            window.location.reload();
+        });
+
+        // Listen for event notifications
+        socket.on('newEventNotification', () => {
+            // Trigger a refresh of notifications
+            window.location.reload();
+        });
+
         return () => {
             socket.off('newMessageNotification');
             socket.off('newGlobalMessageNotification');
+            socket.off('newPostNotification');
+            socket.off('newCommentNotification');
+            socket.off('newShareNotification');
+            socket.off('newEventNotification');
         };
     }, []);
 
