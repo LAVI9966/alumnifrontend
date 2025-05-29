@@ -100,7 +100,7 @@ const page = () => {
     if (notification.type === 'event' && notification.event) {
       router.push(`/alumni/events/${notification.event._id || notification.event}`);
     } else if (notification.post) {
-      router.push(`/alumni/posts/${notification.post}`);
+      router.push(`/alumni/post/${notification.post._id}`);
     }
   };
 
