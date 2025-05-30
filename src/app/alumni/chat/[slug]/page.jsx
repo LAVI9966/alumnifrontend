@@ -7,6 +7,7 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
+import { useChatNotifications } from '@/context/ChatNotificationContext';
 
 const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL || "ws://localhost:8000");
 
@@ -20,8 +21,9 @@ const Chatmain = () => {
   const { slug } = useParams();
   const messagesEndRef = useRef(null);
   const [imgurl, setImgurl] = useState("");
-  const { theme, toggleTheme } = useTheme(); // Use the theme context
+  const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const { socket, isConnected } = useChatNotifications();
 
   useEffect(() => {
     getUser();
@@ -62,12 +64,14 @@ const Chatmain = () => {
   };
   // Get current user ID from local storage
   useEffect(() => {
+    if (!socket || !isConnected) return;
+
     const storedData = localStorage.getItem("alumni");
     if (storedData) {
       const { user } = JSON.parse(storedData);
       setReceiverId(slug);
 
-      // Generate a **unique room ID** based on user and receiver
+      // Generate a unique room ID based on user and receiver
       const generatedRoomId =
         user.id < slug ? `${user.id}_${slug}` : `${slug}_${user.id}`;
       setRoomId(generatedRoomId);
@@ -84,7 +88,7 @@ const Chatmain = () => {
         socket.off("receiveMessage");
       };
     }
-  }, [slug]);
+  }, [slug, socket, isConnected]);
 
   // Scroll to the latest message when messages update
   useEffect(() => {
@@ -133,7 +137,7 @@ const Chatmain = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || !socket || !isConnected) return;
 
     const storedData = localStorage.getItem("alumni");
     if (!storedData) return;

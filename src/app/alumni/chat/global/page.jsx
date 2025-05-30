@@ -7,6 +7,7 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import toast from "react-hot-toast";
 import { useTheme } from "@/context/ThemeProvider";
 import { Icon } from "@iconify/react";
+import { useChatNotifications } from '@/context/ChatNotificationContext';
 
 // Use environment variable for WebSocket URL
 const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL || "ws://localhost:8000");
@@ -19,6 +20,7 @@ const GlobalChat = () => {
     const messagesEndRef = useRef(null);
     const { theme } = useTheme();
     const isDark = theme === 'dark';
+    const { socket, isConnected } = useChatNotifications();
 
     useEffect(() => {
         getUser();
@@ -50,10 +52,10 @@ const GlobalChat = () => {
 
     // Get current user ID from local storage and join global room
     useEffect(() => {
+        if (!socket || !isConnected) return;
+
         const storedData = localStorage.getItem("alumni");
         if (storedData) {
-            const { user } = JSON.parse(storedData);
-
             // Join global room
             socket.emit("joinGlobalRoom");
 
@@ -66,7 +68,7 @@ const GlobalChat = () => {
                 socket.off("receiveGlobalMessage");
             };
         }
-    }, []);
+    }, [socket, isConnected]);
 
     // Scroll to the latest message when messages update
     useEffect(() => {
@@ -109,7 +111,7 @@ const GlobalChat = () => {
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        if (!input.trim()) return;
+        if (!input.trim() || !socket || !isConnected) return;
 
         const storedData = localStorage.getItem("alumni");
         if (!storedData) return;

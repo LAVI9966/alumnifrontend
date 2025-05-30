@@ -386,8 +386,13 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link href="/alumni/chat" className="hover:text-gray-300 transition-colors duration-200">
+            <Link href="/alumni/chat" className="hover:text-gray-300 transition-colors duration-200 relative">
               Chat
+              {totalUnreadCount > 0 && (
+                <span className="ml-2 bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
+                  {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
+                </span>
+              )}
             </Link>
           </li>
           <li>

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useTheme } from "../../../../context/ThemeProvider";
 import Link from "next/link";
-// Import the souvenirItems array
+import souvenirItems from "../souvenirItems"; // Import the souvenirItems array
 import { useCart } from "@/context/CartContext";
 
 // Fix for params in Next.js 14
