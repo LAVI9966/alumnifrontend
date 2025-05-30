@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import gettoken from '@/app/function/gettoken';
+import { toast } from 'react-hot-toast';
 
 const CheckoutPage = () => {
     const { cart, total, clearCart } = useCart();
@@ -85,64 +86,46 @@ const CheckoutPage = () => {
         return null;
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
-
+    const handlePayment = async () => {
         try {
-            // Validate form
-            const formError = validateForm();
-            if (formError) {
-                throw new Error(formError);
-            }
-
-            // Validate cart
-            const cartError = validateCart();
-            if (cartError) {
-                console.error('Cart validation error:', cartError);
-                throw new Error(cartError);
-            }
-
+            setLoading(true);
             const token = await gettoken();
             if (!token) {
-                throw new Error('Please login to continue');
+                toast.error('Please login to continue');
+                return;
             }
 
-            // Log cart data for debugging
-            console.log('Cart data:', cart);
-            const orderData = {
-                items: cart.map(item => ({
-                    product: item._id,
-                    quantity: item.quantity,
-                    price: item.price
-                })),
-                shippingAddress: {
-                    name: formData.name,
-                    phone: formData.phone,
-                    address: formData.address,
-                    city: formData.city,
-                    state: formData.state,
-                    pincode: formData.pincode
-                }
-            };
-            console.log('Order data being sent:', orderData);
-
-            // Create order on backend
-            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/orders`, {
+            // Create order
+            const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/orders`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(orderData),
+                body: JSON.stringify({
+                    items: cart.map(item => ({
+                        product: item._id,
+                        quantity: item.quantity,
+                        price: item.price
+                    })),
+                    shippingAddress: {
+                        name: formData.name,
+                        address: formData.address,
+                        city: formData.city,
+                        state: formData.state,
+                        pincode: formData.pincode,
+                        phone: formData.phone
+                    },
+                    status: 'pending'
+                })
             });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Failed to create order');
+            if (!orderResponse.ok) {
+                const errorData = await orderResponse.json();
+                throw new Error(errorData.message || 'Failed to create order');
             }
+
+            const orderData = await orderResponse.json();
 
             // Wait for Razorpay script to load
             if (!window.Razorpay) {
@@ -152,11 +135,11 @@ const CheckoutPage = () => {
             // Initialize Razorpay
             const options = {
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-                amount: data.amount,
-                currency: data.currency,
+                amount: orderData.amount,
+                currency: orderData.currency,
                 name: "Alumni Association",
                 description: "Payment for your order",
-                order_id: data.orderId,
+                order_id: orderData.orderId,
                 handler: async function (response) {
                     try {
                         // Verify payment
@@ -209,6 +192,32 @@ const CheckoutPage = () => {
             setError(error.message || 'Something went wrong. Please try again.');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+
+        try {
+            // Validate form
+            const formError = validateForm();
+            if (formError) {
+                throw new Error(formError);
+            }
+
+            // Validate cart
+            const cartError = validateCart();
+            if (cartError) {
+                console.error('Cart validation error:', cartError);
+                throw new Error(cartError);
+            }
+
+            await handlePayment();
+        } catch (error) {
+            console.error('Payment error:', error);
+            setError(error.message || 'Something went wrong. Please try again.');
         }
     };
 

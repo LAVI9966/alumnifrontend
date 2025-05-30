@@ -73,10 +73,13 @@ const AdminOrdersPage = () => {
                 throw new Error(errorData.message || 'Failed to update order status');
             }
 
-            // Update local state
+            const data = await response.json();
+
+            // Update local state with the complete order data
             setOrders(orders.map(order =>
-                order._id === orderId ? { ...order, status: newStatus } : order
+                order._id === orderId ? { ...order, ...data.order } : order
             ));
+
             toast.success('Order status updated successfully');
         } catch (error) {
             console.error('Error updating order status:', error);
