@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import gettoken from "../function/gettoken";
 import Header from "@/components/header";
+import Footer from "@/components/footer";
 const Layout = ({ children }) => {
   const router = useRouter();
   const url = process.env.NEXT_PUBLIC_URL;
@@ -47,6 +48,7 @@ const Layout = ({ children }) => {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header></Header>
       {children}
+      <Footer></Footer>
     </div>
   );
 };
