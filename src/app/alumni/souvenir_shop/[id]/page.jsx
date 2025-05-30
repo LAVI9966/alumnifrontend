@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import { useTheme } from "../../../../context/ThemeProvider";
 import Link from "next/link";
 import souvenirItems from "../souvenirItems"; // Import the souvenirItems array
+import { useCart } from "@/context/CartContext";
 
 // Fix for params in Next.js 14
 const Page = () => {
@@ -16,6 +17,7 @@ const Page = () => {
     const [loading, setLoading] = useState(true);
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState('description');
+    const { addToCart } = useCart();
 
     // Get the product ID from the URL using window.location in useEffect
     useEffect(() => {
@@ -42,11 +44,12 @@ const Page = () => {
         }
     };
 
-    // Add to cart function (placeholder)
+    // Add to cart function
     const handleAddToCart = () => {
         if (product) {
+            addToCart(product, quantity);
+            // Show success message
             alert(`Added ${quantity} ${product.name}(s) to cart`);
-            // Here you would actually update your cart state or send to API
         }
     };
 

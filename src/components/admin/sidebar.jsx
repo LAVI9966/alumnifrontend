@@ -12,6 +12,7 @@ const AllMenu = [
   { text: "Manage Users", link: "/admin/manageusers" },
   { text: "Manage Events", link: "/admin/manageevent" },
   { text: "Manage Contacts", link: "/admin/contactus" },
+  { text: "Orders", link: "/admin/orders" },
 ];
 const AdminSidebar = () => {
   const [userData, setUserData] = useState(null);

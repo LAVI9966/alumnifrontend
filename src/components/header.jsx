@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useNotifications } from "../app/alumni/notification/NotificationContext";
 import { useChatNotifications } from "../context/ChatNotificationContext";
 import { useTheme } from "../context/ThemeProvider"; // Import the theme context
+import { useCart } from "../context/CartContext";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -22,6 +23,7 @@ const Header = () => {
 
   const { notificationCount, setCount } = useNotifications();
   const { totalUnreadCount } = useChatNotifications();
+  const { getCartCount } = useCart();
 
   useEffect(() => {
     // Check user role when component mounts
@@ -250,6 +252,9 @@ const Header = () => {
         <Link href="/alumni/souvenir_shop" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
           Souvenir shop
         </Link>
+        <Link href="/alumni/orders" className={`${isDark ? 'text-[#131A45] hover:text-gray-300' : 'text-white hover:text-gray-300'} transition-colors duration-200`}>
+          My Orders
+        </Link>
 
         {/* Show Admin link only if user is admin */}
         {isAdmin && (
@@ -329,6 +334,24 @@ const Header = () => {
           </Link>
           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
             Profile
+          </div>
+        </div>
+
+        {/* Cart Icon */}
+        <div className="relative group">
+          <Link
+            href="/alumni/cart"
+            className={`border-2 rounded-full p-2 flex justify-center items-center cursor-pointer hover:shadow-lg ${isDark ? 'border-[#131A45] text-[#131A45]' : 'border-white text-white'} transition-colors duration-200`}
+          >
+            <Icon icon="mdi:cart" width="24" height="24" />
+            {getCartCount() > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {getCartCount() > 9 ? '9+' : getCartCount()}
+              </span>
+            )}
+          </Link>
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+            Cart
           </div>
         </div>
       </div>
@@ -488,6 +511,17 @@ const Header = () => {
                 height="20"
               />
             </div>
+          </li>
+
+          <li>
+            <Link href="/alumni/cart" className="hover:text-gray-300 transition-colors duration-200 relative">
+              {getCartCount() > 0 && (
+                <span className="mr-2 bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
+                  {getCartCount() > 9 ? "9+" : getCartCount()}
+                </span>
+              )}
+              Cart
+            </Link>
           </li>
         </ul>
       </nav>

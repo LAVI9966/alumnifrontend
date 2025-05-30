@@ -8,6 +8,7 @@ import React, { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import gettoken from "@/app/function/gettoken";
 import { useTheme } from "@/context/ThemeProvider";
+import Image from "next/image";
 
 const ProfilePage = () => {
   const [initialValues, setinitialValues] = useState({
@@ -373,26 +374,23 @@ const ProfilePage = () => {
             {/* Profile Image Upload */}
             <div className="relative m-auto w-40 h-40">
               <label className={`w-full h-full rounded-full border-2 ${isDark ? 'border-[#C7A006]' : 'border-[#C7A006]'} flex items-center justify-center cursor-pointer overflow-hidden`}>
-                {image ? (
-                  <img
-                    src={image}
-                    alt="Profile"
-                    className="w-full h-full object-cover rounded-full"
-                    onError={(e) => {
-                      console.error("Image failed to load:", e.target.src);
-                      // Fallback to default image on error
-                      e.target.src = "/default-profile.png";
-                    }}
-                  />
-                ) : (
-                  <Icon icon="mynaui:user-solid" width="80%" height="80%" />
-                )}
+                <Image
+                  src={image || '/images/default-profile.png'}
+                  alt="Profile"
+                  width={150}
+                  height={150}
+                  className="w-full h-full object-cover rounded-full"
+                  onError={(e) => {
+                    console.error("Image failed to load:", e.target.src);
+                    e.target.src = '/images/default-profile.png';
+                  }}
+                />
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/jpeg,image/png,image/jpg"
-                  className="hidden"
+                  accept="image/*"
                   onChange={handleImageUpload}
+                  className="hidden"
                 />
               </label>
               <div

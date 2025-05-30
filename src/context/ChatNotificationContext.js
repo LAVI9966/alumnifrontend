@@ -10,128 +10,44 @@ const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET_URL || "ws://localhost:8000
 const ChatNotificationContext = createContext();
 
 export const ChatNotificationProvider = ({ children }) => {
-    // Load initial state from localStorage
-    const [unreadObj, setUnreadObj] = useState(() => {
-        if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('chatUnreadCounts');
-            return saved ? JSON.parse(saved) : {};
-        }
-        return {};
-    });
-    const [globalUnreadCount, setGlobalUnreadCount] = useState(() => {
-        if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('globalUnreadCount');
-            return saved ? parseInt(saved) : 0;
-        }
-        return 0;
-    });
-
-    // Total unread member count (number of unique members who sent messages)
-    const unreadMemberCount = Object.keys(unreadObj).length;
-
-    // Save unread counts to localStorage whenever they change
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('chatUnreadCounts', JSON.stringify(unreadObj));
-            localStorage.setItem('globalUnreadCount', globalUnreadCount.toString());
-        }
-    }, [unreadObj, globalUnreadCount]);
+    const [totalUnreadCount, setTotalUnreadCount] = useState(0);
 
     useEffect(() => {
-        // Join personal notification room after login
-        const storedData = localStorage.getItem("alumni");
-        if (storedData) {
-            const { user } = JSON.parse(storedData);
-            if (user?.id) {
-                socket.emit('joinUserRoom', user.id);
+        // Fetch unread chat messages count from backend
+        const fetchUnreadCount = async () => {
+            try {
+                const url = process.env.NEXT_PUBLIC_URL;
+                const token = localStorage.getItem("alumni") ? JSON.parse(localStorage.getItem("alumni")).token : null;
+                if (!token) return;
+                const response = await fetch(`${url}/api/chat/unread`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setTotalUnreadCount(data.count || 0);
+                }
+            } catch (e) {
+                console.error('Error fetching unread chat count:', e);
             }
-        }
-    }, []);
-
-    useEffect(() => {
-        // Listen for new message notifications
-        socket.on('newMessageNotification', (data) => {
-            console.log('New message notification received:', data);
-            if (data && data.fromUserId) {
-                setUnreadObj(prev => ({
-                    ...prev,
-                    [data.fromUserId]: (prev[data.fromUserId] || 0) + 1
-                }));
-            }
-        });
-
-        // Listen for global chat notifications
-        socket.on('newGlobalMessageNotification', () => {
-            setGlobalUnreadCount(prev => prev + 1);
-        });
-
-        // Listen for post notifications
-        socket.on('newPostNotification', () => {
-            // Trigger a refresh of notifications
-            window.location.reload();
-        });
-
-        // Listen for comment notifications
-        socket.on('newCommentNotification', () => {
-            // Trigger a refresh of notifications
-            window.location.reload();
-        });
-
-        // Listen for share notifications
-        socket.on('newShareNotification', () => {
-            // Trigger a refresh of notifications
-            window.location.reload();
-        });
-
-        // Listen for event notifications
-        socket.on('newEventNotification', () => {
-            // Trigger a refresh of notifications
-            window.location.reload();
-        });
-
-        return () => {
-            socket.off('newMessageNotification');
-            socket.off('newGlobalMessageNotification');
-            socket.off('newPostNotification');
-            socket.off('newCommentNotification');
-            socket.off('newShareNotification');
-            socket.off('newEventNotification');
         };
+        fetchUnreadCount();
     }, []);
 
-    // Mark messages as read for a user
-    const markAsRead = (userId) => {
-        setUnreadObj(prev => {
-            const updated = { ...prev };
-            delete updated[userId];
-            return updated;
-        });
-    };
-
-    // Mark global chat as read
-    const markGlobalAsRead = () => {
-        setGlobalUnreadCount(0);
-    };
-
-    // Get total unread count across all chats
-    const getTotalUnreadCount = () => {
-        const personalUnreadCount = Object.values(unreadObj).reduce((sum, count) => sum + count, 0);
-        return personalUnreadCount + globalUnreadCount;
+    const updateUnreadCount = (count) => {
+        setTotalUnreadCount(count);
     };
 
     return (
-        <ChatNotificationContext.Provider value={{
-            unreadObj,
-            unreadCount: unreadMemberCount,
-            globalUnreadCount,
-            totalUnreadCount: getTotalUnreadCount(),
-            setUnreadObj,
-            markAsRead,
-            markGlobalAsRead
-        }}>
+        <ChatNotificationContext.Provider value={{ totalUnreadCount, updateUnreadCount }}>
             {children}
         </ChatNotificationContext.Provider>
     );
 };
 
-export const useChatNotifications = () => useContext(ChatNotificationContext);
+export const useChatNotifications = () => {
+    const context = useContext(ChatNotificationContext);
+    if (!context) {
+        throw new Error('useChatNotifications must be used within a ChatNotificationProvider');
+    }
+    return context;
+};

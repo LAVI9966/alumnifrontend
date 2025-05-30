@@ -11,24 +11,6 @@ const Layout = ({ children }) => {
 
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const storedData = localStorage.getItem("alumni");
-  //   if (!storedData) {
-  //     router.push("/login");
-  //     return;
-  //   }
-  //   const { token, user } = JSON.parse(storedData);
-
-  //   if (!token) {
-  //     router.push("/login");
-  //     return;
-  //   }
-  //   if (user.role !== "admin") {
-  //     router.push("/alumni/homepage");
-  //   }
-  // }, [router]);
-
-  const url = process.env.NEXT_PUBLIC_URL;
   useEffect(() => {
     async function verifyToken() {
       const token = await gettoken();
@@ -40,7 +22,7 @@ const Layout = ({ children }) => {
         return;
       }
       try {
-        const response = await fetch(`${url}/api/auth/check-token`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/check-token`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,7 +40,6 @@ const Layout = ({ children }) => {
             router.push("/login");
           }
           setLoading(false);
-
         }
       } catch (error) {
         console.error("Error checking token:", error);
@@ -69,18 +50,18 @@ const Layout = ({ children }) => {
 
     verifyToken();
   }, [router]);
+
   if (loading) {
-    return <div>Loading...</div>; // Show loading indicator while checking token
+    return <div>Loading...</div>;
   }
   if (error) {
-    return <div>{error}</div>; // Display error message
+    return <div>{error}</div>;
   }
 
-  // Theme logic for admin layout
-  // Use ThemeProvider context
   const { useTheme } = require("@/context/ThemeProvider");
   const { theme } = useTheme();
   const isDark = theme === "dark";
+
   return (
     <div className={`flex h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-white text-[#131A45]'}`}>
       <AdminSidebar />
