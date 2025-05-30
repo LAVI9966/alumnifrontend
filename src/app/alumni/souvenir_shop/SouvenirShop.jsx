@@ -99,7 +99,7 @@ const SouvenirShop = () => {
 
   return (
     <div className={`min-h-screen ${isDark ? 'bg-[#131A45] text-white' : 'bg-[#F2F2F2] text-[#131A45]'} transition-colors duration-200`}>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container max-w-6xl mx-auto px-4 py-8">
         {/* Search and Sort Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
           <div className="relative w-full md:w-96">
@@ -171,7 +171,7 @@ const SouvenirShop = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
           {sortedItems.map((item) => (
             <div
               key={item._id}

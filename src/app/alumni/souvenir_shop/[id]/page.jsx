@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { useTheme } from "../../../../context/ThemeProvider";
 import Link from "next/link";
-import souvenirItems from "../souvenirItems"; // Import the souvenirItems array
+// Import the souvenirItems array
 import { useCart } from "@/context/CartContext";
 
 // Fix for params in Next.js 14
@@ -138,7 +138,7 @@ const Page = () => {
             </div> */}
 
             {/* Main product section */}
-            <div className="container mx-auto px-4 py-8 max-w-6xl">
+            <div className="container  px-4 py-8 max-w-6xl mx-auto">
                 <div className={`flex flex-col lg:flex-row ${isDark ? 'bg-[#2A3057]' : 'bg-white'} rounded-xl shadow-lg overflow-hidden`}>
                     {/* Product image section */}
                     <div className="w-full lg:w-2/5 p-6">
