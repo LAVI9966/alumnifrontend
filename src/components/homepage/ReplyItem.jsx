@@ -46,9 +46,11 @@ const ReplyItem = ({ reply, postId, commentId, onReplyAdded, onReplyDelete, path
         }
     };
 
-    const handleSubmitReply = async (e) => {
-        e.preventDefault();
-        if (!replyText.trim()) return;
+    const handleAddReply = async () => {
+        if (!replyText.trim()) {
+            toast.error("Please enter a reply");
+            return;
+        }
 
         try {
             const token = gettoken();
@@ -56,6 +58,8 @@ const ReplyItem = ({ reply, postId, commentId, onReplyAdded, onReplyDelete, path
                 toast.error("Please login to reply");
                 return;
             }
+
+            const toastId = toast.loading("Adding reply...");
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/${postId}/replies`, {
                 method: "POST",
@@ -79,7 +83,7 @@ const ReplyItem = ({ reply, postId, commentId, onReplyAdded, onReplyDelete, path
             setLocalReplies([...localReplies, newReply]);
             setReplyText("");
             setShowReplyForm(false);
-            toast.success("Reply added successfully");
+            toast.success("Reply added successfully", { id: toastId });
             if (onReplyAdded) onReplyAdded(newReply);
         } catch (error) {
             console.error("Error adding reply:", error);
@@ -97,26 +101,25 @@ const ReplyItem = ({ reply, postId, commentId, onReplyAdded, onReplyDelete, path
                 return;
             }
 
-            const deleteToast = toast.loading("Deleting reply...");
+            const toastId = toast.loading("Deleting reply...");
             setIsDeleting(true);
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/posts/${postId}/replies/${reply._id}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    path: [...path],
-                    userId: reply.user._id,
-                }),
-            });
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_URL}/api/posts/${postId}/reply/${reply._id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
             if (!response.ok) {
                 throw new Error("Failed to delete reply");
             }
 
-            toast.success("Reply deleted successfully", { id: deleteToast });
+            toast.success("Reply deleted successfully", { id: toastId });
             if (onReplyDelete) onReplyDelete(reply._id);
         } catch (error) {
             console.error("Error deleting reply:", error);
@@ -183,7 +186,7 @@ const ReplyItem = ({ reply, postId, commentId, onReplyAdded, onReplyDelete, path
                         )}
                     </div>
                     {showReplyForm && (
-                        <form onSubmit={handleSubmitReply} className="mt-2">
+                        <form onSubmit={handleAddReply} className="mt-2">
                             <textarea
                                 value={replyText}
                                 onChange={(e) => setReplyText(e.target.value)}

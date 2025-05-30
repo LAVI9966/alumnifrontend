@@ -81,7 +81,6 @@ const OrdersPage = () => {
 
             console.log('Validated orders:', validatedOrders);
             setOrders(validatedOrders);
-            toast.success('Orders loaded successfully');
         } catch (error) {
             console.error('Error fetching orders:', error);
             setError(error.message);

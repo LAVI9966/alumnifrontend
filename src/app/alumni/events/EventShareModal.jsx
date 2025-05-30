@@ -15,25 +15,27 @@ const EventShareModal = ({ eventData, isOpen, onClose }) => {
     const handleShare = async (platform) => {
         try {
             setIsSharing(true);
+            const toastId = toast.loading("Sharing event...");
 
             // Share to the selected platform
             if (platform) {
                 const shared = EventShareService.shareToSocialMedia(eventData, platform);
 
                 if (shared) {
-                    toast.success(`Sharing to ${platform}...`);
+                    toast.success(`Shared to ${platform}`, { id: toastId });
                     onClose();
                 } else {
-                    toast.error(`Unable to share to ${platform}`);
+                    toast.error(`Unable to share to ${platform}`, { id: toastId });
                 }
             } else {
                 // Try native sharing first
                 const shared = await EventShareService.nativeShare(eventData);
 
                 if (shared) {
+                    toast.success("Event shared successfully", { id: toastId });
                     onClose();
                 } else {
-                    toast.error("Please select a specific sharing method");
+                    toast.error("Please select a specific sharing method", { id: toastId });
                 }
             }
         } catch (error) {
@@ -44,13 +46,14 @@ const EventShareModal = ({ eventData, isOpen, onClose }) => {
     };
 
     const copyLink = async () => {
+        const toastId = toast.loading("Copying link...");
         const copied = await EventShareService.copyEventLink(eventData._id);
 
         if (copied) {
-            toast.success("Event link copied to clipboard!");
+            toast.success("Event link copied to clipboard!", { id: toastId });
             onClose();
         } else {
-            toast.error("Failed to copy link");
+            toast.error("Failed to copy link", { id: toastId });
         }
     };
 

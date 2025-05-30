@@ -15,6 +15,7 @@ const PostShareModal = ({ postData, isOpen, onClose, onShare }) => {
     const handleShare = async (platform) => {
         try {
             setIsSharing(true);
+            const toastId = toast.loading("Sharing post...");
 
             // Call the API to log the share
             const result = await ShareService.sharePost(postData._id);
@@ -30,18 +31,18 @@ const PostShareModal = ({ postData, isOpen, onClose, onShare }) => {
                     const shared = ShareService.shareToSocialMedia(postData, platform);
 
                     if (shared) {
-                        toast.success(`Sharing to ${platform}...`);
+                        toast.success(`Shared to ${platform}`, { id: toastId });
                     } else {
-                        toast.error(`Unable to share to ${platform}`);
+                        toast.error(`Unable to share to ${platform}`, { id: toastId });
                     }
                 } else {
-                    toast.success(result.message);
+                    toast.success(result.message, { id: toastId });
                 }
 
                 // Close the modal
                 onClose();
             } else {
-                toast.error(result.message);
+                toast.error(result.message, { id: toastId });
             }
         } catch (error) {
             toast.error("An error occurred while sharing the post.");
@@ -51,21 +52,16 @@ const PostShareModal = ({ postData, isOpen, onClose, onShare }) => {
     };
 
     const copyLink = async () => {
+        const toastId = toast.loading("Copying link...");
         // Log the share to the server first
         const result = await ShareService.sharePost(postData._id);
 
         if (result.success && onShare) {
             onShare(result.shares);
-        }
-
-        // Then copy the link
-        const copied = await ShareService.copyPostLink(postData._id);
-
-        if (copied) {
-            toast.success("Link copied to clipboard!");
+            toast.success("Link copied to clipboard!", { id: toastId });
             onClose();
         } else {
-            toast.error("Failed to copy link");
+            toast.error("Failed to copy link", { id: toastId });
         }
     };
 
