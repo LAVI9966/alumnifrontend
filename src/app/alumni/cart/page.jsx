@@ -5,11 +5,35 @@ import { useTheme } from '@/context/ThemeProvider';
 import { Icon } from '@iconify/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { toast } from 'react-hot-toast';
 
 const CartPage = () => {
     const { cart, total, removeFromCart, updateQuantity } = useCart();
     const { theme } = useTheme();
     const isDark = theme === 'dark';
+
+    const handleRemoveFromCart = (item) => {
+        removeFromCart(item._id);
+        toast.success(`${item.name} removed from cart`, {
+            style: {
+                background: isDark ? '#2A3057' : '#fff',
+                color: isDark ? '#fff' : '#131A45',
+                border: `1px solid ${isDark ? '#3D437E' : '#e5e7eb'}`
+            }
+        });
+    };
+
+    const handleUpdateQuantity = (item, newQuantity) => {
+        if (newQuantity < 1) return;
+        updateQuantity(item._id, newQuantity);
+        toast.success(`Updated ${item.name} quantity to ${newQuantity}`, {
+            style: {
+                background: isDark ? '#2A3057' : '#fff',
+                color: isDark ? '#fff' : '#131A45',
+                border: `1px solid ${isDark ? '#3D437E' : '#e5e7eb'}`
+            }
+        });
+    };
 
     if (cart.length === 0) {
         return (
@@ -68,14 +92,14 @@ const CartPage = () => {
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-2">
                                                     <button
-                                                        onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                                                        onClick={() => handleUpdateQuantity(item, item.quantity - 1)}
                                                         className={`p-1 rounded ${isDark ? 'hover:bg-[#1F2447]' : 'hover:bg-gray-100'}`}
                                                     >
                                                         <Icon icon="mdi:minus" width="20" height="20" />
                                                     </button>
                                                     <span className="w-8 text-center">{item.quantity}</span>
                                                     <button
-                                                        onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                                                        onClick={() => handleUpdateQuantity(item, item.quantity + 1)}
                                                         className={`p-1 rounded ${isDark ? 'hover:bg-[#1F2447]' : 'hover:bg-gray-100'}`}
                                                     >
                                                         <Icon icon="mdi:plus" width="20" height="20" />
@@ -84,7 +108,7 @@ const CartPage = () => {
                                                 <div className="flex items-center gap-4">
                                                     <span className="font-semibold">₹{item.price * item.quantity}</span>
                                                     <button
-                                                        onClick={() => removeFromCart(item._id)}
+                                                        onClick={() => handleRemoveFromCart(item)}
                                                         className={`p-1 rounded ${isDark ? 'hover:bg-[#1F2447]' : 'hover:bg-gray-100'}`}
                                                     >
                                                         <Icon icon="mdi:delete" width="20" height="20" />

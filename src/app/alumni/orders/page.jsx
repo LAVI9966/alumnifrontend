@@ -270,7 +270,12 @@ const OrdersPage = () => {
                                                     />
                                                 </div>
                                                 <div className="flex-grow">
-                                                    <h3 className="font-medium">{item.product?.name || 'Product not found'}</h3>
+                                                    <Link
+                                                        href={`/alumni/souvenir_shop/${item.product?._id}`}
+                                                        className="font-medium hover:underline inline-block"
+                                                    >
+                                                        {item.product?.name || 'Product not found'}
+                                                    </Link>
                                                     <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                                                         Qty: {item.quantity}
                                                     </p>

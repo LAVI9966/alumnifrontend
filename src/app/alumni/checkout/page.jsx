@@ -164,7 +164,10 @@ const CheckoutPage = () => {
 
                         // Clear cart and redirect to success page
                         clearCart();
-                        router.push('/alumni/payment-success');
+                        // Use a more reliable redirection method
+                        setTimeout(() => {
+                            window.location.href = '/alumni/payment-success';
+                        }, 100);
                     } catch (error) {
                         console.error('Payment verification error:', error);
                         setError('Payment verification failed. Please contact support.');

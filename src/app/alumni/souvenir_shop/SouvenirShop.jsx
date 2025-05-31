@@ -4,10 +4,13 @@ import { useCart } from '@/context/CartContext';
 import { useTheme } from '@/context/ThemeProvider';
 import Image from 'next/image';
 import { Icon } from '@iconify/react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 const SouvenirShop = () => {
   const { addToCart } = useCart();
   const { theme } = useTheme();
+  const router = useRouter();
   const isDark = theme === 'dark';
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('default');
@@ -50,6 +53,13 @@ const SouvenirShop = () => {
       stock: item.stock,
       category: item.category,
       quantity: 1
+    });
+    toast.success(`${item.name} added to cart`, {
+      style: {
+        background: isDark ? '#2A3057' : '#fff',
+        color: isDark ? '#fff' : '#131A45',
+        border: `1px solid ${isDark ? '#3D437E' : '#e5e7eb'}`
+      }
     });
   };
 
@@ -175,7 +185,8 @@ const SouvenirShop = () => {
           {sortedItems.map((item) => (
             <div
               key={item._id}
-              className={`rounded-xl overflow-hidden shadow-lg ${isDark ? 'bg-[#2A3057]' : 'bg-white'}`}
+              className={`rounded-xl overflow-hidden shadow-lg ${isDark ? 'bg-[#2A3057]' : 'bg-white'} cursor-pointer`}
+              onClick={() => router.push(`/alumni/souvenir_shop/${item._id}`)}
             >
               <div className="relative h-48">
                 <Image
@@ -193,12 +204,26 @@ const SouvenirShop = () => {
                 </p>
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold">₹{item.price}</span>
-                  <button
-                    onClick={() => handleAddToCart(item)}
-                    className={`px-4 py-2 rounded-lg ${isDark ? 'bg-white text-[#131A45] hover:bg-gray-200' : 'bg-[#131A45] text-white hover:bg-[#2A3057]'} transition-colors duration-200`}
-                  >
-                    Add to Cart
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(item);
+                      }}
+                      className={`px-4 py-2 rounded-lg ${isDark ? 'bg-white text-[#131A45] hover:bg-gray-200' : 'bg-[#131A45] text-white hover:bg-[#2A3057]'} transition-colors duration-200`}
+                    >
+                      Add to Cart
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        router.push(`/alumni/souvenir_shop/${item._id}`);
+                      }}
+                      className={`px-4 py-2 rounded-lg ${isDark ? 'bg-[#3D437E] text-white hover:bg-[#4A52A0]' : 'bg-gray-200 text-[#131A45] hover:bg-gray-300'} transition-colors duration-200`}
+                    >
+                      View Details
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

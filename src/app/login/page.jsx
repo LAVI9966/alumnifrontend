@@ -103,11 +103,7 @@ export default function SignupPage() {
                     "alumni",
                     JSON.stringify({ token: data.token, user: data.user })
                   );
-
-                  // Delay redirect to allow toast to be seen
-                  setTimeout(() => {
-                    router.push("/verification");
-                  }, 1000);
+                  router.push("/verification");
                 } else {
                   // Handle different error cases with custom messages
                   if (data.message === 'Invalid Credentials' && response.status === 400) {
