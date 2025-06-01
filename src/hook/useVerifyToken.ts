@@ -7,25 +7,33 @@ import { useEffect, useState } from "react";
 
 const useVerifyToken = () => {
   const router = useRouter();
-  const pathname = usePathname(); // Get current route
+  const pathname = usePathname();
   const url = process.env.NEXT_PUBLIC_URL;
-  const [isChecking, setIsChecking] = useState(true); // Prevent unnecessary re-renders
+  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
     const verifyToken = async () => {
-      const storedData = localStorage.getItem("alumni");
-      if (!storedData) {
-        setIsChecking(false); // Stop checking if no token is found
+      // Skip verification for public routes
+      if (pathname === "/login" || pathname === "/signup" || pathname === "/") {
+        setIsChecking(false);
         return;
       }
-      const { token } = await JSON.parse(storedData);
-      if (!token) {
-        // router.push("/alumni"); 
-        setIsChecking(false); // Stop checking if no token is found
+
+      const storedData = localStorage.getItem("alumni");
+      if (!storedData) {
+        setIsChecking(false);
+        router.push("/login");
         return;
       }
 
       try {
+        const { token } = JSON.parse(storedData);
+        if (!token) {
+          setIsChecking(false);
+          router.push("/login");
+          return;
+        }
+
         const response = await fetch(`${url}/api/auth/check-token`, {
           method: "GET",
           headers: {
@@ -36,22 +44,50 @@ const useVerifyToken = () => {
 
         if (!response.ok) {
           localStorage.removeItem("alumni");
-        } else if (pathname !== "/alumni/homepage") {
-          router.push("/alumni/homepage"); // Redirect only if token is valid
+          setIsChecking(false);
+          router.push("/login");
+          return;
+        }
+
+        const data = await response.json();
+
+        // Check both OTP verification and admin verification
+        if (!data.user.isVerified) {
+          // If not OTP verified and not already on verification page, redirect to verification
+          if (pathname !== "/verification") {
+            router.push("/verification");
+            return;
+          }
+        } else if (data.user.status !== "verified") {
+          // If OTP verified but not admin verified, show pending message
+          if (pathname !== "/verification") {
+            router.push("/verification");
+            return;
+          }
+        } else if (pathname === "/verification") {
+          // If both verified and on verification page, redirect to homepage
+          router.push("/alumni/homepage");
+          return;
+        }
+
+        // If we're on login/signup page and token is valid, redirect to homepage
+        if ((pathname === "/login" || pathname === "/signup") && response.ok) {
+          router.push("/alumni/homepage");
         }
       } catch (error) {
         console.error("Error checking token:", error);
         localStorage.removeItem("alumni");
-        router.push("/alumni"); // Redirect on error
+        setIsChecking(false);
+        router.push("/login");
       } finally {
-        setIsChecking(false); // Mark check as complete
+        setIsChecking(false);
       }
     };
 
     verifyToken();
-  }, [router, pathname]);
+  }, [pathname, router]);
 
-  return isChecking; // Return the loading state
+  return isChecking;
 };
 
 export default useVerifyToken;

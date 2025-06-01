@@ -2,6 +2,7 @@
 'use client';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import { usePathname } from 'next/navigation';
 
 const ChatNotificationContext = createContext();
 
@@ -10,6 +11,7 @@ export const ChatNotificationProvider = ({ children }) => {
     const [globalUnreadCount, setGlobalUnreadCount] = useState(0);
     const [socket, setSocket] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
+    const pathname = usePathname();
 
     // Calculate total unread count
     const totalUnreadCount = Object.values(unreadObj).reduce((sum, count) => sum + count, 0) + globalUnreadCount;
@@ -27,8 +29,16 @@ export const ChatNotificationProvider = ({ children }) => {
             auth: { token },
             reconnection: true,
             reconnectionAttempts: 5,
-            reconnectionDelay: 1000
+            reconnectionDelay: 1000,
+            // Add autoConnect option to prevent immediate connection
+            autoConnect: false
         });
+
+        // Only connect if we're not on a public route
+        const publicRoutes = ['/login', '/signup', '/', '/verification'];
+        if (!publicRoutes.includes(pathname)) {
+            newSocket.connect();
+        }
 
         newSocket.on('connect', () => {
             console.log('Socket connected');
@@ -53,9 +63,11 @@ export const ChatNotificationProvider = ({ children }) => {
         setSocket(newSocket);
 
         return () => {
-            newSocket.disconnect();
+            if (newSocket.connected) {
+                newSocket.disconnect();
+            }
         };
-    }, []);
+    }, [pathname]);
 
     useEffect(() => {
         if (!socket || !isConnected) return;

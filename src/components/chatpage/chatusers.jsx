@@ -110,40 +110,50 @@ const Chatusers = () => {
 
         {/* Chat List */}
         <ul className="divide-y divide-gray-200">
-          {filteredMembers?.map((user) => {
-            if (!user?.userId) return null;
+          {filteredMembers?.length === 0 ? (
+            <div className={`p-8 text-center ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+              <Icon icon="mdi:chat-outline" className="mx-auto mb-2" width="32" height="32" />
+              <p className="font-medium">No chats found</p>
+              <p className="text-sm mt-1">Start a conversation with other alumni members</p>
+            </div>
+          ) : (
+            filteredMembers?.map((user) => {
+              if (!user?.userId) return null;
 
-            const unreadCount = getUnreadCount(user.userId);
+              const unreadCount = getUnreadCount(user.userId);
 
-            return (
-              <Link
-                href={`/alumni/chat/${user.userId}`}
-                key={user.userId}
-                className={`flex items-center hover:bg-gray-200 cursor-pointer p-4 space-x-3 ${user?.active ? "bg-gray-200" : isDark ? "bg-[#2A3057]" : "bg-white"}`}
-                onClick={() => handleChatClick(user.userId)}
-              >
-                <img
-                  src={
-                    user?.profilePicture
-                      ? `${url}/uploads/${user?.profilePicture?.split("\\").pop()}`
-                      : "/memberpage/member.png"
-                  }
-                  alt={user?.name || 'User'}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div className="flex-1">
-                  <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>{user?.name || 'Unknown User'}</p>
-                  <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>{user?.message || 'No messages yet'}</p>
-                </div>
-                <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-400'}`}>{user?.time || ''}</span>
-                {unreadCount > 0 && (
-                  <span className="ml-2 bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
+              return (
+                <Link
+                  href={`/alumni/chat/${user.userId}`}
+                  key={user.userId}
+                  className={`flex items-center hover:bg-gray-200 cursor-pointer p-4 space-x-3 ${user?.active ? "bg-gray-200" : isDark ? "bg-[#2A3057]" : "bg-white"}`}
+                  onClick={() => handleChatClick(user.userId)}
+                >
+                  <img
+                    src={
+                      user?.profilePicture
+                        ? `${url}/uploads/${user?.profilePicture?.split("\\").pop()}`
+                        : "/memberpage/member.png"
+                    }
+                    alt={user?.name || 'User'}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div className="flex-1">
+                    <p className={`font-semibold ${isDark ? 'text-white' : 'text-gray-800'}`}>{user?.name || 'Unknown User'}</p>
+                    <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-500'}`}>
+                      {user?.message || 'Start a conversation'}
+                    </p>
+                  </div>
+                  <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-400'}`}>{user?.time || ''}</span>
+                  {unreadCount > 0 && (
+                    <span className="ml-2 bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </Link>
+              );
+            })
+          )}
         </ul>
       </div>
     </div>
